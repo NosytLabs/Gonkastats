@@ -20,9 +20,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-      - name: Resolve initial lockfile
-        run: |
-          if [ ! -f package-lock.json ]; then npm install --package-lock-only --ignore-scripts; fi
+          cache: npm
       - name: Install locked dependencies
         run: npm ci
       - name: Unit tests
@@ -32,10 +30,8 @@ jobs:
       - name: Lint
         run: npm run lint
       - name: Build production app
-        id: build
         run: npm run build
       - name: Capture bounded public observations
-        id: snapshot
         run: npm run snapshot
       - name: Package local preview runtime
         run: |
@@ -62,27 +58,3 @@ jobs:
           path: artifacts/
           retention-days: 7
           if-no-files-found: warn
-  preserve-lockfile:
-    needs: verify
-    if: always() && !cancelled() && github.ref == 'refs/heads/feat/community-observatory'
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    permissions:
-      contents: write
-      actions: read
-    steps:
-      - name: Preserve generated lockfile as immutable repository blob
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh run download "$GITHUB_RUN_ID" --repo NosytLabs/Gonkastats --name gonkastats-verification --dir verification
-          python3 - <<'PY'
-          import os,json,pathlib,urllib.request
-          content=pathlib.Path('verification/package-lock.json').read_text()
-          lock=json.loads(content)
-          assert lock['name']=='gonkastats' and lock['lockfileVersion']==3
-          request=urllib.request.Request('https://api.github.com/repos/NosytLabs/Gonkastats/git/blobs',data=json.dumps({'content':content,'encoding':'utf-8'}).encode(),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json'})
-          with urllib.request.urlopen(request,timeout=20) as response:
-              result=json.load(response)
-          print('LOCKFILE_BLOB_SHA='+result['sha'])
-          PY
