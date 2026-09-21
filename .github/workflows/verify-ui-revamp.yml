@@ -1,8 +1,8 @@
-name: Verify requested UI revamp
+name: Verify requested UI and content expansion
 # Temporary, scoped to this requested feature branch. Removed before merging.
 on:
   push:
-    branches: [feat/ui-revamp]
+    branches: [feat/charts-content-polish]
 permissions:
   contents: read
 concurrency:
