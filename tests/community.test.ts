@@ -1,0 +1,10 @@
+import {it,expect} from 'vitest';
+import {canonicalSection,curlCommand,observationLabel} from '../src/core/community-rules';
+it('supports the conventional address alias',()=>expect(canonicalSection('address')).toBe('addresses'));
+it('supports the token alias',()=>expect(canonicalSection('token')).toBe('tokenomics'));
+it('preserves other sections',()=>expect(canonicalSection('hardware')).toBe('hardware'));
+it('quotes ampersands in a copyable curl example',()=>expect(curlCommand('https://stats.example','/api/v1/models?limit=2&offset=0')).toBe("curl --fail-with-body --silent --show-error 'https://stats.example/api/v1/models?limit=2&offset=0'"));
+it('rejects unsupported origin schemes',()=>expect(()=>curlCommand('javascript:evil','/api/v1/models')).toThrow());
+it('rejects nonlocal API destinations',()=>expect(()=>curlCommand('https://stats.example','//evil.example')).toThrow());
+it('includes the calendar date in a retained observation label',()=>expect(observationLabel('2026-09-21T04:35:03.000Z')).toBe('2026-09-21 04:35:03 UTC'));
+it('does not fabricate a time for an invalid timestamp',()=>expect(observationLabel('bad')).toBe('Unknown observation time'));
