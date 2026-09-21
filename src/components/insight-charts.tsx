@@ -1,0 +1,66 @@
+'use client';
+import {useId, useState} from 'react';
+import Link from 'next/link';
+import {Download} from 'lucide-react';
+import {csv, format, number, shorten} from '@/core/metrics';
+import {concentration, hasObservation, modelFootprint, overviewFacts} from '@/core/insights';
+import type {Snapshot, Source} from '@/core/types';
+import {Empty, Panel, Proof, More, download} from './ui';
+
+export interface BarRow {label: string; value: string | number | null; href?: string;}
+export function ComparisonBars({rows, unit, label, source, money = false, basis = 'current observation, not history'}: {rows: BarRow[]; unit: string; label: string; source?: Source; money?: boolean; basis?: string}) {
+  const id = useId(), [table, setTable] = useState(false);
+  const max = Math.max(0, ...rows.map(row => number(row.value) ?? 0));
+  const display = (value: BarRow['value']) => money ? format(value, 'usd') : format(value, 'number');
+  return <figure className="comparison-chart" aria-label={label}>
+    <div className="comparison-bars">{rows.map((row, index) => <div className="comparison-row" key={row.label}>
+      <div className="comparison-label"><span><i className="chart-rank">{String(index + 1).padStart(2, '0')}</i>{row.href ? <Link href={row.href}>{row.label}</Link> : row.label}</span><strong title={String(row.value ?? 'Unavailable')}>{display(row.value)} <small>{money ? '' : unit}</small></strong></div>
+      <svg viewBox="0 0 500 8" preserveAspectRatio="none" height="8" width="100%" aria-hidden="true"><rect width="500" height="8" rx="4" fill="var(--border)"/>{number(row.value) !== null && max > 0 && <rect width={Math.max(0, (number(row.value) ?? 0) / max * 500)} height="8" rx="4" fill={`var(--chart-${index % 3})`}/>}</svg>
+      {row.value !== null && number(row.value) === null && <small className="muted">Exact value available below; outside the chart’s safe numeric range.</small>}
+    </div>)}</div>
+    {!rows.length && <Empty>No usable observations for this comparison.</Empty>}
+    <figcaption className="chart-caption"><span>{unit} · {basis}</span><div className="chart-actions"><button className="text-button" aria-expanded={table} aria-controls={id} onClick={() => setTable(!table)}>{table ? 'Hide' : 'View'} {label.toLowerCase()} data</button><button className="icon-button" aria-label={'Export ' + label + ' CSV'} onClick={() => download(label.toLowerCase().replaceAll(' ', '-') + '.csv', csv(rows.map(row => ({label: row.label, value: row.value, unit, source: source?.url ?? '', fetchedAt: source?.fetchedAt ?? '', sourceTime: source?.sourceTime ?? '', coverage: source?.coverage ?? ''}))), 'text/csv')}><Download size={14}/></button></div></figcaption>
+    {table && <div id={id} className="table-scroll"><table><caption className="sr-only">{label} exact values</caption><thead><tr><th>Category</th><th>Exact value</th><th>Unit</th></tr></thead><tbody>{rows.map(row => <tr key={row.label}><td>{row.label}</td><td className="mono">{row.value ?? 'Unavailable'}</td><td>{unit}</td></tr>)}</tbody></table></div>}
+  </figure>;
+}
+export function HardwareChart({s}: {s: Snapshot}) {
+  const known = hasObservation(s, 'hardware');
+  return <Panel title="What hardware is registered?" description="GPU mix matched to the epoch’s declared ML nodes" action={<More href="/hardware" children="Hardware"/>} footer={<Proof snapshot={s} ids={['hardware', 'participants']}/>}>
+    {known ? <ComparisonBars label="GPU mix" unit="GPUs" rows={s.hardware.map(h => ({label: h.model, value: h.count}))} source={s.sources.find(x => x.id === 'hardware')}/> : <Empty>No hardware observation is available. Compute weight is not used to invent a GPU count.</Empty>}
+    <p className="chart-explainer">These are <strong>registrations, not a physical audit</strong>. Marked exclusions can still appear in this epoch-matched inventory.</p>
+  </Panel>;
+}
+export function ModelFootprintChart({s}: {s: Snapshot}) {
+  const [exclude, setExclude] = useState(false), rows = modelFootprint(s, exclude);
+  return <Panel title="Which models do members report?" description="A member can report more than one model" footer={<Proof snapshot={s} ids={['participants', 'models']}/>}>
+    <div className="chart-switch"><label><input type="checkbox" checked={exclude} onChange={e => setExclude(e.target.checked)}/> Omit members marked excluded</label><span>{rows[0]?.denominator ?? '—'} members in scope</span></div>
+    <ComparisonBars label="Model participation" unit="members" source={s.sources.find(x => x.id === 'participants')} rows={rows.map(row => ({label: row.name, value: row.count, href: '/models/' + row.slug}))}/>
+    <p className="chart-explainer">Counts overlap across models. This chart shows reported support—not requests served, performance, or uptime.</p>
+  </Panel>;
+}
+export function ConcentrationChart({s}: {s: Snapshot}) {
+  const id = useId(), [table, setTable] = useState(false);
+  const rows = hasObservation(s, 'participants') ? concentration(s.participants) : [], facts = overviewFacts(s);
+  const points = rows.filter(row => row.cumulativeShare !== null);
+  const coordinates = points.map(row => `${44 + row.rank / Math.max(1, rows.length) * 470},${196 - Number(row.cumulativeShare) * 1.7}`);
+  return <Panel title="How is compute weight distributed?" description="Members ranked by their declared epoch weight" action={<More href="/participants"/>} footer={<Proof snapshot={s} ids={['participants']}/>}>
+    {points.length ? <><div className="concentration-summary"><strong>{facts.topFiveShare}%</strong><span>of declared weight belongs to the top {Math.min(5, rows.length)} members</span></div>
+      <svg className="concentration-svg" viewBox="0 0 550 232" role="img" aria-labelledby={id + '-title'}><title id={id + '-title'}>Cumulative share of declared epoch weight by member rank. The top {Math.min(5, rows.length)} account for {facts.topFiveShare} percent.</title>
+        {[0, 25, 50, 75, 100].map(value => <g key={value}><line x1="44" x2="514" y1={196 - value * 1.7} y2={196 - value * 1.7} stroke="var(--border)" strokeDasharray="3 5"/><text x="35" y={200 - value * 1.7} textAnchor="end">{value}%</text></g>)}
+        <polygon points={'44,196 ' + coordinates.join(' ') + ' 514,196'} fill="var(--accent)" opacity="0.09"/>
+        <polyline points={'44,196 ' + coordinates.join(' ')} fill="none" stroke="var(--accent)" strokeWidth="2.5"/>
+        {[...new Set([0, Math.round(rows.length / 2), rows.length])].map(rank => <text key={rank} x={44 + rank / rows.length * 470} y="222" textAnchor="middle">{rank} members</text>)}
+      </svg><div className="chart-caption"><span>Cumulative share · not consensus voting power</span><button className="text-button" aria-expanded={table} onClick={() => setTable(!table)}>{table ? 'Hide' : 'View'} concentration data</button></div>
+      {table && <div className="table-scroll"><table><caption className="sr-only">Exact declared-weight concentration</caption><thead><tr><th>Rank</th><th>Member</th><th>Weight</th><th>Share</th><th>Cumulative</th></tr></thead><tbody>{rows.map(row => <tr key={row.address}><td>{row.rank}</td><td><Link href={'/participants/' + row.address}>{shorten(row.address)}</Link></td><td className="mono">{row.weight}</td><td>{row.share}%</td><td>{row.cumulativeShare}%</td></tr>)}</tbody></table></div>}
+    </> : <Empty>At least one member with positive declared weight is needed.</Empty>}
+    <p className="chart-explainer">A steeper curve means more weight is concentrated in fewer reported members. Addresses are not assumed to be independent operators.</p>
+  </Panel>;
+}
+export function ModelComparisonChart({s}: {s: Snapshot}) {
+  const [mode, setMode] = useState<'context' | 'price'>('context');
+  return <Panel title="Compare the model essentials" description="Reported limits and advertised prices—not a quality leaderboard" action={<More href="/models" children="Compare models"/>} footer={<Proof snapshot={s} ids={['models', 'capabilities', 'pricing']}/>}>
+    <div className="segmented" aria-label="Model comparison measure"><button aria-pressed={mode === 'context'} onClick={() => setMode('context')}>Context window</button><button aria-pressed={mode === 'price'} onClick={() => setMode('price')}>Advertised price</button></div>
+    <ComparisonBars label={mode === 'context' ? 'Model context' : 'Model pricing'} unit={mode === 'context' ? 'tokens' : 'USD / 1M tokens'} money={mode === 'price'} source={s.sources.find(x => x.id === (mode === 'context' ? 'capabilities' : 'pricing'))} rows={s.models.map(m => ({label: m.name, value: mode === 'context' ? m.context : m.price, href: '/models/' + m.slug}))}/>
+    <p className="chart-explainer">{mode === 'context' ? 'Context is the reported working window. Maximum output is a separate limit; a longer window does not prove better answers.' : 'These are Proxy’s published quotes. They are not confirmed request costs, a market price, or OpenBroker account invoices.'}</p>
+  </Panel>;
+}

@@ -1,4 +1,5 @@
 import type {Scope,Source,Snapshot} from './types';
+import {isSourceFresh} from './insights';
 export const registry:{id:string;name:string;scope:Scope;coverage:string;docs:string}[]=[
 {id:'epoch',name:'Gonka epoch API',scope:'chain',coverage:'Latest epoch and returned stage boundaries.',docs:'https://rpc.gonka.gg/v1/epochs/latest'},
 {id:'participants',name:'Epoch membership',scope:'chain',coverage:'Epoch membership, with current exclusions separately marked. Not the live consensus-power distribution.',docs:'https://rpc.gonka.gg/llms-full.txt'},
@@ -16,4 +17,8 @@ export const registry:{id:string;name:string;scope:Scope;coverage:string;docs:st
 {id:'catalog',name:'RPC endpoint catalog',scope:'provider',coverage:'Discovery metadata, not proof each endpoint works. Read/write methods stay distinct.',docs:'https://rpc.gonka.gg/api/endpoints'}];
 export function emptySnapshot():Snapshot{return {version:1,generatedAt:new Date().toISOString(),mode:'live',sources:[],epoch:null,participants:[],models:[],blocks:[],proposals:[],hardware:[],stats:[],fx:null,fxAt:null,totalSupply:null,tokenomics:{},communityPool:null,protocol:{},validators:null,statsWindow:null,endpoints:[],catalogAuth:null};}
 export function unavailable(id:string,error='No successful observation'):Source{const d=registry.find(x=>x.id===id)!;return {id,name:d.name,url:d.docs,scope:d.scope,coverage:d.coverage,status:'unavailable',fetchedAt:new Date().toISOString(),sourceTime:null,ttl:300,error};}
-export function ageSnapshot(s:Snapshot,mode:'live'|'snapshot'=s.mode):Snapshot{return {...s,mode,sources:s.sources.map(source=>({...source,status:source.status==='unavailable'?'unavailable':mode==='snapshot'?'snapshot':Date.now()-Date.parse(source.sourceTime??source.fetchedAt)>source.ttl*1000?'stale':source.status}))};}
+export function ageSnapshot(s: Snapshot, mode: 'live' | 'snapshot' = s.mode): Snapshot {
+  return {...s, mode, sources: s.sources.map(source => ({...source,
+    status: source.status === 'unavailable' ? 'unavailable' : mode === 'snapshot' ? 'snapshot' :
+      isSourceFresh(source) ? 'recent' : 'stale'}))};
+}

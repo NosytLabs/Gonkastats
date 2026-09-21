@@ -1,11 +1,12 @@
-name: Verify GonkaStats
-# Cost containment: builds, public snapshots and browser checks are opt-in.
+name: Verify requested UI revamp
+# Temporary, scoped to this requested feature branch. Removed before merging.
 on:
-  workflow_dispatch:
+  push:
+    branches: [feat/ui-revamp]
 permissions:
   contents: read
 concurrency:
-  group: gonkastats-${{ github.ref }}
+  group: gonkastats-revamp-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verify:
@@ -52,7 +53,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: gonkastats-verification
+          name: gonkastats-ui-revamp
           path: artifacts/
           retention-days: 7
           if-no-files-found: warn

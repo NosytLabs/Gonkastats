@@ -1,3 +1,4 @@
 .resource-card>.badge{margin-left:12px;vertical-align:top}.site-footer>div{flex-wrap:wrap}
-/* Inline links remain identifiable in every theme and without color vision. */
-.empty p a{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.empty p a{text-decoration:underline;text-underline-offset:3px}
+/* Keep KPI provenance panels visible, including at narrow widths. */
+.kpi-tile{overflow:visible!important}.kpi-tile .metric{border-radius:10px 10px 0 0!important}.kpi-tile .source-note[open]>div{width:min(320px,80vw)!important;max-width:none!important}
