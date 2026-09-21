@@ -1,8 +1,6 @@
 name: Verify GonkaStats
+# Cost containment: builds, public snapshots and browser checks are opt-in.
 on:
-  push:
-    branches: [main, feat/community-observatory]
-    paths-ignore: ['docs/**', 'README.md', 'public/brand/**']
   workflow_dispatch:
 permissions:
   contents: read
