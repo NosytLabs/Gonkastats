@@ -1,0 +1,56 @@
+name: Verify GonkaStats
+on:
+  push:
+    branches: [main, feat/community-observatory]
+    paths-ignore: ['docs/**', 'README.md', 'public/brand/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gonkastats-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Resolve initial lockfile
+        run: |
+          if [ ! -f package-lock.json ]; then npm install --package-lock-only --ignore-scripts; fi
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Unit tests
+        run: npm test
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Build production app
+        run: npm run build
+      - name: Capture bounded public observations
+        run: npm run snapshot
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser verification
+        run: node scripts/browser-qa.mjs
+      - name: Prepare source archive
+        if: always()
+        run: |
+          mkdir -p artifacts
+          cp package-lock.json artifacts/package-lock.json
+          tar --exclude=.git --exclude=node_modules --exclude=.next --exclude=artifacts --exclude=.env.local --exclude=.env --exclude=.data -czf artifacts/GonkaStats-source.tar.gz .
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gonkastats-verification
+          path: |
+            artifacts/
+          retention-days: 7
+          if-no-files-found: warn

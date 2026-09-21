@@ -1,0 +1,12 @@
+import {it,expect} from 'vitest';
+import {simulateCost} from '../src/core/cost';
+const input={prompt:'1000000',completion:'250000',requests:'2',attempts:'1.5'};
+const rates={tokenPrice:'10',providerPrice:'0.001484955',fx:'0.1484955'};
+it('uses identical exact calculation for UI and API',()=>{const r=simulateCost(input,rates);expect(r.tokens).toBe('2500000');expect(r.singleAttemptGnk).toBe('0.025');expect(r.retryScenarioGnk).toBe('0.0375');expect(r.advertisedUsd).toBe('0.0037123875');expect(r.retryScenarioUsd).toBe('0.00556858125');});
+it('preserves unknown prices',()=>expect(simulateCost(input,{tokenPrice:null,providerPrice:null,fx:null}).singleAttemptGnk).toBeNull());
+it('zero requests is a valid zero scenario',()=>expect(simulateCost({...input,requests:'0'},rates).tokens).toBe('0'));
+it('rejects negative counts',()=>expect(()=>simulateCost({...input,prompt:'-1'},rates)).toThrow());
+it('rejects fractional requests',()=>expect(()=>simulateCost({...input,requests:'1.1'},rates)).toThrow());
+it('rejects NaN and infinity',()=>{expect(()=>simulateCost({...input,prompt:'NaN'},rates)).toThrow();expect(()=>simulateCost({...input,attempts:'Infinity'},rates)).toThrow();});
+it('bounds retry scenarios',()=>expect(()=>simulateCost({...input,attempts:'4'},rates)).toThrow());
+it('preserves very large workloads',()=>expect(simulateCost({prompt:'1000000000000000',completion:'0',requests:'1000000000000000',attempts:'1'},rates).tokens).toBe('1000000000000000000000000000000'));
