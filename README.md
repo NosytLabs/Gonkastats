@@ -1,60 +1,76 @@
 # GonkaStats
 
-An independent Gonka community observatory by **Nosyt Labs**. Original visual identity, read-only sources, precise accounting, and transparent data coverage. Not an official Gonka service.
+An independent Gonka community observatory by **Nosyt Labs**. Original dark/light SVG interface, real read-only sources, exact accounting, and explicit data coverage. Not an official Gonka service.
 
-## Run locally
+## Run the application
 
-Requires Node.js 22 or newer.
+Requires Node.js 22 or newer. Dependencies are pinned in the committed lockfile.
 
 ```sh
+git clone https://github.com/NosytLabs/Gonkastats.git
+cd Gonkastats
 npm ci
 cp .env.example .env.local
 npm run dev
 ```
 
-Open `http://localhost:3000`. Core public sources require no wallet or API key. The server performs bounded public reads through the managed Gonka RPC, OpenBroker model catalog, and Proxy pricing/capability APIs.
+Open `http://localhost:3000`. Public core analytics require no wallet or API key. By default, server-side adapters perform bounded real reads from Gonka RPC, OpenBroker's model catalog, and Proxy's model/pricing APIs.
 
-A lockfile is generated during the initial verification build and included in its source artifact; it must be committed before a reproducible release. Before that initial lock is present, use `npm install` once instead of `npm ci`.
+## Pages and community tools
 
-## What is implemented
+The overview combines source-qualified GNK conversion, epoch membership and weights, indexed activity charts, the epoch clock, model access, recent blocks, and governance.
 
-Overview, declared compute membership, GPU registrations matched to epoch ML nodes, epoch timelines, participant/model pages, indexed block explorer and validated lookups, current protocol parameters, governance, source health, and source-attributed ecosystem links.
+Explore Network, Participants, Epochs, Models, Providers, Markets, Tokenomics, Rewards, Treasury, Vesting, DevShards, Governance, Explorer, Sources, and Methodology. Public entity detail views use validated read-only lookups. Some integration pages explain unavailable capabilities rather than fabricating values.
 
-Distinctive tools: **Cost Lab** (exact API/UI-shared arithmetic), **Epoch Diff** (real historical membership queries), **Signal Desk** (deterministic evidence), **Agent Workbench** (runtime-discovered RPC catalog), and an interactive grouped REST reference with actual request execution.
+Distinctive tools:
 
-Our API has 18 implemented GET routes, counted from `src/core/api-definitions.ts`. OpenAPI and the REST reference use that same registry. `llms.txt` and `AGENTS.md` are served as public discovery resources. No write/broadcast or arbitrary-proxy endpoint exists.
+- **Cost Lab:** exact shared API/UI arithmetic for advertised USD, single-attempt GNK and assumed retry-inclusive costs. Scenario assumptions and excluded fees are visible.
+- **Epoch Diff:** bounded comparison of two actual epoch membership responses; declared weight is not confused with current consensus voting power.
+- **Signal Desk:** deterministic observations with evidence, not invented AI-generated market commentary.
+- **Agent Workbench:** searchable, runtime-imported Gonka RPC definitions. Writes are documentation only and are never executed here.
+- **Developer reference:** 18 implemented GET routes, grouped examples, parameters, curl copy, working Try-it requests, ETags, and OpenAPI generated from the same implementation registry.
 
-## What is not claimed
+The UI includes global search, local address stars, table filtering/sorting/pagination, CSV/JSON exports, dark/light themes, and a focus-managed mobile navigation drawer. Original SVG branding is distinct from VeniceStats.
 
-This is not complete feature parity with VeniceStats. No independent broker-performance measurements, licensed Pulse sentiment feed, private account connection, hosted AI chat, or deployed Feather node is configured. Market cap/circulating supply are not inferred from issued supply and a provider FX quote. A successful response does not prove full-network inference coverage.
+## Verified build
 
-Historical charts require an actual observation store; no invented history or silent demo fallback is used. The Pulse page is an attributed reading room until an authorized API/feed is connected.
+Application commit: `0f51b6009faa5cf4bb0468064c67db1d4af719a9`.
 
-## Data and precision
+[Passing verification run](https://github.com/NosytLabs/Gonkastats/actions/runs/35561473172), 2026-09-21:
 
-Raw numeric JSON values are parsed losslessly. GNK = ngonka / 1,000,000,000. Ledger values stay decimal strings. Keep source/retrieval times, source scope and stale states distinct. Declared epoch weight is not assumed to equal current consensus voting power. Read `/methodology` and `/sources`.
+- 47 unit/contract tests passed; TypeScript, ESLint and production build passed.
+- 29 page routes returned HTTP 200 in browser smoke tests.
+- 23 API checks covered valid reads, invalid parameters and unsupported resources; conditional ETag handling was also verified.
+- Chart controls, filtering, CSV download, real REST examples, cost recalculation, global search, themes and mobile navigation passed interaction checks.
+- Four selected pages had zero reported axe WCAG A/AA violations. This is not a full manual accessibility certification.
+- Desktop, tablet and mobile screenshots were captured from the actual production build using an explicitly labelled retained public observation.
 
-## Retained preview
+The following documentation-only commit does not alter application code. See [verification details](docs/VERIFICATION.md).
+
+## Important limitations
+
+This is a tested first implementation, **not full VeniceStats feature parity or a hosted production deployment**.
+
+During verification, 13 of 14 source reads returned usable data. The dAPI inference-statistics endpoint returned HTTP 500, so demand totals/history remain unavailable rather than becoming fake zeros. A working source does not prove global DevShard coverage.
+
+Long-term charts require PostgreSQL and an operated collector. Private OpenBroker account analytics, hosted AI chat, remote MCP execution, measured broker benchmarks, a licensed Pulse feed, and a self-hosted Feather index are not configured. Pulse is currently an attributed reading room. No market capitalization is inferred from issued supply and a provider conversion quote.
+
+## Data rules
+
+Raw numeric JSON is parsed losslessly. One GNK is one billion ngonka. Ledger amounts remain decimal strings. Each source has scope, retrieval time, source time when supplied, freshness, errors, and coverage. Stale observations remain gaps in historical series rather than being relabelled new data. Declared epoch weight and later exclusions remain distinct.
+
+## Retained preview and optional history
 
 ```sh
 npm run snapshot
 DATA_MODE=snapshot npm run dev
 ```
 
-This records real public responses into the git-ignored `data/snapshot.json`. Snapshot mode is prominently labelled. It does not pretend to refresh or enable live lookups.
+The generated, git-ignored `data/snapshot.json` contains real public observations. Snapshot mode is prominently labelled and does not perform live detail lookups.
 
-## Optional history
+For persistent history, set `DATABASE_URL` in the operator environment or `.env.local`, run `npm run db:migrate`, then operate `npm run collect` separately from the web server. Web requests use the stored observation when a database is configured. Five-minute storage slots are idempotent. No database or paid service has been provisioned automatically.
 
-Set `DATABASE_URL` in the operator environment, then:
-
-```sh
-npm run db:migrate
-npm run collect
-```
-
-Run the collector separately from the web server, not inside a request or a GitHub Actions schedule. With a database configured, web requests read the stored observation; they do not collect per visitor. Storage currently uses five-minute observation slots. Bound retention according to deployment needs.
-
-## Verification
+## Tests and deployment
 
 ```sh
 npm test
@@ -63,13 +79,9 @@ npm run lint
 npm run build
 npm run snapshot
 npx playwright install chromium
-node scripts/browser-qa.mjs
+npm run test:e2e
 ```
 
-The workflow is bounded, cancels superseded runs, and stores evidence for seven days. Browser QA starts the production build against a clearly labelled retained observation, tests routes/API/controls/mobile layouts, runs selected axe checks, and captures screenshots. It is not a full manual accessibility certification or production load test.
+Deploy as a Node.js Next.js application or with the Dockerfile. GitHub Pages alone cannot run the server/API. Configure an edge-wide limiter for multi-instance deployments; process-level request budgets are not a distributed limiter.
 
-## Deployment
-
-Deploy as a Node.js Next.js application or use the included Dockerfile. Public analytics need no secret environment variables. Optional PostgreSQL and provider integrations should only be provisioned with operator authorization. GitHub Pages alone cannot run this server/API.
-
-See `docs/IMPLEMENTATION.md` for design/engineering rulings. Refer to actual build artifacts and commit checks for verification status; this README does not assert a run passed.
+CI uses locked dependencies, npm caching, least-privilege read access, concurrency cancellation, a 15-minute timeout and seven-day artifact retention. It has no scheduled telemetry/inference polling jobs. See `docs/IMPLEMENTATION.md` and `docs/REFERENCE-RESEARCH.md` for design and source decisions.
