@@ -1,0 +1,23 @@
+# GonkaStats by Nosyt Labs
+Independent, read-only Gonka community observatory. Not an official Gonka service.
+
+## Discovery
+- /developers: interactive REST reference.
+- /api/v1/openapi: implemented OpenAPI specification.
+- /api/v1/overview: normalized snapshot and individual source metadata.
+- /api/v1/metrics: values with units, definitions and scope.
+- /api/v1/sources: freshness and coverage.
+- /api/v1/endpoints: imported upstream RPC catalog, documentation only.
+- /methodology: metric definitions and limitations.
+
+## Data rules
+Raw ledger amounts are decimal strings. Missing data is null, never an invented zero. Source time and retrieval time differ. Issued supply is not circulating supply. Provider conversion references are not market trades. Declared epoch weights are not a current consensus-power distribution. No billable inference, signing, wallet private keys or arbitrary fetch tools are supported.
+
+## Gonka sources
+https://rpc.gonka.gg/agents
+https://rpc.gonka.gg/llms.txt
+https://rpc.gonka.gg/llms-full.txt
+https://rpc.gonka.gg/api/endpoints
+https://gonka.ai/docs/
+
+A discovery catalog is not authorization to execute its transaction endpoints.

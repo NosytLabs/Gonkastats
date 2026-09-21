@@ -1,0 +1,16 @@
+import {it,expect} from 'vitest';
+import {apiDefinitions,validateQuery} from '../src/core/api-definitions';
+import {chartData,metricData,healthData} from '../src/core/api-data';
+import {emptySnapshot} from '../src/core/sources';
+import {openapi} from '../src/core/openapi';
+const models=apiDefinitions.find(d=>d.id==='models')!;
+it('all advertised API operations have unique names',()=>expect(new Set(apiDefinitions.map(d=>d.id)).size).toBe(apiDefinitions.length));
+it('OpenAPI is generated from the same registry',()=>expect(Object.keys(openapi().paths).length).toBe(apiDefinitions.length));
+it('defaults pagination to bounded sizes',()=>expect(validateQuery(models,new URLSearchParams())).toMatchObject({limit:'20',offset:'0'}));
+it('rejects unknown query parameters',()=>expect(()=>validateQuery(models,new URLSearchParams('url=http://169.254.169.254'))).toThrow());
+it('rejects repeated query parameters',()=>expect(()=>validateQuery(models,new URLSearchParams('limit=1&limit=2'))).toThrow());
+it('rejects unbounded and noninteger queries',()=>{for(const q of ['limit=10000','offset=-1','limit=1.5','offset=Infinity'])expect(()=>validateQuery(models,new URLSearchParams(q))).toThrow();});
+it('retains missing metrics as null',()=>expect(metricData(emptySnapshot()).every(m=>m.value===null)).toBe(true));
+it('marks wholly missing source data unavailable',()=>expect(healthData(emptySnapshot()).status).toBe('unavailable'));
+it('preserves gaps in downsampled chart buckets',()=>{const points=Array.from({length:6},(_,i)=>({at:new Date(i*1000).toISOString(),weight:i===1?null:String(i),price:null,participants:1}));const result=chartData(points,'weight',2);expect(result.points).toHaveLength(2);expect(result.points[0].value).toBeNull();expect(result.points[1].value).toBe('5');expect(result.rawPointCount).toBe(6);});
+it('does not invent history when no observations exist',()=>expect(chartData([],'weight',200).points).toEqual([]));
