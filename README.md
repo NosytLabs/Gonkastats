@@ -1,8 +1,8 @@
 # GonkaStats
 
-An independent Gonka community observatory by **Nosyt Labs**. Original dark/light SVG interface, real read-only sources, exact accounting, and explicit data coverage. Not an official Gonka service.
+An independent Gonka community observatory by **Nosyt Labs**. Source-qualified observations, original SVG charts, plain-language explanations, and practical model tools. Not an official Gonka service.
 
-## Run the application
+## Run locally
 
 Requires Node.js 22 or newer. Dependencies are pinned in the committed lockfile.
 
@@ -14,63 +14,69 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open `http://localhost:3000`. Core public analytics require no wallet or API key. By default, server-side adapters perform bounded reads from Gonka RPC, OpenBroker's model catalog, and Proxy's model/pricing APIs.
+Open `http://localhost:3000`. Public core analytics need no wallet or provider key. Live mode performs bounded server-side reads from Gonka RPC, OpenBroker's public model catalog, and Proxy's capability/pricing APIs.
 
-## Pages and community tools
+## The community workspace
 
-The overview combines source-qualified GNK conversion, epoch membership and weights, indexed activity charts, the epoch clock, model access, recent blocks, and governance.
+The overview groups six source-qualified headline cards into activity, compute, model access and community sections. Charts cover indexed transactions/gas, reported GPU mix, declared-weight concentration, model context/prices, overlapping model support, and recent proposal statuses. Each chart explains its units and scope. Source details retain observation time, retrieval time, errors and limitations.
 
-Explore Network, Hardware, Participants, Epochs, Models, Providers, Markets, Tokenomics, Rewards, Treasury, Vesting, DevShards, Governance, Explorer, Sources, Methodology and the Community Directory. A browser-local Watchlist stores starred public addresses. About and Privacy pages explain identity and data handling. Public entity details use validated read-only lookups. Some integration pages explain unavailable capabilities rather than fabricating values.
+The model explorer supports URL-preserved filters, sorting, card/table views, up-to-three-model comparisons, exact-value tables and CSV exports. Unknown or removed model IDs cannot consume comparison slots.
 
-Distinctive tools:
+Useful tools:
 
-- **Cost Lab:** exact shared API/UI arithmetic for advertised USD, single-attempt GNK and assumed retry-inclusive costs; visible assumptions and excluded fees.
-- **Epoch Diff:** bounded comparison of two actual epoch-membership responses; declared weight is not confused with current consensus power.
-- **Signal Desk:** deterministic observations with evidence, not invented AI-generated market commentary.
-- **Agent Workbench:** searchable, runtime-imported RPC definitions. Catalogued writes are documentation only and cannot be executed here.
-- **Developer reference:** 18 implemented GET routes, grouped examples, parameters, current-origin quoted curl commands, working Try-it requests, ETags and OpenAPI generated from the same registry.
+- **Context budget (`/workload`):** compare assumed prompt plus output reserve against separately reported context and output limits. Presets, URL inputs, visual budget bars and CSV export. This is a metadata comparison, not a tokenizer, inference call, or provider acceptance guarantee.
+- **Cost Lab:** shared API/UI decimal arithmetic for advertised USD, single-attempt GNK and assumed retry-inclusive scenarios. Fees and assumptions stay explicit.
+- **Epoch Diff:** compare declared membership and weight changes between two source responses, not current consensus power.
+- **Gonka field guide (`/learn`):** explore/build/hosting paths, model-card explanations, glossary, FAQs and OpenBroker accounting distinctions.
+- **Watchlist:** browser-local saved public addresses. No wallet connection.
+- **Signal Desk:** deterministic observations with sources, not generated market predictions.
+- **Agent Workbench:** searchable imported RPC definitions. Catalogued writes are documentation-only.
 
-Global search, table filtering/sorting/pagination, CSV/JSON exports, local address stars, dark/light themes, and a focus-managed mobile drawer are implemented. SVG branding is original and distinct from VeniceStats.
+Also explore Network, Hardware, Participants, Epochs, Providers, Markets, Tokenomics, Rewards, Treasury, Vesting, DevShards, Governance, Explorer, Community Directory, Sources and Methodology. About and Privacy pages explain identity and data handling. Some integration pages explicitly explain unavailable data rather than fabricating numbers.
 
-## Verified application
+## API and developer reference
 
-Tested application commit: `d7666ee5df048846d029dace9995ed26559ec0dc`.
+Twenty implemented GET definitions, including `/api/v1/context-plan` and `/api/v1/composition`, are published in the interactive developer reference. Definitions include documented aliases and the OpenAPI route; this is not a claimed count of twenty independent datasets.
 
-[Passing community verification](https://github.com/NosytLabs/Gonkastats/actions/runs/35563439797), 2026-09-21:
+Examples use the current site origin, quoted curl commands, bounded parameters, working Try-it reads, provenance metadata and ETags. Model capability filtering shares the same helper as the UI. No arbitrary proxy, transaction broadcast, private-account access or paid completion endpoint is exposed.
 
-- 55 unit/contract tests passed; TypeScript, ESLint and production build passed.
-- 35 page routes returned HTTP 200 in browser smoke tests.
-- 23 API scenarios covered valid reads and invalid parameters/resources; ETag handling was also verified.
-- 12 interaction groups passed, including the local watchlist, chart controls, CSV downloads, real REST examples, cost recalculation, global search, themes and mobile navigation.
-- Seven selected pages had zero reported axe WCAG A/AA violations. This is not a complete manual accessibility certification.
-- Desktop, tablet and mobile screenshots were captured from the production build using an explicitly labelled retained public observation.
+```sh
+curl 'http://localhost:3000/api/v1/context-plan?prompt=8000&completion=2000'
+curl 'http://localhost:3000/api/v1/composition'
+```
 
-See [current verification details](docs/FINALIZATION.md) and the [previous verified baseline](docs/VERIFICATION.md). The final docs/workflow cleanup does not alter tested application code.
+## Verified chart/content release
 
-## Important limitations
+Tested application commit: `d91ca761ecfd650848ceb5709db6499e5d742dae`.
 
-This is a tested community release, **not full VeniceStats feature parity or a hosted production deployment**.
+[Passing verification run](https://github.com/NosytLabs/Gonkastats/actions/runs/35660239927), 2026-09-21, completed locked installation, the full unit/contract suite, strict TypeScript, ESLint, production build, public-source capture and all three browser scripts.
 
-During verification, 13 of 14 source reads returned usable data. Gonka's dAPI inference-statistics endpoint returned HTTP 500; demand totals/history remain unavailable instead of becoming fake zeros. A working source does not establish global DevShard coverage.
+The reports record 35 baseline page checks, 23 baseline API scenarios, 12 baseline interaction groups, nine UI-revamp check groups, and five new workload/content check groups. New APIs, malformed queries, context presets, exports, chart data tables, filters, comparisons and learning content were exercised. Selected desktop/tablet/mobile layouts and dark/light accessibility scans passed with no reported browser runtime exceptions or axe violations. These are bounded automated checks, not exhaustive accessibility, security or load certifications.
 
-Long-term charts require PostgreSQL and an operated collector. Private account analytics, hosted AI chat, remote MCP execution, measured broker benchmarks, a licensed Pulse feed, and a self-hosted Feather index are not configured. Pulse is currently an attributed reading room. Market capitalization is not inferred from issued supply and a provider conversion quote.
+See [current evidence and boundaries](docs/CHARTS-RELEASE.md). The final documentation/workflow cleanup does not change tested application code. Earlier verification records remain in `docs/FINALIZATION.md` and `docs/VERIFICATION.md` as historical baselines.
 
-## Data rules
+## Accuracy and limitations
 
-Numeric JSON is parsed losslessly. One GNK is one billion ngonka. Ledger amounts stay decimal strings. Sources retain scope, retrieval/source timestamps, freshness, errors and coverage. Stale readings remain gaps in historical series rather than being relabelled new data. Declared epoch membership and later exclusions remain distinct.
+During this release capture, 13 of 14 sources returned usable observations. The dAPI inference-statistics request returned HTTP 500. Its demand totals are unavailable; blockchain transactions are not substituted for AI requests. No missing history, sentiment, market capitalization, uptime or GPU-equivalence series is invented.
 
-## Retained preview and optional history
+Model availability, capabilities and pricing are separate source observations. A failed catalog fetch no longer freezes fresh price/capability values. Failed attributes retain their original stale-source attribution. Prompt/completion text tokens, Gonka's model-specific compute-unit terminology and native GNK currency are explained separately.
+
+Large JSON numbers are parsed losslessly. Ledger amounts remain decimal strings; one GNK is one billion ngonka. Declared epoch weights are not presented as current consensus power. Hardware counts are registrations, not an independent physical audit. The GNK conversion reference is provider-supplied, not an executed market trade. Native issued supply is not assumed to be circulating supply.
+
+**This is not full VeniceStats/AntSeedStats parity or a publicly hosted deployment.** Long-term charts need PostgreSQL and an operated collector. Private OpenBroker analytics, hosted AI/MCP, measured broker benchmarks, licensed Pulse ingestion, and self-hosted Feather are not configured. Pulse is an attributed reading room. No domain, database, wallet or paid infrastructure is provisioned by this update.
+
+## Retained observations and optional history
 
 ```sh
 npm run snapshot
 DATA_MODE=snapshot npm run dev
 ```
 
-The git-ignored `data/snapshot.json` contains genuine public observations. Snapshot mode shows the full UTC date, disables refresh and does not perform live detail lookups.
+The git-ignored snapshot contains actual public observations, is explicitly dated, disables live refresh, and does not perform live detail lookups. Screenshots and browser tests use this retained mode for reproducibility.
 
-For persistent history, set `DATABASE_URL` in the operator environment or `.env.local`, run `npm run db:migrate`, then operate `npm run collect` separately from the web server. Web requests use stored observations when a database is configured. Five-minute storage slots are idempotent. No database or paid service was provisioned automatically.
+For history, configure server-only `DATABASE_URL`, run `npm run db:migrate`, and operate `npm run collect` separately from the web process. Web requests read stored observations when a database is configured. Five-minute storage slots are idempotent. No live database integration was exercised in this release.
 
-## Tests and deployment
+## Verification and deployment
 
 ```sh
 npm test
@@ -82,8 +88,6 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Deploy as a Node.js Next.js application or with the Dockerfile. GitHub Pages alone cannot run the server/API. Configure an edge-wide limiter for multi-instance deployments; process-level request budgets are not a distributed limiter.
+Deploy as a Node.js Next.js application or using the Dockerfile. GitHub Pages alone cannot run the server/API. A multi-instance deployment needs an edge-wide limiter; process budgets are not a distributed rate limiter.
 
-Main verification remains manual-only for cost containment. It uses locked dependencies, least-privilege read access, concurrency cancellation, a 15-minute timeout and seven-day artifact retention. Temporary completion verification has been removed. No scheduled telemetry or paid inference jobs are active.
-
-See `docs/IMPLEMENTATION.md`, `docs/REFERENCE-RESEARCH.md`, and the served `/developers`, `/methodology`, `/sources` and `/agents` pages for architecture, source and integration details.
+Main's verification remains manual-only with read-only permissions, locked dependencies, bounded runtime and seven-day artifact retention. The requested feature branch's temporary workflow was removed after the passing run. There are no scheduled telemetry or billable inference jobs.

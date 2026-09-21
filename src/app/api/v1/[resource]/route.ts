@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
-import Decimal from 'decimal.js';
+import {contextPlan,compositionData} from '@/core/workload';
+import {filterModels} from '@/core/insights';
 import {getSnapshot,detail,epochDiff} from '@/core/service';
 import {history} from '@/db/store';
 import {apiDefinitions,validateQuery} from '@/core/api-definitions';
@@ -22,7 +23,9 @@ export async function GET(request:Request,{params}:{params:Promise<{resource:str
  switch(resource){
  case 'overview':data=s;break;
  case 'metrics':data=metricData(s);break;
- case 'models':{let rows=s.models.filter(m=>!query.capability||(query.capability==='tools'?m.tools===true:m.reasoning===true));rows=[...rows].sort((a,b)=>query.sort==='context'?(b.context??-1)-(a.context??-1):query.sort==='price'?a.price===null?1:b.price===null?-1:new Decimal(a.price).cmp(b.price):a.name.localeCompare(b.name));data=page(rows,m=>m.id);break;}
+ case 'models':{const rows=filterModels(s.models,{q:'',capability:query.capability??'all',sort:query.sort??'name',view:'table',compare:[]});data=page(rows,m=>m.id);break;}
+ case 'composition':data=compositionData(s);break;
+ case 'context-plan':data={plans:contextPlan(s.models,String(Number(query.prompt??8000)),String(Number(query.completion??2000))),sourceIds:['models','capabilities'],basis:'Proxy-reported limits joined to the OpenBroker catalog; not a provider acceptance guarantee'};break;
  case 'participants':data=page(s.participants,p=>p.address+' '+p.models.join(' '));break;
  case 'blocks':data=page(s.blocks,b=>String(b.height));break;
  case 'epochs':data=s.epoch;break;
