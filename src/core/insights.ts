@@ -57,12 +57,13 @@ export function modelFootprint(s: Snapshot, excludeFlagged = false) {
     denominator: members?.length ?? null}));
 }
 export type ModelFilters = {q: string; capability: string; sort: string; view: string; compare: string[]};
-export function readModelFilters(params: URLSearchParams): ModelFilters {
+export function readModelFilters(params: URLSearchParams, catalog?: readonly Pick<Model, 'slug'>[]): ModelFilters {
+  const known = catalog ? new Set(catalog.map(model => model.slug)) : null;
   return {q: (params.get('q') ?? '').slice(0, 120),
     capability: ['tools', 'reasoning', 'long-context'].includes(params.get('capability') ?? '') ? params.get('capability')! : 'all',
     sort: ['context', 'price'].includes(params.get('sort') ?? '') ? params.get('sort')! : 'name',
     view: params.get('view') === 'table' ? 'table' : 'cards',
-    compare: [...new Set(params.getAll('compare'))].filter(value => /^(?:[0-9a-f]{2}){1,250}$/.test(value)).slice(0, 3)};
+    compare: [...new Set(params.getAll('compare'))].filter(value => /^(?:[0-9a-f]{2}){1,250}$/.test(value) && (known === null || known.has(value))).slice(0, 3)};
 }
 export function filterModels(models: Model[], filters: ModelFilters) {
   return models.filter(m => `${m.id} ${m.name}`.toLowerCase().includes(filters.q.trim().toLowerCase()))

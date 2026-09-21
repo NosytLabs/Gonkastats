@@ -10,7 +10,7 @@ import type {Snapshot, Model} from '@/core/types';
 import {PageHeading, ObservationBar} from './shared';
 const capability = (value: boolean | null) => value === null ? 'Unknown' : value ? 'Reported supported' : 'Not reported supported';
 export function ModelExplorer({s}: {s: Snapshot}) {
-  const search = useSearchParams(), filters = readModelFilters(new URLSearchParams(search.toString()));
+  const search = useSearchParams(), filters = readModelFilters(new URLSearchParams(search.toString()), s.models);
   const rows = filterModels(s.models, filters), selected = s.models.filter(m => filters.compare.includes(m.slug));
   const footprint = new Map(modelFootprint(s).map(row => [row.model, row.count]));
   function update(key: string, values: string[]) {
