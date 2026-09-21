@@ -1,3 +1,7 @@
 .resource-card>.badge{margin-left:12px;vertical-align:top}.site-footer>div{flex-wrap:wrap}
-/* Inline links remain identifiable in every theme and without color vision. */
-.empty p a{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.empty p a{text-decoration:underline;text-underline-offset:3px}
+/* Provenance stays readable rather than clipping inside a KPI tile. */
+.kpi-tile{overflow:visible!important}.kpi-tile .metric{border-radius:10px 10px 0 0!important}.kpi-tile .source-note[open]>div{width:min(320px,80vw)!important;max-width:none!important}
+/* Bring actual charts into the desktop's first screen without shrinking mobile text. */
+@media(min-width:1280px){.observatory-v2 .dashboard-kpis{grid-template-columns:repeat(6,minmax(0,1fr))}.observatory-v2 .kpi-tile{display:flex;flex-direction:column}.observatory-v2 .kpi-tile .metric{padding:16px 13px;min-height:145px}.observatory-v2 .kpi-tile .metric-label{font-size:11px;align-items:flex-start}.observatory-v2 .kpi-tile .metric-value{font-size:27px}.observatory-v2 .kpi-tile>.source-note{padding:7px 12px;min-height:52px;margin-top:auto}.observatory-v2 .kpi-tile .source-note summary{font-size:9px;flex-wrap:wrap;gap:4px}}
+@media(max-width:620px){.kpi-tile:nth-child(2n) .source-note[open]>div{left:auto;right:0}}

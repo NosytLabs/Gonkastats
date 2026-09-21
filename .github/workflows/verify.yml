@@ -41,7 +41,7 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Browser verification
-        run: node scripts/browser-qa.mjs
+        run: npm run test:e2e
       - name: Prepare source archive
         if: always()
         run: |
