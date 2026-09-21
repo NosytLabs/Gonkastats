@@ -21,7 +21,7 @@ try{
  assert.equal((await fetch(base+'/api/v1/activity?limit=61')).status,400);
  assert.equal((await fetch(base+'/api/v1/activity?limit=15&limit=30')).status,400);
  report.checks.push('Activity bounds and duplicate query validation');
- browser=await chromium.launch();const page=await browser.newPage({viewport:{width:1440,height:1050},reducedMotion:'reduce'});page.on('pageerror',e=>report.runtimeErrors.push(e.message));
+ browser=await chromium.launch();const context=await browser.newContext({viewport:{width:1440,height:1050},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>report.runtimeErrors.push(e.message));
  await page.goto(base+'/activity',{waitUntil:'networkidle'});await expect(page.locator('main h1')).toHaveCount(1);
  await page.getByRole('button',{name:'Latest 15',exact:true}).click();await expect(page).toHaveURL(/records=15/);
  await page.reload({waitUntil:'networkidle'});await expect(page.getByRole('button',{name:'Latest 15',exact:true})).toHaveAttribute('aria-pressed','true');
@@ -29,7 +29,7 @@ try{
  if(a.rows.length){const event=page.waitForEvent('download');await page.getByRole('button',{name:'Export activity',exact:true}).click();assert.equal((await event).suggestedFilename(),'gonka-activity.csv');}else report.skipped.push('Activity CSV interaction: source has no records');
  report.checks.push('Shareable sample, reload state, measure switch and bounded export');
  await page.goto(base+'/participants');await page.getByRole('textbox',{name:'Search participants'}).fill('no-such-member');await page.getByRole('button',{name:'Reset table',exact:true}).click();await expect(page.getByRole('textbox',{name:'Search participants'})).toHaveValue('');report.checks.push('Unified table reset clears filters');
- await page.goto(base+'/learn');await expect(page.getByRole('heading',{name:'Read an OpenBroker bill correctly'})).toBeVisible();report.checks.push('Public versus private billing guide is reachable');
+ await page.goto(base+'/learn');await expect(page.getByRole('heading',{name:'OpenBroker: read the bill, not just the headline rate'})).toBeVisible();report.checks.push('Public versus private billing guide is reachable');
  for(const theme of ['dark','light']){
   await page.goto(base+'/activity');if(await page.locator('html').getAttribute('data-theme')!==theme)await page.getByRole('button',{name:'Toggle color theme'}).click();
   for(const width of [1440,768,390]){

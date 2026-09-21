@@ -1,0 +1,25 @@
+import {it,expect} from 'vitest';
+import {contextPlan,compositionData,reconcileModels} from '../src/core/workload';
+import {emptySnapshot,unavailable} from '../src/core/sources';
+import {apiDefinitions,validateQuery} from '../src/core/api-definitions';
+import type {Model} from '../src/core/types';
+const model:Model={id:'fixture/model',name:'Fixture',slug:'aa',provider:'fixture',context:1000,output:300,price:'0.01',tools:true,reasoning:null,vram:null,ngonka:null,hfRepo:null,hfCommit:null};
+it('budgets combined prompt and reserved output',()=>expect(contextPlan([model],'700','200')[0]).toMatchObject({total:'900',remaining:'100',usedPercent:90,status:'within-reported-limits'}));
+it('permits equality with the published limit',()=>expect(contextPlan([model],'800','200')[0].status).toBe('within-reported-limits'));
+it('detects context overflow',()=>expect(contextPlan([model],'900','200')[0]).toMatchObject({remaining:'-100',contextExceeded:true,status:'exceeds-reported-limit'}));
+it('checks the separate output cap',()=>expect(contextPlan([model],'0','301')[0]).toMatchObject({contextExceeded:false,outputExceeded:true,status:'exceeds-reported-limit'}));
+it('does not turn unknown output into a guaranteed fit',()=>expect(contextPlan([{...model,output:null}],'100','200')[0].status).toBe('limits-incomplete'));
+it('retains unknown context',()=>expect(contextPlan([{...model,context:null}],'100','200')[0]).toMatchObject({remaining:null,usedPercent:null,status:'limits-incomplete'}));
+it('invalid reported limits are unavailable',()=>expect(contextPlan([{...model,context:-1,output:Infinity}],'0','0')[0]).toMatchObject({contextLimit:null,outputLimit:null,status:'limits-incomplete'}));
+it.each(['-1','1e6','1.2','1000000001','',' 5','NaN'])('rejects unsupported token input %s',input=>expect(()=>contextPlan([model],input,'20')).toThrow());
+it('uses exact totals at the permitted bound',()=>expect(contextPlan([model],'1000000000','1000000000')[0].total).toBe('2000000000'));
+function snapshot(){const s=emptySnapshot();s.models=[model];s.sources=['participants','models','governance'].map(id=>({...unavailable(id),status:'recent' as const,error:null}));s.participants=[{address:'fixture-a',weight:'9007199254740993',models:[model.id],nodes:null,nodeIds:[],excluded:false,reason:null},{address:'fixture-b',weight:'2',models:[model.id],nodes:null,nodeIds:[],excluded:true,reason:'fixture'}];return s;}
+it('membership categories are disjoint and complete in the returned scope',()=>expect(compositionData(snapshot()).membership).toEqual({total:2,notMarkedExcluded:1,markedExcluded:1}));
+it('preserves exact weights in overlapping model groups',()=>expect(compositionData(snapshot()).modelSupport[0].weight).toBe('9007199254740995'));
+it('distinguishes empty from missing observations',()=>{const s=snapshot();s.participants=[];expect(compositionData(s).membership?.total).toBe(0);s.sources=[];expect(compositionData(s).membership).toBeNull();expect(compositionData(s).governance).toBeNull();});
+it('records the returned governance window without inventing full history',()=>expect(compositionData(snapshot()).governance).toEqual({returned:0,states:[]}));
+it('independent fresh model fields replace prior values',()=>expect(reconcileModels([model],[{...model,price:'0.02',tools:false}],{capabilities:true,pricing:true})[0]).toMatchObject({price:'0.02',tools:false}));
+it('retains only failed source fields',()=>expect(reconcileModels([model],[{...model,price:null,tools:false}],{capabilities:true,pricing:false})[0]).toMatchObject({price:'0.01',tools:false}));
+it('does not resurrect a removed catalog model',()=>expect(reconcileModels([model],[],{capabilities:false,pricing:false})).toEqual([]));
+it('new models have no guessed fallback capabilities',()=>expect(reconcileModels([model],[{...model,id:'new',context:null,price:null}],{capabilities:false,pricing:false})[0]).toMatchObject({context:null,price:null}));
+it('context endpoint rejects repeated and oversized parameters',()=>{const d=apiDefinitions.find(x=>x.id==='context-plan')!;expect(validateQuery(d,new URLSearchParams())).toEqual({prompt:'8000',completion:'2000'});expect(()=>validateQuery(d,new URLSearchParams('prompt=1&prompt=2'))).toThrow();expect(()=>validateQuery(d,new URLSearchParams('prompt=1000000001'))).toThrow();});
