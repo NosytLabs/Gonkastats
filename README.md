@@ -54,7 +54,7 @@ Tested application commit: `d726e738a0c27c7f2dc8ce68849a23a0a11e88d4`.
 
 Locked installation, the complete unit/contract suite, strict TypeScript, ESLint, production build, public-source capture and **all four browser scripts passed**. Evidence includes 35 baseline page checks, 23 baseline API scenarios, new activity/context/composition API checks, and 31 interaction/check groups across the scripts. **31 selected page/theme/viewport accessibility scans returned zero axe violations.** No browser runtime exceptions were reported. Selected desktop/tablet/mobile overflow checks passed.
 
-These are bounded automated tests, not an exhaustive accessibility, security or load certification. See [audit evidence](docs/AUDIT-VERIFICATION.md). Earlier records in `docs/CHARTS-RELEASE.md`, `docs/FINALIZATION.md` and `docs/VERIFICATION.md` are historical baselines. Final documentation and temporary-workflow cleanup leave tested application code unchanged.
+These are bounded automated tests, not an exhaustive accessibility, security or load certification. See [audit evidence](docs/AUDIT-VERIFICATION.md) and the [chart/content release record](docs/CHARTS-RELEASE.md). Superseded planning and intermediate verification notes have been removed so the repository keeps one current audit trail.
 
 ## Accuracy and limitations
 
