@@ -1,6 +1,7 @@
+import {hasObservation,filterModels} from '@/core/insights';
+import {activityData} from '@/core/audit';
 import {createHash} from 'node:crypto';
 import {contextPlan,compositionData} from '@/core/workload';
-import {filterModels} from '@/core/insights';
 import {getSnapshot,detail,epochDiff} from '@/core/service';
 import {history} from '@/db/store';
 import {apiDefinitions,validateQuery} from '@/core/api-definitions';
@@ -21,6 +22,7 @@ export async function GET(request:Request,{params}:{params:Promise<{resource:str
  try{const s=await getSnapshot();let data:unknown,status=200,pagination:unknown;const meta:{schemaVersion:string;generatedAt:string;mode:string;sources:typeof s.sources;pagination?:unknown;coverage?:string}={schemaVersion:'1',generatedAt:s.generatedAt,mode:s.mode,sources:s.sources};
  const page=<T,>(rows:T[],text:(row:T)=>string)=>{const selected=rows.filter(r=>!query.q||text(r).toLowerCase().includes(query.q.toLowerCase())),offset=Number(query.offset??0),limit=Number(query.limit??20);const result=selected.slice(offset,offset+limit);pagination={offset,limit,returned:result.length,retainedMatches:selected.length};return result;};
  switch(resource){
+ case 'activity':data={...activityData(s.blocks,Number(query.limit??30)),...(!hasObservation(s,'blocks')?{transactions:null,gas:null,missingHeights:null,spanSeconds:null,histogram:[]}:{}),source:s.sources.find(x=>x.id==='blocks'),scope:'selected indexed records'};break;
  case 'overview':data=s;break;
  case 'metrics':data=metricData(s);break;
  case 'models':{const rows=filterModels(s.models,{q:'',capability:query.capability??'all',sort:query.sort??'name',view:'table',compare:[]});data=page(rows,m=>m.id);break;}

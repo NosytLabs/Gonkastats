@@ -6,11 +6,11 @@ import {chromium,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 await mkdir('artifacts/screenshots',{recursive:true});
 const log=createWriteStream('artifacts/workload-server.log');
-const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port','3102'],{env:{...process.env,DATA_MODE:'snapshot',NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});server.stdout.pipe(log);server.stderr.pipe(log);
-const base='http://127.0.0.1:3102';let browser;const report={checks:[],accessibility:[],errors:[],startedAt:new Date().toISOString()};
+const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port','3103'],{env:{...process.env,DATA_MODE:'snapshot',NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});server.stdout.pipe(log);server.stderr.pipe(log);
+const base='http://127.0.0.1:3103';let browser;const report={checks:[],accessibility:[],errors:[],startedAt:new Date().toISOString()};
 try{
  let ready=false;for(let i=0;i<60;i++){try{if((await fetch(base+'/api/v1/openapi')).ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,1000));}assert.ok(ready);
- const schema=await (await fetch(base+'/api/v1/openapi')).json();assert.equal(Object.keys(schema.paths).length,20);
+ const schema=await (await fetch(base+'/api/v1/openapi')).json();assert.equal(Object.keys(schema.paths).length,21);
  const r=await fetch(base+'/api/v1/context-plan?prompt=8000&completion=2000');assert.equal(r.status,200);const plan=await r.json();assert.ok(Array.isArray(plan.data.plans));for(const p of plan.data.plans)assert.equal(p.total,'10000');
  for(const query of ['prompt=-1','prompt=1e6','prompt=1000000001','prompt=1&prompt=2','url=https://example.com'])assert.equal((await fetch(base+'/api/v1/context-plan?'+query)).status,400);
  assert.equal((await fetch(base+'/api/v1/context-plan?prompt=&completion=')).status,200);assert.equal((await fetch(base+'/api/v1/context-plan?prompt=0000000000008')).status,200);

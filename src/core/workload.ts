@@ -33,18 +33,8 @@ export function contextPlan(models: Model[], prompt: string, completion: string)
   });
 }
 
-/** Each source is independent: a failed catalog read must not freeze fresh prices. */
-export function reconcileModels(previous: Model[], next: Model[], observed: {capabilities: boolean; pricing: boolean}): Model[] {
-  const previousById = new Map(previous.map(model => [model.id, model]));
-  return next.map(model => {
-    const old = previousById.get(model.id);
-    if (!old) return model;
-    return {...model,
-      ...(!observed.capabilities ? {context: old.context, output: old.output, vram: old.vram,
-        tools: old.tools, reasoning: old.reasoning, hfRepo: old.hfRepo, hfCommit: old.hfCommit} : {}),
-      ...(!observed.pricing ? {price: old.price, ngonka: old.ngonka} : {})};
-  });
-}
+// One reconciliation implementation serves collection and both test suites.
+export {reconcileModels} from './audit';
 
 export function compositionData(s: Snapshot) {
   const observed = (id: string) => s.sources.some(source => source.id === id && source.status !== 'unavailable');
