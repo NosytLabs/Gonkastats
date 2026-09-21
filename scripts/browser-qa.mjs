@@ -30,7 +30,20 @@ try{
  await page.goto(base+'/cost-lab');const before=await page.getByTestId('cost-tokens').textContent();await page.getByLabel('Number of requests',{exact:true}).fill('2');assert.notEqual(await page.getByTestId('cost-tokens').textContent(),before);const scenario=await checkApi('/api/v1/simulate-cost?prompt=1000000&completion=250000&requests=2&attempts=1.5');assert.equal(scenario.data.tokens,'2500000');await page.screenshot({path:'artifacts/screenshots/cost-lab-1440.png',fullPage:true});report.interactions.push('Cost inputs recalculate; API returns matching exact workload');
  await page.goto(base+'/agents');await page.screenshot({path:'artifacts/screenshots/agents-1440.png',fullPage:false});
  await page.goto(base+'/hardware');await page.screenshot({path:'artifacts/screenshots/hardware-1440.png',fullPage:false});
- if(snapshot.participants.length){const address=snapshot.participants[0].address;await page.goto(base+'/participants/'+address);await page.getByRole('button',{name:'Add to watchlist',exact:true}).click();await page.goto(base+'/watchlist');assert.equal(await page.locator('tbody tr').count(),1);await page.getByRole('button',{name:'Remove from watchlist',exact:true}).click();await page.getByText('Keep an eye on the compute you care about',{exact:true}).waitFor();report.interactions.push('Local watchlist save, display, and remove');}
+ if(snapshot.participants.length){
+  const address=snapshot.participants[0].address;
+  await page.goto(base+'/participants/'+address);
+  await page.getByRole('button',{name:'Add to watchlist',exact:true}).click();
+  await page.waitForFunction(address=>JSON.parse(localStorage.getItem('gonkastats-watchlist')??'[]').includes(address),address);
+  await page.goto(base+'/watchlist');
+  // The watchlist intentionally reads localStorage only after hydration.
+  // Wait for its saved-row UI; count() alone does not auto-retry.
+  await page.getByRole('button',{name:'Remove from watchlist',exact:true}).waitFor({state:'visible'});
+  assert.equal(await page.locator('tbody tr').count(),1);
+  await page.getByRole('button',{name:'Remove from watchlist',exact:true}).click();
+  await page.getByText('Keep an eye on the compute you care about',{exact:true}).waitFor();
+  report.interactions.push('Local watchlist save, display, and remove');
+ }
  await page.goto(base+'/token');await page.waitForURL('**/tokenomics');report.interactions.push('Conventional token route alias');
  await page.goto(base+'/');assert.equal(await page.getByRole('button',{name:'Snapshot',exact:true}).isDisabled(),true);assert.ok((await page.locator('.observation-bar').textContent()).includes(snapshot.generatedAt.slice(0,10)));report.interactions.push('Snapshot refresh is disabled and full observation date is visible');
  await page.getByRole('button',{name:'Search anything',exact:true}).click();await page.getByRole('textbox',{name:'Search pages and chain data'}).fill('Epoch diff');await page.getByRole('dialog').getByRole('link',{name:'Epoch diff',exact:true}).click();await page.waitForURL('**/epoch-diff');report.interactions.push('Global command search navigates to an actual route');
