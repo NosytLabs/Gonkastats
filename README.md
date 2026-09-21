@@ -14,11 +14,11 @@ npm run dev
 
 Open `http://localhost:3000`. Core public sources require no wallet or API key. The server performs bounded public reads through the managed Gonka RPC, OpenBroker model catalog, and Proxy pricing/capability APIs.
 
-A lockfile is generated during the initial verification build and included in its source artifact; it must be committed before a reproducible release. Before that initial lock is present, use `npm install` once instead of `npm ci`.
+The dependency lockfile is committed. Use `npm ci` so local and CI builds use the same versions.
 
 ## What is implemented
 
-Overview, declared compute membership, GPU registrations matched to epoch ML nodes, epoch timelines, participant/model pages, indexed block explorer and validated lookups, current protocol parameters, governance, source health, and source-attributed ecosystem links.
+Overview, declared compute membership, GPU registrations matched to epoch ML nodes, epoch timelines, participant/model pages, a browser-local watchlist, a dedicated hardware table, a community directory, privacy/about pages, indexed block explorer and validated lookups, current protocol parameters, governance, source health, and source-attributed ecosystem links.
 
 Distinctive tools: **Cost Lab** (exact API/UI-shared arithmetic), **Epoch Diff** (real historical membership queries), **Signal Desk** (deterministic evidence), **Agent Workbench** (runtime-discovered RPC catalog), and an interactive grouped REST reference with actual request execution.
 
@@ -41,7 +41,7 @@ npm run snapshot
 DATA_MODE=snapshot npm run dev
 ```
 
-This records real public responses into the git-ignored `data/snapshot.json`. Snapshot mode is prominently labelled. It does not pretend to refresh or enable live lookups.
+This records real public responses into the git-ignored `data/snapshot.json`. Snapshot mode is prominently labelled. Its refresh control is disabled, the complete UTC observation date is shown, and live lookups are unavailable in snapshot mode.
 
 ## Optional history
 
@@ -72,4 +72,6 @@ The workflow is bounded, cancels superseded runs, and stores evidence for seven 
 
 Deploy as a Node.js Next.js application or use the included Dockerfile. Public analytics need no secret environment variables. Optional PostgreSQL and provider integrations should only be provisioned with operator authorization. GitHub Pages alone cannot run this server/API.
 
-See `docs/IMPLEMENTATION.md` for design/engineering rulings. Refer to actual build artifacts and commit checks for verification status; this README does not assert a run passed.
+The connected deployment action was not available during verification; no publicly hosted deployment is claimed. A tested Linux production runtime and source archive are included in the Actions artifacts.
+
+See `docs/IMPLEMENTATION.md` for design/engineering rulings and `docs/VERIFICATION.md` for evidence and boundaries. Refer to actual build artifacts and commit checks for current verification status.
