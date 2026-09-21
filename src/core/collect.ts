@@ -1,0 +1,25 @@
+import {z} from 'zod';
+import {readJSON,configuredOrigin} from './http';
+import {epochData,participantData,blockData,proposalData,modelData,statsData,catalogData,hardwareData,record,scalar} from './normalize';
+import {registry,emptySnapshot,unavailable,ageSnapshot} from './sources';
+import {exponentDecimal,ngnk} from './metrics';
+import type {Snapshot} from './types';
+const prefix='/chain-api/productscience/inference/inference/';
+export async function collect(previous?:Snapshot):Promise<Snapshot>{const s=previous?structuredClone(previous):emptySnapshot();s.mode='live';s.generatedAt=new Date().toISOString();const rpc=configuredOrigin('GONKA_RPC_URL','https://rpc.gonka.gg'),sourceMap=new Map(s.sources.map(x=>[x.id,x])),raw:Record<string,unknown>={};
+async function read(id:string,url:string,apply:(d:unknown)=>void){try{const data=await readJSON(url,id==='hardware'?15000:8000,id==='hardware'?8000000:2000000);apply(data);raw[id]=data;const def=registry.find(x=>x.id===id)!;sourceMap.set(id,{id,name:def.name,url,scope:def.scope,coverage:def.coverage,status:'recent',fetchedAt:new Date().toISOString(),sourceTime:null,ttl:id==='hardware'?3600:id==='pricing'?600:300,error:null});}catch(error){const old=sourceMap.get(id),message=error instanceof Error?error.message:'Unknown source error';sourceMap.set(id,old&&old.status!=='unavailable'?{...old,status:'stale',error:message}:{...unavailable(id,message),url});}}
+await read('epoch',rpc+'/v1/epochs/latest',d=>{s.epoch=epochData(d);});const now=Math.floor(Date.now()/300000)*300000,from=now-86400000;
+await Promise.all([
+read('blocks',rpc+'/api/ch/blocks?limit=60',d=>{s.blocks=blockData(d);}),
+read('models','https://api.openbroker.gonka.gg/v1/models',d=>{modelData(d,null,null);}),
+read('capabilities','https://api.proxy.gonka.gg/api/models/capabilities',d=>{z.object({models:z.array(record)}).parse(d);}),
+read('pricing','https://api.proxy.gonka.gg/api/pricing',d=>{const p=z.object({gonka_usd:scalar,fx_updated_at:z.string(),models:z.array(record)}).parse(d);s.fx=p.gonka_usd;s.fxAt=p.fx_updated_at;}),
+read('params',rpc+prefix+'params',d=>{const p=z.object({params:record}).parse(d).params,result:Record<string,string>={};for(const group of ['epoch_params','devshard_escrow_params','tokenomics_params','bitcoin_reward_params','collateral_params']){let fields=record.parse(p[group]);if(group==='epoch_params'&&fields.epoch_params)fields=record.parse(fields.epoch_params);for(const [key,value] of Object.entries(fields)){if(['string','number','boolean'].includes(typeof value))result[group+'.'+key]=String(value);else if(value&&typeof value==='object'&&'value' in value&&'exponent' in value){const e=z.object({value:scalar,exponent:z.coerce.number()}).parse(value);result[group+'.'+key]=exponentDecimal(e);}}}s.protocol=result;}),
+read('supply',rpc+'/chain-api/cosmos/bank/v1beta1/supply/by_denom?denom=ngonka',d=>{const p=z.object({amount:z.object({denom:z.literal('ngonka'),amount:scalar})}).parse(d);s.totalSupply=ngnk(p.amount.amount);}),
+read('tokenomics',rpc+prefix+'tokenomics_data',d=>{const p=z.object({tokenomics_data:z.record(z.string(),scalar)}).parse(d);s.tokenomics=Object.fromEntries(Object.entries(p.tokenomics_data).map(([k,v])=>[k,ngnk(v)]));}),
+read('community',rpc+'/chain-api/cosmos/distribution/v1beta1/community_pool',d=>{const p=z.object({pool:z.array(z.object({denom:z.string(),amount:scalar}))}).parse(d),native=p.pool.find(x=>x.denom==='ngonka');s.communityPool=native?ngnk(native.amount):null;}),
+read('governance',rpc+'/chain-api/cosmos/gov/v1/proposals?pagination.limit=20&pagination.reverse=true',d=>{s.proposals=proposalData(d);}),
+read('stats',rpc+`/v1/stats/models?time_from=${from}&time_to=${now}`,d=>{s.stats=statsData(d);s.statsWindow={from:new Date(from).toISOString(),to:new Date(now).toISOString()};}),
+read('catalog',rpc+'/api/endpoints',d=>{s.endpoints=catalogData(d);const p=record.parse(d);s.catalogAuth=p.auth?JSON.stringify(p.auth):null;})]);
+if(s.epoch){if(previous?.epoch?.id!==s.epoch.id){s.participants=[];s.hardware=[];sourceMap.delete('participants');sourceMap.delete('hardware');}await read('participants',rpc+`/v1/epochs/${s.epoch.id}/participants`,d=>{const p=record.parse(d);s.participants=participantData(d);s.validators=Array.isArray(p.validators)?p.validators.length:null;});}
+const oldHardware=sourceMap.get('hardware');if(s.participants.length&&(!oldHardware||previous?.epoch?.id!==s.epoch?.id||Date.now()-Date.parse(oldHardware.fetchedAt)>3600000)){await read('hardware',rpc+prefix+'hardware_nodes_all',d=>{s.hardware=hardwareData(d,s.participants);});}
+if(raw.models)s.models=modelData(raw.models,raw.capabilities,raw.pricing);const price=sourceMap.get('pricing');if(price&&s.fxAt)price.sourceTime=s.fxAt;const blocks=sourceMap.get('blocks');if(blocks&&s.blocks.length)blocks.sourceTime=s.blocks[0].time;s.sources=registry.map(d=>sourceMap.get(d.id)??unavailable(d.id));return ageSnapshot(s);}
