@@ -1,0 +1,3 @@
+.resource-card>.badge{margin-left:12px;vertical-align:top}.site-footer>div{flex-wrap:wrap}
+/* Inline links remain identifiable in every theme and without color vision. */
+.empty p a{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
