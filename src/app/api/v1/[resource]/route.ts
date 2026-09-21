@@ -1,3 +1,5 @@
+import {hasObservation} from '@/core/insights';
+import {activityData} from '@/core/audit';
 import {createHash} from 'node:crypto';
 import Decimal from 'decimal.js';
 import {getSnapshot,detail,epochDiff} from '@/core/service';
@@ -20,6 +22,7 @@ export async function GET(request:Request,{params}:{params:Promise<{resource:str
  try{const s=await getSnapshot();let data:unknown,status=200,pagination:unknown;const meta:{schemaVersion:string;generatedAt:string;mode:string;sources:typeof s.sources;pagination?:unknown;coverage?:string}={schemaVersion:'1',generatedAt:s.generatedAt,mode:s.mode,sources:s.sources};
  const page=<T,>(rows:T[],text:(row:T)=>string)=>{const selected=rows.filter(r=>!query.q||text(r).toLowerCase().includes(query.q.toLowerCase())),offset=Number(query.offset??0),limit=Number(query.limit??20);const result=selected.slice(offset,offset+limit);pagination={offset,limit,returned:result.length,retainedMatches:selected.length};return result;};
  switch(resource){
+ case 'activity':data={...activityData(s.blocks,Number(query.limit??30)),...(!hasObservation(s,'blocks')?{transactions:null,gas:null,missingHeights:null,histogram:[]}:{}),source:s.sources.find(x=>x.id==='blocks'),scope:'selected indexed records'};break;
  case 'overview':data=s;break;
  case 'metrics':data=metricData(s);break;
  case 'models':{let rows=s.models.filter(m=>!query.capability||(query.capability==='tools'?m.tools===true:m.reasoning===true));rows=[...rows].sort((a,b)=>query.sort==='context'?(b.context??-1)-(a.context??-1):query.sort==='price'?a.price===null?1:b.price===null?-1:new Decimal(a.price).cmp(b.price):a.name.localeCompare(b.name));data=page(rows,m=>m.id);break;}

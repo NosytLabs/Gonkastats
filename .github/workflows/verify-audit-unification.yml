@@ -1,0 +1,59 @@
+name: Verify requested audit
+# Temporary branch-only verification; remove before merge. No recurring jobs.
+on:
+  push:
+    branches: [fix/audit-unification]
+permissions:
+  contents: read
+concurrency:
+  group: gonkastats-audit-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Unit tests
+        run: npm test
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Build production app
+        run: npm run build
+      - name: Capture bounded public observations
+        run: npm run snapshot
+      - name: Package local preview runtime
+        run: |
+          mkdir -p artifacts .next/standalone/.next .next/standalone/data
+          cp -R .next/static .next/standalone/.next/static
+          cp -R public .next/standalone/public
+          cp data/snapshot.json .next/standalone/data/snapshot.json
+          tar -C .next/standalone -czf artifacts/GonkaStats-preview-runtime.tar.gz .
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser verification
+        run: npm run test:e2e
+      - name: Prepare source archive
+        if: always()
+        run: |
+          mkdir -p artifacts
+          cp package-lock.json artifacts/package-lock.json
+          tar --exclude=.git --exclude=node_modules --exclude=.next --exclude=artifacts --exclude=.env.local --exclude=.env --exclude=.data -czf artifacts/GonkaStats-source.tar.gz .
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: gonkastats-audit
+          path: artifacts/
+          retention-days: 7
+          if-no-files-found: warn

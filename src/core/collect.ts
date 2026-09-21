@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {reconcileModels} from './audit';
 import {readJSON,configuredOrigin} from './http';
 import {epochData,participantData,blockData,proposalData,modelData,statsData,catalogData,hardwareData,record,scalar} from './normalize';
 import {registry,emptySnapshot,unavailable,ageSnapshot} from './sources';
@@ -22,4 +23,6 @@ read('stats',rpc+`/v1/stats/models?time_from=${from}&time_to=${now}`,d=>{s.stats
 read('catalog',rpc+'/api/endpoints',d=>{s.endpoints=catalogData(d);const p=record.parse(d);s.catalogAuth=p.auth?JSON.stringify(p.auth):null;})]);
 if(s.epoch){if(previous?.epoch?.id!==s.epoch.id){s.participants=[];s.hardware=[];sourceMap.delete('participants');sourceMap.delete('hardware');}await read('participants',rpc+`/v1/epochs/${s.epoch.id}/participants`,d=>{const p=record.parse(d);s.participants=participantData(d);s.validators=Array.isArray(p.validators)?p.validators.length:null;});}
 const oldHardware=sourceMap.get('hardware');if(s.participants.length&&(!oldHardware||previous?.epoch?.id!==s.epoch?.id||Date.now()-Date.parse(oldHardware.fetchedAt)>3600000)){await read('hardware',rpc+prefix+'hardware_nodes_all',d=>{s.hardware=hardwareData(d,s.participants);});}
-if(raw.models)s.models=modelData(raw.models,raw.capabilities,raw.pricing);const price=sourceMap.get('pricing');if(price&&s.fxAt)price.sourceTime=s.fxAt;const capabilities=sourceMap.get('capabilities');if(capabilities&&raw.capabilities){const updated=record.parse(raw.capabilities).updated_at;if(typeof updated==='string')capabilities.sourceTime=updated;}const blocks=sourceMap.get('blocks');if(blocks&&s.blocks.length)blocks.sourceTime=s.blocks[0].time;s.sources=registry.map(d=>sourceMap.get(d.id)??unavailable(d.id));return ageSnapshot(s);}
+// Reconcile per-source fields even when one of the three providers fails.
+const catalog=raw.models??{data:s.models.map(m=>({id:m.id,owned_by:m.provider}))};
+s.models=reconcileModels(s.models,modelData(catalog,raw.capabilities,raw.pricing),{capabilities:raw.capabilities!==undefined,pricing:raw.pricing!==undefined});const price=sourceMap.get('pricing');if(price&&s.fxAt)price.sourceTime=s.fxAt;const capabilities=sourceMap.get('capabilities');if(capabilities&&raw.capabilities){const updated=record.parse(raw.capabilities).updated_at;if(typeof updated==='string')capabilities.sourceTime=updated;}const blocks=sourceMap.get('blocks');if(blocks&&s.blocks.length)blocks.sourceTime=s.blocks[0].time;s.sources=registry.map(d=>sourceMap.get(d.id)??unavailable(d.id));s.generatedAt=new Date().toISOString();return ageSnapshot(s);}
