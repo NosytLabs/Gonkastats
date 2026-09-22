@@ -1,5 +1,5 @@
-import Link from 'next/link';
 'use client';
+import Link from 'next/link';
 import {Activity,Cpu,GitBranch,Layers,Radio,ShieldCheck} from 'lucide-react';
 import {Badge,DataTable,Empty,External,Metric,Panel,Proof} from '@/components/ui';
 import {buildProtocolSnapshot} from '@/core/protocol';
