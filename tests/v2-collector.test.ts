@@ -1,0 +1,36 @@
+import {it,expect} from 'vitest';
+import {collect} from '../src/core/collect';
+import {readJSON} from '../src/core/http';
+import {vi,afterEach} from 'vitest';
+vi.mock('../src/core/http',()=>({configuredOrigin:()=> 'https://rpc.gonka.gg',readJSON:vi.fn()}));
+afterEach(()=>vi.resetAllMocks());
+it('collects protocol model sets versions DevShard approvals and structured catalog total independently',async()=>{
+  vi.mocked(readJSON).mockImplementation(async (url:string)=>{
+    if(url.endsWith('/v1/epochs/latest'))return {block_height:105,latest_epoch:{index:7},phase:'Inference',epoch_stages:{poc_start:100,poc_validation_start:101,poc_validation_end:102,set_new_validators:103,next_poc_start:110}};
+    if(url.includes('/api/ch/blocks'))return {blocks:[]};
+    if(url==='https://api.openbroker.gonka.gg/v1/models')return {data:[{id:'active/model'}]};
+    if(url.endsWith('/v1/models'))return {data:[{id:'active/model'}]};
+    if(url.endsWith('/v1/governance/models'))return {models:[{id:'active/model',v_ram:80},{id:'registered/model',v_ram:160}]};
+    if(url.endsWith('/v1/versions'))return {node_version:{application_name:'inference-chain',version:'v0.2.15',commit:'abc'},timestamp:'2026-09-22T05:12:18Z'};
+    if(url.endsWith('/api/models/capabilities'))return {models:[]};
+    if(url.endsWith('/api/pricing'))return {gonka_usd:'0.2',fx_updated_at:'2026-09-22T05:00:00Z',models:[]};
+    if(url.endsWith('/inference/params'))return {params:{poc_params:{models:[{model_id:'active/model',seq_len:'1024',weight_scale_factor:{value:'3024',exponent:-4},penalty_start_epoch:'278'}]},devshard_escrow_params:{token_price:'10',approved_versions:[{name:'v5',binary:'https://example.test/v5.zip',sha256:'abc'}]}}};
+    if(url.includes('/supply/by_denom'))return {amount:{denom:'ngonka',amount:'1'}};
+    if(url.endsWith('/tokenomics_data'))return {tokenomics_data:{}};
+    if(url.includes('/community_pool'))return {pool:[]};
+    if(url.includes('/gov/v1/proposals'))return {proposals:[]};
+    if(url.includes('/v1/stats/models'))throw new Error('stats unavailable');
+    if(url.endsWith('/api/endpoints'))return {total_endpoints:354,groups:[{label:'RPC',endpoints:[{method:'POST',path:'/chain-rpc/broadcast_tx_sync',description:'broadcast'}]}]};
+    if(url.includes('/participants'))return {active_participants:{participants:[]},excluded_participants:[]};
+    throw new Error('unexpected '+url);
+  });
+  const s:any=await collect();
+  expect(s.networkModels).toEqual(['active/model']);
+  expect(s.governanceModels.map((x:any)=>x.id)).toEqual(['active/model','registered/model']);
+  expect(s.pocModels).toEqual([{id:'active/model',seqLen:'1024',weightScaleFactor:'0.3024',penaltyStartEpoch:'278'}]);
+  expect(s.devshardVersions).toEqual([{name:'v5',binary:'https://example.test/v5.zip',sha256:'abc'}]);
+  expect(s.versions['node_version.version']).toBe('v0.2.15');
+  expect(s.endpointDeclaredTotal).toBe(354);
+  expect(s.endpoints[0]).toMatchObject({namespace:'chain-rpc',readOnly:false});
+  expect(s.sources.find((x:any)=>x.id==='stats')?.status).toBe('unavailable');
+});
