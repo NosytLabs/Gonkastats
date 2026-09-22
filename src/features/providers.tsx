@@ -7,7 +7,6 @@ import {providerMetadata} from '@/core/providers';
 import type {Snapshot} from '@/core/types';
 import {ObservationBar,PageHeading} from './shared';
 
-const titles={openbroker:'OpenBroker',proxy:'Proxy by gonka.gg',feather:'Feather'} as const;
 export function ProviderDirectory({s,id}:{s:Snapshot;id?:string}){
  const rows=providerMetadata(s),selected=id?rows.find(row=>row.id===id):null;
  if(id&&!selected)return <><PageHeading eyebrow="ECOSYSTEM / PROVIDERS" title="Provider not found" description="This provider is not in the GonkaStats provider registry." snapshot={s}/><Empty>Choose OpenBroker, Proxy, or Feather.</Empty></>;
