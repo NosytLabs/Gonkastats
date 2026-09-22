@@ -120,8 +120,8 @@ describe('buildProtocolSnapshot', () => {
   });
 
   it('accepts retained v1 snapshots that predate version metadata',()=>{
-    const s=emptySnapshot() as typeof emptySnapshot extends (...args:any)=>infer R ? R : never;
-    delete (s as Partial<typeof s>).versions;
+    const s:any=emptySnapshot();
+    delete s.versions;
     expect(buildProtocolSnapshot(s).versions).toEqual({});
   });
 });
