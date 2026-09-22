@@ -1,3 +1,4 @@
+import Link from 'next/link';
 'use client';
 import {Activity,Cpu,GitBranch,Layers,Radio,ShieldCheck} from 'lucide-react';
 import {Badge,DataTable,Empty,External,Metric,Panel,Proof} from '@/components/ui';
@@ -45,6 +46,6 @@ export function ProtocolRadar({s}:{s:Snapshot}){
  <Panel title="Current chain parameters" description="Exact scalar values from current inference params. Existing escrows or historical epochs can retain older terms." footer={<Proof snapshot={s} ids={['params']}/>}>
   {paramsObserved&&parameters.length?<DataTable rows={parameters} rowKey={r=>r.key} exportName="protocol parameters" pageSize={12} columns={[{key:'parameter',label:'Parameter',value:r=>r.key},{key:'value',label:'Value',value:r=>r.value}]}/>:<Empty>Current parameter data is unavailable.</Empty>}
  </Panel>
- <div className="reader-note"><GitBranch size={18}/><div><strong>Proposal is not execution.</strong> Governance pages show proposals and tallies separately; this page emphasizes state actually returned by current chain/API sources.</div><a href="/governance">Inspect governance</a></div>
+ <div className="reader-note"><GitBranch size={18}/><div><strong>Proposal is not execution.</strong> Governance pages show proposals and tallies separately; this page emphasizes state actually returned by current chain/API sources.</div><Link href="/governance">Inspect governance</Link></div>
  </div>;
 }
