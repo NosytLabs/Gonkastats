@@ -1,0 +1,5 @@
+import {it,expect} from 'vitest';
+import {providerMetadata} from '../src/core/providers';
+import {emptySnapshot,unavailable} from '../src/core/sources';
+it('marks only successfully observed provider layers observed',()=>{const s=emptySnapshot();s.sources=[{...unavailable('models'),status:'recent',error:null},{...unavailable('capabilities'),status:'recent',error:null},{...unavailable('pricing'),status:'unavailable'}];const rows=providerMetadata(s);expect(rows.find(x=>x.id==='openbroker')?.status).toBe('observed');expect(rows.find(x=>x.id==='proxy')?.status).toBe('observed');expect(rows.find(x=>x.id==='feather')?.status).toBe('not-configured');});
+it('does not call documented providers observed when all their sources are unavailable',()=>{const s=emptySnapshot();s.sources=['models','capabilities','pricing'].map(id=>unavailable(id));const rows=providerMetadata(s);expect(rows.find(x=>x.id==='openbroker')?.status).toBe('documented');expect(rows.find(x=>x.id==='proxy')?.status).toBe('documented');});
