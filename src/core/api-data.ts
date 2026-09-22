@@ -1,6 +1,9 @@
 import {historyWithGaps} from './audit';
 import type {Snapshot,HistoryPoint} from './types';
 import {hasObservation,overviewFacts} from './insights';
+import {buildProtocolSnapshot} from './protocol';
+import {sourceDependents} from './source-dependencies';
+import {providerMetadata} from './providers';
 export function metricData(s:Snapshot){const facts=overviewFacts(s);return [
 {id:'gnk_conversion_reference',label:'GNK conversion reference',value:hasObservation(s,'pricing')?s.fx:null,unit:'USD/GNK',sourceId:'pricing',scope:'provider',definition:'Proxy conversion reference, not an executed trade.'},
 {id:'issued_supply',label:'Native issued supply',value:hasObservation(s,'supply')?s.totalSupply:null,unit:'GNK',sourceId:'supply',scope:'chain',definition:'Issued native bank supply; not circulating or maximum supply.'},
@@ -13,3 +16,7 @@ export function metricData(s:Snapshot){const facts=overviewFacts(s);return [
 ];}
 export function healthData(s:Snapshot){const usable=s.sources.filter(x=>x.status!=='unavailable').length,recent=s.sources.filter(x=>x.status==='recent').length;return {status:usable===0?'unavailable':s.mode==='snapshot'?'snapshot':recent===s.sources.length?'ok':'degraded',mode:s.mode,usableSources:usable,recentSources:recent,totalSources:s.sources.length,observationTime:s.generatedAt,history:process.env.DATABASE_URL?'configured':'not-configured'};}
 export function chartData(points:HistoryPoint[],metric:'weight'|'price'|'participants',maxPoints:number){const rawCount=points.length;points=historyWithGaps(points);const size=Math.max(1,Math.ceil(points.length/maxPoints));const rows:{at:string;value:string|null;observations:number;containsGap:boolean}[]=[];for(let i=0;i<points.length;i+=size){const bucket=points.slice(i,i+size),last=bucket[bucket.length-1],gap=bucket.some(p=>p[metric]===null);rows.push({at:last.at,value:gap?null:String(last[metric]),observations:bucket.filter(p=>!p.gap).length,containsGap:gap});}return {metric,unit:metric==='price'?'USD/GNK':metric==='participants'?'members':'declared weight',points:rows,sampling:size===1?'none':'last observed value per bucket; any missing observation preserves a gap',rawPointCount:rawCount,gapPolicy:'Break lines across missing collection intervals longer than 15 minutes',returnedPointCount:rows.length,firstObservation:points[0]?.at??null,lastObservation:points.at(-1)?.at??null};}
+
+export const protocolData=(s:Snapshot)=>buildProtocolSnapshot(s);
+export const sourceHealthData=(s:Snapshot)=>s.sources.map(source=>({...source,usedBy:sourceDependents(source.id)}));
+export const providersData=(s:Snapshot)=>providerMetadata(s);
