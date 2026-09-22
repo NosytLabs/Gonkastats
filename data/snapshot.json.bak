@@ -1,0 +1,5248 @@
+{
+  "version": 1,
+  "generatedAt": "2026-09-22T07:53:33.399Z",
+  "mode": "live",
+  "sources": [
+    {
+      "id": "epoch",
+      "name": "Gonka epoch API",
+      "url": "https://rpc.gonka.gg/v1/epochs/latest",
+      "scope": "chain",
+      "coverage": "Latest epoch and returned stage boundaries.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:29.315Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "participants",
+      "name": "Epoch membership",
+      "url": "https://rpc.gonka.gg/v1/epochs/401/participants",
+      "scope": "chain",
+      "coverage": "Epoch membership, with current exclusions separately marked. Not the live consensus-power distribution.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:31.989Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "blocks",
+      "name": "Indexed blocks",
+      "url": "https://rpc.gonka.gg/api/ch/blocks?limit=60",
+      "scope": "indexer",
+      "coverage": "Latest 60 indexed records. May omit empty blocks; not a complete chain history.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:29.479Z",
+      "sourceTime": "2026-09-22T07:53:17.000Z",
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "models",
+      "name": "OpenBroker catalog",
+      "url": "https://api.openbroker.gonka.gg/v1/models",
+      "scope": "provider",
+      "coverage": "Provider model availability, not independently measured performance.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:30.842Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "networkModels",
+      "name": "Gonka network model list",
+      "url": "https://rpc.gonka.gg/v1/models",
+      "scope": "chain",
+      "coverage": "Models returned by the Gonka API node. Separate from provider availability and governance registration.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:29.718Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "governanceModels",
+      "name": "Governance model registry",
+      "url": "https://rpc.gonka.gg/v1/governance/models",
+      "scope": "chain",
+      "coverage": "Governance-registered model metadata. Registration does not prove current PoC activation or provider availability.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:29.706Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "versions",
+      "name": "Gonka software versions",
+      "url": "https://rpc.gonka.gg/v1/versions",
+      "scope": "chain",
+      "coverage": "Software version metadata returned by the Gonka API node.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:29.743Z",
+      "sourceTime": "2026-09-22T07:53:30Z",
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "capabilities",
+      "name": "Proxy capabilities",
+      "url": "https://api.proxy.gonka.gg/api/models/capabilities",
+      "scope": "provider",
+      "coverage": "Reported registration capabilities. Not measured benchmarks.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:30.135Z",
+      "sourceTime": "2026-09-22T07:49:35Z",
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "pricing",
+      "name": "Proxy pricing and FX",
+      "url": "https://api.proxy.gonka.gg/api/pricing",
+      "scope": "provider",
+      "coverage": "Advertised price and provider conversion reference. Not a market trade or settled cost.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:30.141Z",
+      "sourceTime": "2026-09-22T07:52:35.364898727Z",
+      "ttl": 600,
+      "error": null
+    },
+    {
+      "id": "params",
+      "name": "Inference parameters",
+      "url": "https://rpc.gonka.gg/chain-api/productscience/inference/inference/params",
+      "scope": "chain",
+      "coverage": "Current parameters. Historical escrows retain their creation-time terms.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:29.946Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "supply",
+      "name": "Native token supply",
+      "url": "https://rpc.gonka.gg/chain-api/cosmos/bank/v1beta1/supply/by_denom?denom=ngonka",
+      "scope": "chain",
+      "coverage": "Issued supply, not circulating supply or a maximum supply.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:30.102Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "tokenomics",
+      "name": "Tokenomics counters",
+      "url": "https://rpc.gonka.gg/chain-api/productscience/inference/inference/tokenomics_data",
+      "scope": "chain",
+      "coverage": "Module cumulative counters, not revenue attribution.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:30.254Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "community",
+      "name": "Distribution community pool",
+      "url": "https://rpc.gonka.gg/chain-api/cosmos/distribution/v1beta1/community_pool",
+      "scope": "chain",
+      "coverage": "Native balance in this module pool, not all ecosystem treasury funds.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:30.291Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "governance",
+      "name": "Governance proposals",
+      "url": "https://rpc.gonka.gg/chain-api/cosmos/gov/v1/proposals?pagination.limit=20&pagination.reverse=true",
+      "scope": "chain",
+      "coverage": "Latest 20 proposals in reverse order. Counts refer only to this window.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:30.485Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    },
+    {
+      "id": "stats",
+      "name": "dAPI inference statistics",
+      "url": "https://rpc.gonka.gg/v1/stats/models?time_from=1789977000000&time_to=1790063400000",
+      "scope": "indexer",
+      "coverage": "Last 24 hours as reported by this API. Global completeness is unverified.",
+      "status": "unavailable",
+      "fetchedAt": "2026-09-22T07:53:30.965Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": "Upstream HTTP 500"
+    },
+    {
+      "id": "hardware",
+      "name": "Epoch-matched GPU registrations",
+      "url": "https://rpc.gonka.gg/chain-api/productscience/inference/inference/hardware_nodes_all",
+      "scope": "chain",
+      "coverage": "Current registry entries matched by participant and ML-node ID to declared epoch members, including marked exclusions. Counts are registrations, not independently verified inventory.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:33.398Z",
+      "sourceTime": null,
+      "ttl": 3600,
+      "error": null
+    },
+    {
+      "id": "catalog",
+      "name": "RPC endpoint catalog",
+      "url": "https://rpc.gonka.gg/api/endpoints",
+      "scope": "provider",
+      "coverage": "Discovery metadata, not proof each endpoint works. Read/write methods stay distinct.",
+      "status": "recent",
+      "fetchedAt": "2026-09-22T07:53:30.409Z",
+      "sourceTime": null,
+      "ttl": 300,
+      "error": null
+    }
+  ],
+  "epoch": {
+    "id": 401,
+    "height": 6191013,
+    "phase": "Inference",
+    "start": 6183146,
+    "end": 6198537,
+    "progress": 51.11428757065818,
+    "remaining": 7524,
+    "boundaries": [
+      {
+        "label": "Proof of compute",
+        "height": 6183146
+      },
+      {
+        "label": "Validation",
+        "height": 6183186
+      },
+      {
+        "label": "Validator selection",
+        "height": 6183426
+      },
+      {
+        "label": "Inference",
+        "height": 6183546
+      },
+      {
+        "label": "Next epoch",
+        "height": 6198537
+      }
+    ]
+  },
+  "participants": [
+    {
+      "address": "gonka1scskt6wpnjnumsah6kjphmdu87vjgvcxmn4rxv",
+      "weight": "109053",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 37,
+      "nodeIds": [
+        "DA-LA-2",
+        "DA-LA-3",
+        "DA-LA-4",
+        "DAY-ATRO-1",
+        "DAY-ATRO-2",
+        "DAY-SPU-1",
+        "DAY-SPU-2",
+        "GL-LA-1",
+        "GL-LA-2",
+        "GL-LA-3",
+        "RI-NS-10",
+        "RI-NS-11",
+        "RI-NS-12",
+        "RI-NS-13",
+        "RI-NS-14",
+        "RI-NS-15",
+        "RI-NS-20",
+        "RI-NS-21",
+        "RI-NS-22",
+        "RI-NS-23",
+        "RI-NS-27",
+        "RI-NS-28",
+        "RI-NS-29",
+        "RI-NS-37",
+        "RI-NS-38",
+        "RI-NS-39",
+        "RI-NS-40",
+        "RI-NS-41",
+        "RI-NS-43",
+        "RI-NS-48",
+        "RI-NS-49",
+        "RI-NS-50",
+        "RI-NS-51",
+        "RI-NS-9",
+        "VR-JS-4",
+        "VR-JS-5",
+        "VR-JS-6"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1gvrrhjmy4w4mayvs2s5l23edj8ertcmtd2v4zr",
+      "weight": "100530",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7",
+        "deepseek-ai/DeepSeek-V4-Flash-0731",
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "nodes": 37,
+      "nodeIds": [
+        "AS-LA-1",
+        "AS-LA-2",
+        "AS-LA-3",
+        "AS-LA-4",
+        "DA-LA-5",
+        "GL-LA-4",
+        "ML-GMN-h100-1",
+        "OC-A100-1",
+        "RI-NS-1",
+        "RI-NS-16",
+        "RI-NS-17",
+        "RI-NS-18",
+        "RI-NS-19",
+        "RI-NS-24",
+        "RI-NS-25",
+        "RI-NS-26",
+        "RI-NS-3",
+        "RI-NS-30",
+        "RI-NS-31",
+        "RI-NS-33",
+        "RI-NS-34",
+        "RI-NS-35",
+        "RI-NS-36",
+        "RI-NS-4",
+        "RI-NS-42",
+        "RI-NS-44",
+        "RI-NS-45",
+        "RI-NS-46",
+        "RI-NS-47",
+        "RI-NS-5",
+        "RI-NS-6",
+        "RI-NS-7",
+        "RI-NS-8",
+        "VR-JS-2",
+        "vl-NV-1",
+        "DA-LA-1",
+        "vs-glm-4b200-1"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka16dgkvx7mh609ntkzknckwaskgq9lcdp86j0skk",
+      "weight": "49071",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7",
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "nodes": 7,
+      "nodeIds": [
+        "FTJ-3",
+        "FTJ-5",
+        "FTJ-6",
+        "FTJ-7",
+        "FTJ-8",
+        "FTJ-9",
+        "FTJ-1-1"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1kvmerzu64094dt9t62ea0cp75larh39ulzldum",
+      "weight": "47267",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 6,
+      "nodeIds": [
+        "FTJ-10",
+        "FTJ-14",
+        "FTJ-15",
+        "FTJ-19",
+        "FTJ11",
+        "FTJ12"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka10eg5wakkmc0tee3llwj2qwa67knzk48cht38c5",
+      "weight": "29856",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 9,
+      "nodeIds": [
+        "x13",
+        "x18",
+        "x19",
+        "x22",
+        "x25",
+        "x38",
+        "x43",
+        "x48",
+        "x52"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka18x6wprs8c4x7awjgvn5t0e04fscrrash8rvmw4",
+      "weight": "23101",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 6,
+      "nodeIds": [
+        "w11",
+        "w23",
+        "w3",
+        "w4",
+        "w5",
+        "w6"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1q60h5av2pxe6gz3edmlcvd8p36vtj7r24fm43v",
+      "weight": "19724",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 5,
+      "nodeIds": [
+        "n21",
+        "n23",
+        "n24",
+        "n25",
+        "n26"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1u60wtn9dhadweeuq2gywcpx34fpfnuhmu7w0qq",
+      "weight": "14455",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 4,
+      "nodeIds": [
+        "node6",
+        "node7",
+        "node8",
+        "node9"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1kx9mca3xm8u8ypzfuhmxey66u0ufxhs7nm6wc5",
+      "weight": "10651",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7",
+        "deepseek-ai/DeepSeek-V4-Flash-0731",
+        "zai-org/GLM-5.3-Flash"
+      ],
+      "nodes": 5,
+      "nodeIds": [
+        "node-minimax",
+        "4xB300",
+        "inference-2",
+        "mlnode-2",
+        "mlnode5"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1ajmhqgvkf76hss5xe35kcnntqqhs7r8jz8s939",
+      "weight": "9355",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 2,
+      "nodeIds": [
+        "node207",
+        "node217"
+      ],
+      "excluded": true,
+      "reason": "failed_confirmation_poc"
+    },
+    {
+      "address": "gonka1f90vekylyqvx3u8pdst3mcjv05tg5ux0sl3tts",
+      "weight": "8933",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 2,
+      "nodeIds": [
+        "node903",
+        "node913"
+      ],
+      "excluded": true,
+      "reason": "failed_confirmation_poc"
+    },
+    {
+      "address": "gonka1rqm2u7lxzn7r68y0drcyhag6xnckpsnfmgd53t",
+      "weight": "6484",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 2,
+      "nodeIds": [
+        "x60",
+        "x65"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1ts6k67zt064z87rx9hztm93cd3yh5mkqje6z4c",
+      "weight": "4348",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 1,
+      "nodeIds": [
+        "node731"
+      ],
+      "excluded": true,
+      "reason": "failed_confirmation_poc"
+    },
+    {
+      "address": "gonka1830lqug50lse998x2lakk4pj5ypfumz5pasz0y",
+      "weight": "4306",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 1,
+      "nodeIds": [
+        "node802"
+      ],
+      "excluded": true,
+      "reason": "failed_confirmation_poc"
+    },
+    {
+      "address": "gonka1qwfrtz9c7kcrfkrrlne2pkcye74mj6ce33xdkl",
+      "weight": "3528",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 3,
+      "nodeIds": [
+        "node1",
+        "node2",
+        "node3"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1ym3np7guxart483yfdxnlztuazx22cjt0e4a2p",
+      "weight": "3410",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 2,
+      "nodeIds": [
+        "A18",
+        "A5"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1dkl4mah5erqggvhqkpc8j3qs5tyuetgdy552cp",
+      "weight": "3048",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7",
+        "deepseek-ai/DeepSeek-V4-Flash-0731"
+      ],
+      "nodes": 2,
+      "nodeIds": [
+        "minimax-1",
+        "mlnode-4"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1gvpv7vhk5gyxhmf9u8sc8pw5j8fr6lzalyrmkx",
+      "weight": "2866",
+      "models": [
+        "deepseek-ai/DeepSeek-V4-Flash-0731"
+      ],
+      "nodes": 3,
+      "nodeIds": [
+        "FTJ-141",
+        "FTJ-71",
+        "FTJ-81"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka10thh6z0wvq9c05j4z3f9qtpxxedruqn5ae350k",
+      "weight": "2843",
+      "models": [
+        "deepseek-ai/DeepSeek-V4-Flash-0731"
+      ],
+      "nodes": 1,
+      "nodeIds": [
+        "node831"
+      ],
+      "excluded": true,
+      "reason": "failed_confirmation_poc"
+    },
+    {
+      "address": "gonka1y2a9p56kv044327uycmqdexl7zs82fs5ryv5le",
+      "weight": "2417",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7",
+        "deepseek-ai/DeepSeek-V4-Flash-0731"
+      ],
+      "nodes": 2,
+      "nodeIds": [
+        "node-235b-1",
+        "mlnode-3"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1vjz8csqsr0ph0lv0yylc4auypnzrld7y6l2feu",
+      "weight": "1950",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 1,
+      "nodeIds": [
+        "A22"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1p2lhgng7tcqju7emk989s5fpdr7k2c3ek6h26m",
+      "weight": "1798",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 2,
+      "nodeIds": [
+        "node1",
+        "node2"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1346p2h8dn4kp98c5e93k5q64g0h7vxjxnd55fh",
+      "weight": "1631",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 2,
+      "nodeIds": [
+        "node-mm",
+        "node2"
+      ],
+      "excluded": false,
+      "reason": null
+    },
+    {
+      "address": "gonka1xv27ecufeug00rl4vs34rgmmylz4ev22rc69sq",
+      "weight": "1536",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 1,
+      "nodeIds": [
+        "node1"
+      ],
+      "excluded": true,
+      "reason": "failed_confirmation_poc"
+    },
+    {
+      "address": "gonka1tlvg4kjx7ljd5thgd5fkgh39q6lu8cmxupktgg",
+      "weight": "1456",
+      "models": [
+        "deepseek-ai/DeepSeek-V4-Flash-0731"
+      ],
+      "nodes": 1,
+      "nodeIds": [
+        "node6"
+      ],
+      "excluded": true,
+      "reason": "failed_confirmation_poc"
+    },
+    {
+      "address": "gonka1gyk0aahvr3qeju4zx0nplfreej6cy4jjk8svc5",
+      "weight": "886",
+      "models": [
+        "MiniMaxAI/MiniMax-M2.7"
+      ],
+      "nodes": 1,
+      "nodeIds": [
+        "node2"
+      ],
+      "excluded": false,
+      "reason": null
+    }
+  ],
+  "models": [
+    {
+      "id": "MiniMaxAI/MiniMax-M2.7",
+      "name": "MiniMax-M2.7",
+      "slug": "4d696e694d617841492f4d696e694d61782d4d322e37",
+      "provider": "openbroker",
+      "context": 180000,
+      "output": 16384,
+      "vram": 320,
+      "tools": true,
+      "reasoning": true,
+      "price": "0.001682949",
+      "ngonka": "10",
+      "hfRepo": "MiniMaxAI/MiniMax-M2.7",
+      "hfCommit": "d494266a4affc0d2995ba1fa35c8481cbd84294b"
+    },
+    {
+      "id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "name": "DeepSeek-V4-Flash-0731",
+      "slug": "646565707365656b2d61692f446565705365656b2d56342d466c6173682d30373331",
+      "provider": "openbroker",
+      "context": 400000,
+      "output": 16384,
+      "vram": 280,
+      "tools": true,
+      "reasoning": true,
+      "price": "0.001682949",
+      "ngonka": "10",
+      "hfRepo": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "hfCommit": "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+    },
+    {
+      "id": "zai-org/GLM-5.3-Flash",
+      "name": "GLM-5.3-Flash",
+      "slug": "7a61692d6f72672f474c4d2d352e332d466c617368",
+      "provider": "openbroker",
+      "context": 400000,
+      "output": 16384,
+      "vram": 560,
+      "tools": true,
+      "reasoning": true,
+      "price": "0.001682949",
+      "ngonka": "10",
+      "hfRepo": "zai-org/GLM-5.3-Flash",
+      "hfCommit": "04c4e9e95c5da8862dced7e5056455116f83a7e0"
+    }
+  ],
+  "networkModels": [
+    "MiniMaxAI/MiniMax-M2.7",
+    "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "zai-org/GLM-5.3-Flash"
+  ],
+  "governanceModels": [
+    {
+      "id": "MiniMaxAI/MiniMax-M2.7",
+      "hfRepo": "MiniMaxAI/MiniMax-M2.7",
+      "hfCommit": "d494266a4affc0d2995ba1fa35c8481cbd84294b",
+      "vram": 320,
+      "unitsOfComputePerToken": "10000",
+      "throughputPerNonce": "5000"
+    },
+    {
+      "id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "hfRepo": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "hfCommit": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+      "vram": 280,
+      "unitsOfComputePerToken": "10000",
+      "throughputPerNonce": "1700"
+    },
+    {
+      "id": "moonshotai/Kimi-K2.6",
+      "hfRepo": "moonshotai/Kimi-K2.6",
+      "hfCommit": "5a49d036ab7472b7d5912ded487150ec1358c11d",
+      "vram": 720,
+      "unitsOfComputePerToken": "10000",
+      "throughputPerNonce": "1500"
+    },
+    {
+      "id": "zai-org/GLM-5.2-FP8",
+      "hfRepo": "zai-org/GLM-5.2-FP8",
+      "hfCommit": "70311cfa0158cce7dd2cf5d2e04f68e3fdc3efc1",
+      "vram": 1120,
+      "unitsOfComputePerToken": "10000",
+      "throughputPerNonce": "700"
+    },
+    {
+      "id": "zai-org/GLM-5.3-Flash",
+      "hfRepo": "zai-org/GLM-5.3-Flash",
+      "hfCommit": "04c4e9e95c5da8862dced7e5056455116f83a7e0",
+      "vram": 560,
+      "unitsOfComputePerToken": "10000",
+      "throughputPerNonce": "1500"
+    }
+  ],
+  "pocModels": [
+    {
+      "id": "MiniMaxAI/MiniMax-M2.7",
+      "seqLen": "1024",
+      "weightScaleFactor": "0.3024",
+      "penaltyStartEpoch": "278"
+    },
+    {
+      "id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "seqLen": "1024",
+      "weightScaleFactor": "0.246",
+      "penaltyStartEpoch": "360"
+    },
+    {
+      "id": "zai-org/GLM-5.3-Flash",
+      "seqLen": "1024",
+      "weightScaleFactor": "0.62",
+      "penaltyStartEpoch": "394"
+    }
+  ],
+  "devshardVersions": [
+    {
+      "name": "v3",
+      "binary": "https://github.com/gonka-ai/gonka/releases/download/release%2Fv0.2.13-devshard-v3.0.0/devshardd.zip",
+      "sha256": "ca1294fc8db3f0907a01f362eb4b13665f66d0fd12cfc6f01468b1e27f0bab63"
+    },
+    {
+      "name": "v4",
+      "binary": "https://github.com/gonka-ai/gonka/releases/download/release%2Fv0.2.15-devshard-v4.0.1/devshardd.zip",
+      "sha256": "c80d098941fd18caf0159910c1b6c23140fce871f7ce903ceaad134cfe626b25"
+    },
+    {
+      "name": "v4.1",
+      "binary": "https://github.com/gonka-ai/gonka/releases/download/release%2Fdevshard%2Fv4.1.0/devshardd.zip",
+      "sha256": "69e58e6b6c124fc218d3ed1e38d7853c0a8ce20df660d348fc28ccd249a1ccf1"
+    },
+    {
+      "name": "v5",
+      "binary": "https://github.com/gonka-ai/gonka/releases/download/devshard%2Fv5.0.1/devshardd.zip",
+      "sha256": "e4dcde3990a3af62efcf6af5da8557b05ed3a98ede4a343aab020986a68a2012"
+    }
+  ],
+  "versions": {
+    "api_version.application_name": "<appd>",
+    "api_version.commit": "",
+    "api_version.version": "",
+    "node_version.application_name": "inference-chain",
+    "node_version.commit": "4d687ed6782bcea3931d2d9135bf322f84e190ab",
+    "node_version.version": "v0.2.15",
+    "timestamp": "2026-09-22T07:53:30Z"
+  },
+  "endpointDeclaredTotal": 354,
+  "blocks": [
+    {
+      "height": 6191012,
+      "time": "2026-09-22T07:53:17.000Z",
+      "transactions": 1,
+      "gas": "169779"
+    },
+    {
+      "height": 6191010,
+      "time": "2026-09-22T07:53:06.000Z",
+      "transactions": 1,
+      "gas": "169789"
+    },
+    {
+      "height": 6191009,
+      "time": "2026-09-22T07:53:00.000Z",
+      "transactions": 2,
+      "gas": "130668"
+    },
+    {
+      "height": 6191008,
+      "time": "2026-09-22T07:52:54.000Z",
+      "transactions": 2,
+      "gas": "322479"
+    },
+    {
+      "height": 6191006,
+      "time": "2026-09-22T07:52:43.000Z",
+      "transactions": 2,
+      "gas": "227182"
+    },
+    {
+      "height": 6191005,
+      "time": "2026-09-22T07:52:38.000Z",
+      "transactions": 1,
+      "gas": "67723"
+    },
+    {
+      "height": 6191004,
+      "time": "2026-09-22T07:52:32.000Z",
+      "transactions": 3,
+      "gas": "296605"
+    },
+    {
+      "height": 6191003,
+      "time": "2026-09-22T07:52:27.000Z",
+      "transactions": 1,
+      "gas": "169779"
+    },
+    {
+      "height": 6191002,
+      "time": "2026-09-22T07:52:21.000Z",
+      "transactions": 2,
+      "gas": "222450"
+    },
+    {
+      "height": 6191000,
+      "time": "2026-09-22T07:52:13.000Z",
+      "transactions": 1,
+      "gas": "169789"
+    },
+    {
+      "height": 6190999,
+      "time": "2026-09-22T07:52:08.000Z",
+      "transactions": 2,
+      "gas": "129264"
+    },
+    {
+      "height": 6190998,
+      "time": "2026-09-22T07:52:02.000Z",
+      "transactions": 2,
+      "gas": "232636"
+    },
+    {
+      "height": 6190997,
+      "time": "2026-09-22T07:51:56.000Z",
+      "transactions": 2,
+      "gas": "128051"
+    },
+    {
+      "height": 6190996,
+      "time": "2026-09-22T07:51:51.000Z",
+      "transactions": 1,
+      "gas": "169789"
+    },
+    {
+      "height": 6190994,
+      "time": "2026-09-22T07:51:39.000Z",
+      "transactions": 1,
+      "gas": "169789"
+    },
+    {
+      "height": 6190992,
+      "time": "2026-09-22T07:51:28.000Z",
+      "transactions": 3,
+      "gas": "364416"
+    },
+    {
+      "height": 6190991,
+      "time": "2026-09-22T07:51:23.000Z",
+      "transactions": 2,
+      "gas": "205397"
+    },
+    {
+      "height": 6190989,
+      "time": "2026-09-22T07:51:15.000Z",
+      "transactions": 1,
+      "gas": "152716"
+    },
+    {
+      "height": 6190988,
+      "time": "2026-09-22T07:51:09.000Z",
+      "transactions": 3,
+      "gas": "197000"
+    },
+    {
+      "height": 6190987,
+      "time": "2026-09-22T07:51:04.000Z",
+      "transactions": 2,
+      "gas": "215573"
+    },
+    {
+      "height": 6190986,
+      "time": "2026-09-22T07:50:58.000Z",
+      "transactions": 2,
+      "gas": "238452"
+    },
+    {
+      "height": 6190985,
+      "time": "2026-09-22T07:50:52.000Z",
+      "transactions": 3,
+      "gas": "381913"
+    },
+    {
+      "height": 6190984,
+      "time": "2026-09-22T07:50:47.000Z",
+      "transactions": 2,
+      "gas": "322515"
+    },
+    {
+      "height": 6190983,
+      "time": "2026-09-22T07:50:41.000Z",
+      "transactions": 2,
+      "gas": "322515"
+    },
+    {
+      "height": 6190981,
+      "time": "2026-09-22T07:50:30.000Z",
+      "transactions": 3,
+      "gas": "381499"
+    },
+    {
+      "height": 6190980,
+      "time": "2026-09-22T07:50:25.000Z",
+      "transactions": 3,
+      "gas": "475185"
+    },
+    {
+      "height": 6190979,
+      "time": "2026-09-22T07:50:19.000Z",
+      "transactions": 1,
+      "gas": "152716"
+    },
+    {
+      "height": 6190978,
+      "time": "2026-09-22T07:50:14.000Z",
+      "transactions": 2,
+      "gas": "322505"
+    },
+    {
+      "height": 6190977,
+      "time": "2026-09-22T07:50:08.000Z",
+      "transactions": 2,
+      "gas": "322505"
+    },
+    {
+      "height": 6190976,
+      "time": "2026-09-22T07:50:05.000Z",
+      "transactions": 1,
+      "gas": "169789"
+    },
+    {
+      "height": 6190974,
+      "time": "2026-09-22T07:49:54.000Z",
+      "transactions": 1,
+      "gas": "169789"
+    },
+    {
+      "height": 6190973,
+      "time": "2026-09-22T07:49:49.000Z",
+      "transactions": 2,
+      "gas": "235631"
+    },
+    {
+      "height": 6190972,
+      "time": "2026-09-22T07:49:43.000Z",
+      "transactions": 1,
+      "gas": "169779"
+    },
+    {
+      "height": 6190971,
+      "time": "2026-09-22T07:49:38.000Z",
+      "transactions": 1,
+      "gas": "169789"
+    },
+    {
+      "height": 6190970,
+      "time": "2026-09-22T07:49:32.000Z",
+      "transactions": 4,
+      "gas": "568127"
+    },
+    {
+      "height": 6190968,
+      "time": "2026-09-22T07:49:21.000Z",
+      "transactions": 1,
+      "gas": "169779"
+    },
+    {
+      "height": 6190967,
+      "time": "2026-09-22T07:49:15.000Z",
+      "transactions": 1,
+      "gas": "169789"
+    },
+    {
+      "height": 6190963,
+      "time": "2026-09-22T07:48:56.000Z",
+      "transactions": 1,
+      "gas": "60884"
+    },
+    {
+      "height": 6190961,
+      "time": "2026-09-22T07:48:45.000Z",
+      "transactions": 1,
+      "gas": "65852"
+    },
+    {
+      "height": 6190958,
+      "time": "2026-09-22T07:48:29.000Z",
+      "transactions": 1,
+      "gas": "58994"
+    },
+    {
+      "height": 6190957,
+      "time": "2026-09-22T07:48:23.000Z",
+      "transactions": 1,
+      "gas": "62321"
+    },
+    {
+      "height": 6190952,
+      "time": "2026-09-22T07:47:59.000Z",
+      "transactions": 1,
+      "gas": "60884"
+    },
+    {
+      "height": 6190951,
+      "time": "2026-09-22T07:47:53.000Z",
+      "transactions": 1,
+      "gas": "59398"
+    },
+    {
+      "height": 6190948,
+      "time": "2026-09-22T07:47:36.000Z",
+      "transactions": 2,
+      "gas": "339456"
+    },
+    {
+      "height": 6190947,
+      "time": "2026-09-22T07:47:31.000Z",
+      "transactions": 4,
+      "gas": "568341"
+    },
+    {
+      "height": 6190946,
+      "time": "2026-09-22T07:47:25.000Z",
+      "transactions": 1,
+      "gas": "169779"
+    },
+    {
+      "height": 6190945,
+      "time": "2026-09-22T07:47:20.000Z",
+      "transactions": 3,
+      "gas": "284761"
+    },
+    {
+      "height": 6190944,
+      "time": "2026-09-22T07:47:14.000Z",
+      "transactions": 1,
+      "gas": "169789"
+    },
+    {
+      "height": 6190942,
+      "time": "2026-09-22T07:47:06.000Z",
+      "transactions": 1,
+      "gas": "169779"
+    },
+    {
+      "height": 6190941,
+      "time": "2026-09-22T07:47:00.000Z",
+      "transactions": 2,
+      "gas": "322505"
+    },
+    {
+      "height": 6190940,
+      "time": "2026-09-22T07:46:55.000Z",
+      "transactions": 3,
+      "gas": "381913"
+    },
+    {
+      "height": 6190939,
+      "time": "2026-09-22T07:46:49.000Z",
+      "transactions": 3,
+      "gas": "390336"
+    },
+    {
+      "height": 6190938,
+      "time": "2026-09-22T07:46:44.000Z",
+      "transactions": 2,
+      "gas": "322515"
+    },
+    {
+      "height": 6190937,
+      "time": "2026-09-22T07:46:38.000Z",
+      "transactions": 2,
+      "gas": "322495"
+    },
+    {
+      "height": 6190936,
+      "time": "2026-09-22T07:46:33.000Z",
+      "transactions": 2,
+      "gas": "322515"
+    },
+    {
+      "height": 6190935,
+      "time": "2026-09-22T07:46:27.000Z",
+      "transactions": 4,
+      "gas": "551288"
+    },
+    {
+      "height": 6190934,
+      "time": "2026-09-22T07:46:22.000Z",
+      "transactions": 3,
+      "gas": "375186"
+    },
+    {
+      "height": 6190932,
+      "time": "2026-09-22T07:46:14.000Z",
+      "transactions": 2,
+      "gas": "322515"
+    },
+    {
+      "height": 6190930,
+      "time": "2026-09-22T07:46:03.000Z",
+      "transactions": 2,
+      "gas": "322505"
+    },
+    {
+      "height": 6190929,
+      "time": "2026-09-22T07:45:57.000Z",
+      "transactions": 2,
+      "gas": "301339"
+    }
+  ],
+  "proposals": [
+    {
+      "id": "106",
+      "title": "Marketing Committee — Operations & Reddit Contributor Pilot",
+      "summary": "The Gonka Marketing Committee requests 6,800 USDT + 50,000 GNK from the Community Pool to support ongoing Committee work and a separate two-month Reddit Contributor Pilot.\n\nThe Committee acts as a community-side contributor team supporting active marketing projects. Its work includes joining contractor calls, reviewing deliverables, tracking progress, and consolidating feedback from hosts and other contributors. The team has already been involved with TheSoul and Input, including reviews of Gonka positioning, the Brandbook, website wireframes, and other ongoing materials.\n\nThe proposal also includes a two-month Reddit pilot to test a more systematic community presence on the platform. This includes developing r/GonkaHub, bringing in contributors, identifying relevant communities, and supporting active participation.",
+      "status": "VOTING_PERIOD",
+      "votingStart": "2026-09-21T19:09:41.762006655Z",
+      "votingEnd": "2026-09-23T19:09:41.762006655Z",
+      "messages": [
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmos.distribution.v1beta1.MsgCommunityPoolSpend"
+      ],
+      "yes": "0",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "105",
+      "title": "Approve devshard v5 and bounty payouts",
+      "summary": "Approve DevShard v5 and contributor bounty payouts\n\nThis proposal adds DevShard v5 to the approved list of devshard versions and distributes 91,300 USDT from the community-sale contract to contributors.\n\nRelease was tested with core testteam and external testlab.\n\nDevShard v5 is the next protocol version after the v4 line. Its main protocol addition is height-sync, which gives DevShard sessions a signed, replayable view of mainnet height and establishes protocol-level logical time for future cPoC, timeout, dispute mechanisms and protocol-level QoS.\n\nThe release also includes high-availability improvements, warm cutover and session recovery, Gateway updates, validation and settlement fixes, security hardening, observability improvements and expanded end-to-end testing.\n\nThe bounty recipients are Gonka core-contributors who have been actively involved across multiple development cycles and releases:\n\n@akup / @a-kuprin — contributing since v0.2.6, and extensively across DevShard v3, v4 and v5.\n@qdanik — active since v0.2.11, including v0.2.14/v0.2.15 and DevShard/Gateway work.\n@Ryanchen911 — active since the v0.2.12 cycle, with contributions across chain, security and DevShard-related releases.\n@aikuznetsov — active through the DevShard v4 / v0.2.15 cycle, primarily on testing and protocol reliability.\n@snevolin — active since the DevShard v4 / v0.2.15 cycle, focused on high availability, routing and safe runtime upgrades.\n@shd — contributed to DevShard v4/v5 protocol review and formalization, including the height-sync design.\n@redstartechno — active since the v0.2.15 development cycle, contributing reliability and DevShard fixes.\n\nThe detailed technical scope, individual contributions, PR references and full bounty breakdown are available here: https://github.com/gonka-ai/gonka/pull/1584\n\nThe description: https://github.com/gonka-ai/gonka/blob/devshard-0.2.15-v5/proposals/governance-artifacts/update-v0.2.15-devshard-v5/README.md (sha256 7bba17188e4c3d15476f2c6330281b3908fc124e9eb26950acd6f9f927d89dc4)",
+      "status": "PASSED",
+      "votingStart": "2026-09-16T16:47:54.790005493Z",
+      "votingEnd": "2026-09-18T16:47:54.790005493Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract"
+      ],
+      "yes": "123754",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "104",
+      "title": "Approve devshard v5 and bounty payouts",
+      "summary": "Add v5 to the approved list of devshard versions and distribute 91300 USDT in contributor bounties from the community-sale contract.",
+      "status": "REJECTED",
+      "votingStart": "2026-09-14T01:23:29.834708407Z",
+      "votingEnd": "2026-09-16T01:23:29.834708407Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract",
+        "/cosmwasm.wasm.v1.MsgExecuteContract"
+      ],
+      "yes": "25291",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "103",
+      "title": "Reimbursement of Expenses for Daniil and David Liberman's Participation in All-In Summit 2026",
+      "summary": "We are proposing to allocate 15,500 USDT from the Gonka Community Pool to reimburse the cost of two tickets for All-In Summit 2026 for Daniil and David Liberman, co-creators of the Gonka protocol.\nAll-In Summit will take place on September 13–15, 2026, in Los Angeles and will bring together more than 2,500 hand-selected attendees, including tech founders, investors, executives, and leaders from the AI industry.\nThe standard Attendee Pass costs $7,500 per person. The tickets have already been paid for. The requested reimbursement covers only the cost of the two tickets plus transaction fees for withdrawing the funds. Flights, accommodation, and any other expenses are not being requested from the Community Pool under this proposal.",
+      "status": "PASSED",
+      "votingStart": "2026-09-10T13:31:12.594032166Z",
+      "votingEnd": "2026-09-12T13:31:12.594032166Z",
+      "messages": [
+        "/cosmwasm.wasm.v1.MsgExecuteContract"
+      ],
+      "yes": "184762",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "102",
+      "title": "Ratify Quant Mesh Limited as the Ledger Integration Counterparty and Fund the Initial Ledger Integration Payment",
+      "summary": "6Block proposes that the Gonka community ratify and authorize Quant Mesh Limited as the legal contracting counterparty for the Gonka-Ledger integration and allocate 350,350 USDT from the Community Pool to Quant Mesh Limited at gonka1yqj5xf0wtqgpdmv5v68cus0tp2j5fv7lzcfd6g.\n\nThe allocation consists of 350,000 USDT for the initial Ledger integration payment (275,000 USDT Phase 1 Launch Fees and 75,000 USDT first-year Annual Activation Fee) plus 350 USDT for processing costs. This authorization and funding are strictly limited to the Ledger integration described in the full proposal.",
+      "status": "PASSED",
+      "votingStart": "2026-09-09T09:28:14.306648256Z",
+      "votingEnd": "2026-09-11T09:28:14.306648256Z",
+      "messages": [
+        "/cosmwasm.wasm.v1.MsgExecuteContract"
+      ],
+      "yes": "146903",
+      "no": "0",
+      "abstain": "5568"
+    },
+    {
+      "id": "101",
+      "title": "Add GLM-5.3-Flash, remove Kimi-K2.6 and GLM-5.2-FP8 from PoC models",
+      "summary": "Add zai-org/GLM-5.3-Flash as a governance-approved model and PoC model. Remove moonshotai/Kimi-K2.6 and zai-org/GLM-5.2-FP8 from poc_params.models.\n\nMiniMaxAI/MiniMax-M2.7 and deepseek-ai/DeepSeek-V4-Flash-0731 are not affected: their PoC parameters and weights remain unchanged. All other chain parameters remain unchanged.\n\nThe GLM-5.3-Flash model and its parameters were proposed by the kaitaku.ai team, independently validated by vbgd0, and are now proposed jointly. Release inputs, measurements and the reasoning behind the thresholds are in gonka-ai/gonka#1734.\n\nGLM-5.3-Flash PoC parameters: seq_len 1024, dist_threshold 0.44, p_mismatch 0.10, p_value_threshold 0.05, weight_scale_factor 0.62; validation_threshold 0.951.\n\nThe weight_scale_factor was calibrated so that a B200 host switching its PoC model to GLM-5.3-Flash is expected to gain approximately 7% more weight relative to its current weight. For other GPUs the optimal model does not change.\n\nThe activation epoch (penalty_start_epoch) for GLM-5.3-Flash is 394.",
+      "status": "PASSED",
+      "votingStart": "2026-09-08T23:17:27.402122371Z",
+      "votingEnd": "2026-09-10T23:17:27.402122371Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams",
+        "/inference.inference.MsgRegisterModel"
+      ],
+      "yes": "309308",
+      "no": "0",
+      "abstain": "3168"
+    },
+    {
+      "id": "100",
+      "title": "devshard v4.1",
+      "summary": "Add v4.1 to the approved list of devshard versions.",
+      "status": "PASSED",
+      "votingStart": "2026-09-08T22:36:34.311913031Z",
+      "votingEnd": "2026-09-10T22:36:34.311913031Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams"
+      ],
+      "yes": "312476",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "99",
+      "title": "Support Gonka's presence at TOKEN2049 Singapore",
+      "summary": "6Block proposes that the Gonka community allocate 100,000 USDT from the Community Pool to support Gonka's participation at TOKEN2049 Singapore 2026, taking place on 7-8 October 2026 at Marina Bay Sands, Singapore.\n\nThe requested funds will be used to cover the TOKEN2049 Singapore Gold Sponsorship package and related logistics required to make Gonka's presence effective, including travel, accommodation, local coordination, guest hosting, event operations, and supporting materials.",
+      "status": "PASSED",
+      "votingStart": "2026-09-02T09:53:38.080427980Z",
+      "votingEnd": "2026-09-04T09:53:38.080427980Z",
+      "messages": [
+        "/cosmwasm.wasm.v1.MsgExecuteContract"
+      ],
+      "yes": "170667",
+      "no": "3077",
+      "abstain": "4"
+    },
+    {
+      "id": "98",
+      "title": "Increase DeepSeek V4 Flash weight_scale_factor to 0.246",
+      "summary": "Increase the weight_scale_factor for deepseek-ai/DeepSeek-V4-Flash-0731 from 0.214 to 0.246. All other model and chain parameters remain unchanged.\n\nResubmission of proposal 97, which expired without reaching quorum. No votes were cast against it. The content is unchanged.\n\nThe original factor came from inflated nonce/min numbers. The measurement fix and reproduction steps are in gonka-ai/gonka#1640 (open, will be proposed with the next mainnet update).\n\nRecomputed on historical B300 nonce data and fresh PoC experiments, the factor is 0.246.",
+      "status": "PASSED",
+      "votingStart": "2026-08-27T21:30:24.011124718Z",
+      "votingEnd": "2026-08-29T21:30:24.011124718Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams"
+      ],
+      "yes": "160318",
+      "no": "0",
+      "abstain": "3039"
+    },
+    {
+      "id": "97",
+      "title": "Increase DeepSeek V4 Flash weight_scale_factor to 0.246",
+      "summary": "Increase the weight_scale_factor for deepseek-ai/DeepSeek-V4-Flash-0731 from 0.214 to 0.246. All other model and chain parameters remain unchanged.\n\nThe original factor came from inflated nonce/min numbers. The measurement fix and reproduction steps are in gonka-ai/gonka#1640 (open, will be proposed with the next mainnet update).\n\nRecomputed on historical B300 nonce data and fresh PoC experiments, the factor is 0.246.",
+      "status": "REJECTED",
+      "votingStart": "2026-08-25T03:47:31.768213501Z",
+      "votingEnd": "2026-08-27T03:47:31.768213501Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams"
+      ],
+      "yes": "15452",
+      "no": "0",
+      "abstain": "3093"
+    },
+    {
+      "id": "96",
+      "title": "Stabilize in-epoch invalid SPRT on small samples",
+      "summary": "In-epoch SPRT on invalid inferences is not stable on a small sample. A few invalids can trip it before the epoch has enough data. This proposal raises invalidation_h_threshold to 40 and sets bad_participant_invalidation_rate to 18e-2. At large sample sizes the threshold is about 10% invalid, so participants below that are not punished. Higher rates still trigger, 18% in about 360 samples and 12% in about 1650. Small samples cannot trigger it. At least 32 flagged invalids are required, and at 500 samples the observed rate must exceed 16%. Downtime SPRT is unused and is turned off. Epoch-end stats tests still work.",
+      "status": "PASSED",
+      "votingStart": "2026-08-20T18:04:19.550951169Z",
+      "votingEnd": "2026-08-21T06:04:19.550951169Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams"
+      ],
+      "yes": "181926",
+      "no": "0",
+      "abstain": "225"
+    },
+    {
+      "id": "95",
+      "title": "Migrate community-sale and wrapped-token contracts",
+      "summary": "Migrate the live community-sale contract and all wrapped-token instances to newly stored CosmWasm code, and register that wrapped-token code for future instantiations. Contract addresses and balances are unchanged. No chain binary upgrade. This mitigates a theoretical risk identified in a security report and is not expected to affect normal operation.",
+      "status": "PASSED",
+      "votingStart": "2026-08-14T00:01:21.830543380Z",
+      "votingEnd": "2026-08-16T00:01:21.830543380Z",
+      "messages": [
+        "/cosmwasm.wasm.v1.MsgMigrateContract",
+        "/inference.inference.MsgRegisterWrappedTokenContract",
+        "/inference.inference.MsgMigrateAllWrappedTokens"
+      ],
+      "yes": "173743",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "94",
+      "title": "Add DeepSeek V4 Flash 0731",
+      "summary": "Register deepseek-ai/DeepSeek-V4-Flash-0731 for inference and Proof of Compute.\n\nWho we are\n\nWe are the kaitaku.ai team. Many in the community know us from previous updates and optimizations to ML Node. We ran the experiments ensuring Gonka's PoC and validation work with DeepSeek V4 Flash, calculated the validation thresholds, and are now proposing to add this model to the chain.\n\nNo existing parameter or model is modified - the only change is the new model entry.",
+      "status": "PASSED",
+      "votingStart": "2026-08-10T16:05:15.709852019Z",
+      "votingEnd": "2026-08-12T16:05:15.709852019Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams",
+        "/inference.inference.MsgRegisterModel"
+      ],
+      "yes": "159131",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "93",
+      "title": "Upgrade devshard v4 runtime to v4.0.1",
+      "summary": "Replace the existing devshard v4 runtime with v4.0.1. This performance and resource-management patch does not change protocol, inference, validation, or economic behavior. It removes per-block chain queries by switching epoch tracking to event-driven updates and aligns in-memory host-session and validation-worker cleanup with epoch pruning. versiond will automatically download and verify the replacement binary; no mainnet restart or manual host action is required.",
+      "status": "PASSED",
+      "votingStart": "2026-08-01T00:21:18.753587476Z",
+      "votingEnd": "2026-08-03T00:21:18.753587476Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams"
+      ],
+      "yes": "160267",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "92",
+      "title": "Upgrade Proposal: v0.2.15",
+      "summary": "Upgrade Proposal: v0.2.15",
+      "status": "PASSED",
+      "votingStart": "2026-07-28T07:08:47.579998945Z",
+      "votingEnd": "2026-07-30T07:08:47.579998945Z",
+      "messages": [
+        "/cosmos.upgrade.v1beta1.MsgSoftwareUpgrade"
+      ],
+      "yes": "229105",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "91",
+      "title": "Temporarily update BLS signing parameters",
+      "summary": "Set max_signing_attempts to 1 and signing_deadline_blocks to 60 epoch lengths (923460 blocks) to mitigate a theoretical risk identified in a security report. Historically, retries have never been needed on mainnet, so this temporary change is not expected to affect normal operation.",
+      "status": "PASSED",
+      "votingStart": "2026-07-23T17:23:56.063230542Z",
+      "votingEnd": "2026-07-24T05:23:56.063230542Z",
+      "messages": [
+        "/inference.bls.MsgUpdateParams"
+      ],
+      "yes": "243165",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "90",
+      "title": "Partnerships with Inference Resellers, B2C users acquisition and conversion funnels analytics setup",
+      "summary": "Currently Gonka has a lot of marketing activities, but doesn't have analytics to measure the results of their work and doesn't have a vision which target audiences and how we need to attract and onboard.\n\nThis proposal describes key activities to set analytics, bisdev target audiences and search for best of their acquisition by hundreds of cheap experiments; the team and the budgets for the next 3 months.\nThe full proposal: https://app.integrity.sh/p/NLgLEHfL8Msoz0nh2-_Tf\n\nThe budget of 240K GNK and 57K USDT is held by an immutable escrow contract and released as:\n1. Day 0 — payment of 19K USDT and 60K GNK\n2. Day 31 — payment of 19K USDT and 60K GNK\n3. Day 62 — payment of 19K USDT and 60K GNK\n4. Day 99 — payment of 60K GNK\n\nGovernance may cancel the initiative at any time, in which case all remaining payments will be terminated, for example if KPIs are not achieved. We use contract described in https://github.com/paranjko/testlab-devnet-escrow/tree/1b2e529876141816b5c2130840d04fb93694bf72 (that Sega used in https://gonka.vote/governance/82)\n\n+-------------------------------+-------------------+-------------------+-------------------+\n| KPIs                          | Until day 31      | Until day 62      | Until day 99      |\n+-------------------------------+-------------------+-------------------+-------------------+\n| Partnerships and pilots with  | 1-2               | 3-5               | 7-15              |\n| inference resellers           |                   |                   |                   |\n+-------------------------------+-------------------+-------------------+-------------------+\n| OpenRouter-size comparable    | selection and     | discussions       | 1-3 pilots        |\n| partnerships                  | letters           |                   | started           |\n+-------------------------------+-------------------+-------------------+-------------------+\n| Interviews with competitors   | 3-5               | 5-7               | 10-15             |\n| marketers                     |                   |                   |                   |\n+-------------------------------+-------------------+-------------------+-------------------+\n| New non-ru Gonka users in our | 100-500           | 300-1500          | 1000-5000         |\n| communities                   | (~ 10% paid)      | (~ 15% paid)      | (~ 20% paid)      |\n+-------------------------------+-------------------+-------------------+-------------------+\n| Posts in relevant communities | 100-200           | 200-500           | 300-800           |\n| (1K-100K subscribers)         |                   |                   |                   |\n+-------------------------------+-------------------+-------------------+-------------------+\n| Collaborations with           | 10-30             | 25-80             | 40-150            |\n| microinfluencers (AI / Agents |                   |                   |                   |\n| creators with 500-10K         |                   |                   |                   |\n| subscribers)                  |                   |                   |                   |\n+-------------------------------+-------------------+-------------------+-------------------+\n| Local meetups                 | 1-2               | 2-5               | 5-10              |\n+-------------------------------+-------------------+-------------------+-------------------+\n| Offers x Languages x          | 50-100            | 80-200            | 100-300           |\n| Onboardings (landings) tested |                   |                   |                   |\n+-------------------------------+-------------------+-------------------+-------------------+\n| Public use cases              | 1-2               | 3-5               | 10-15 of various  |\n|                               |                   |                   | usage types       |\n+-------------------------------+-------------------+-------------------+-------------------+\n| Analytics                     | set with ready    | 10-15 key Gonka   | 10-30 key Gonka   |\n|                               | dashboards; 3-8   | services are      | services are      |\n|                               | key Gonka         | connected         | connected         |\n|                               | services          |                   |                   |\n|                               | connected         |                   |                   |\n+-------------------------------+-------------------+-------------------+-------------------+\n| Reports and AMAs every 2      | 2                 | 4                 | 6 + final         |\n| weeks                         |                   |                   |                   |\n+-------------------------------+-------------------+-------------------+-------------------+",
+      "status": "REJECTED",
+      "votingStart": "2026-07-21T15:27:52.129100801Z",
+      "votingEnd": "2026-07-23T15:27:52.129100801Z",
+      "messages": [
+        "/cosmwasm.wasm.v1.MsgInstantiateContract2",
+        "/cosmos.distribution.v1beta1.MsgCommunityPoolSpend",
+        "/cosmwasm.wasm.v1.MsgExecuteContract"
+      ],
+      "yes": "190646",
+      "no": "6269",
+      "abstain": "2324"
+    },
+    {
+      "id": "89",
+      "title": "Upgrade Proposal: v0.2.14",
+      "summary": "Upgrade Proposal: v0.2.14",
+      "status": "PASSED",
+      "votingStart": "2026-07-21T00:02:04.535338507Z",
+      "votingEnd": "2026-07-23T00:02:04.535338507Z",
+      "messages": [
+        "/cosmos.upgrade.v1beta1.MsgSoftwareUpgrade"
+      ],
+      "yes": "296240",
+      "no": "0",
+      "abstain": "0"
+    },
+    {
+      "id": "88",
+      "title": "Restore Kimi K2.6 and remove v1, v2",
+      "summary": "Update current chain params to register moonshotai/Kimi-K2.6 in the governance model list and remove approved_versions v1, v2 from devshard_escrow_params (to reduce RAM usage).",
+      "status": "PASSED",
+      "votingStart": "2026-07-16T18:09:28.727069592Z",
+      "votingEnd": "2026-07-17T06:09:28.727069592Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams",
+        "/inference.inference.MsgRegisterModel"
+      ],
+      "yes": "272063",
+      "no": "543",
+      "abstain": "0"
+    },
+    {
+      "id": "87",
+      "title": "Remove Kimi K2.6 model",
+      "summary": "Remove moonshotai/Kimi-K2.6 from PoC params and delete it from the governance model list.",
+      "status": "PASSED",
+      "votingStart": "2026-07-16T00:01:23.051983254Z",
+      "votingEnd": "2026-07-16T12:01:23.051983254Z",
+      "messages": [
+        "/inference.inference.MsgUpdateParams",
+        "/inference.inference.MsgDeleteGovernanceModel"
+      ],
+      "yes": "151714",
+      "no": "8",
+      "abstain": "0"
+    }
+  ],
+  "hardware": [
+    {
+      "model": "NVIDIA H100 80GB HBM3 | 79GB",
+      "count": 312
+    },
+    {
+      "model": "NVIDIA H200 | 140GB",
+      "count": 136
+    },
+    {
+      "model": "NVIDIA B300 SXM6 AC | 268GB",
+      "count": 67
+    },
+    {
+      "model": "NVIDIA A100-SXM4-80GB | 80GB",
+      "count": 40
+    },
+    {
+      "model": "NVIDIA B200 | 179GB",
+      "count": 36
+    },
+    {
+      "model": "NVIDIA H100 PCIe | 79GB",
+      "count": 24
+    },
+    {
+      "model": "NVIDIA RTX PRO 6000 Blackwell Server Edition | 95GB",
+      "count": 8
+    },
+    {
+      "model": "NVIDIA H20 | 95GB",
+      "count": 8
+    },
+    {
+      "model": "NVIDIA H200 NVL | 140GB",
+      "count": 4
+    }
+  ],
+  "stats": [],
+  "fx": "0.1682949",
+  "fxAt": "2026-09-22T07:52:35.364898727Z",
+  "totalSupply": "443181451.939622918",
+  "tokenomics": {
+    "total_fees": "681.17055839",
+    "total_subsidies": "117695737.230782247",
+    "total_refunded": "78.120203093",
+    "total_burned": "1284341.37297831"
+  },
+  "communityPool": "102705109.798398193213382776456378876",
+  "protocol": {
+    "epoch_params.epoch_length": "15391",
+    "epoch_params.epoch_multiplier": "1",
+    "epoch_params.epoch_shift": "16980",
+    "epoch_params.default_unit_of_compute_price": "100",
+    "epoch_params.poc_stage_duration": "35",
+    "epoch_params.poc_exchange_duration": "0",
+    "epoch_params.poc_validation_delay": "5",
+    "epoch_params.poc_validation_duration": "240",
+    "epoch_params.set_new_validators_delay": "120",
+    "epoch_params.inference_validation_cutoff": "2",
+    "epoch_params.inference_pruning_epoch_threshold": "2",
+    "epoch_params.inference_pruning_max": "5000",
+    "epoch_params.poc_pruning_max": "1000",
+    "epoch_params.poc_slot_allocation": "0.1",
+    "epoch_params.confirmation_poc_safety_window": "500",
+    "validation_params.false_positive_rate": "0.05",
+    "validation_params.min_ramp_up_measurements": "10",
+    "validation_params.pass_value": "0.99",
+    "validation_params.min_validation_average": "0.01",
+    "validation_params.max_validation_average": "1",
+    "validation_params.expiration_blocks": "150",
+    "validation_params.epochs_to_max": "30",
+    "validation_params.full_validation_traffic_cutoff": "10000",
+    "validation_params.min_validation_halfway": "0.05",
+    "validation_params.min_validation_traffic_cutoff": "100",
+    "validation_params.miss_percentage_cutoff": "0.01",
+    "validation_params.miss_requests_penalty": "1",
+    "validation_params.timestamp_expiration": "300",
+    "validation_params.timestamp_advance": "30",
+    "validation_params.estimated_limits_per_block_kb": "0",
+    "validation_params.invalid_reputation_preserve": "0",
+    "validation_params.bad_participant_invalidation_rate": "0.18",
+    "validation_params.invalidation_h_threshold": "40",
+    "validation_params.downtime_good_percentage": "0.99",
+    "validation_params.downtime_bad_percentage": "0.99",
+    "validation_params.downtime_h_threshold": "1000000000",
+    "validation_params.downtime_reputation_preserve": "0",
+    "validation_params.quick_failure_threshold": "0.000001",
+    "validation_params.binom_test_p0": "0.1",
+    "validation_params.claim_validation_enabled": "false",
+    "validation_params.logprobs_mode": "processed_logprobs",
+    "poc_params.default_difficulty": "5",
+    "poc_params.validation_sample_size": "200",
+    "poc_params.poc_data_pruning_epoch_threshold": "1",
+    "poc_params.model_id": "",
+    "poc_params.seq_len": "0",
+    "poc_params.poc_v2_enabled": "true",
+    "poc_params.confirmation_poc_v2_enabled": "true",
+    "poc_params.validation_slots": "0",
+    "poc_params.poc_normalization_enabled": "true",
+    "poc_params.poc_stronger_rng_enabled": "false",
+    "poc_params.validation_vote_threshold_bps": "5000",
+    "tokenomics_params.subsidy_reduction_interval": "0.05",
+    "tokenomics_params.subsidy_reduction_amount": "0.2",
+    "tokenomics_params.current_subsidy_percentage": "0.9",
+    "tokenomics_params.work_vesting_period": "180",
+    "tokenomics_params.reward_vesting_period": "180",
+    "collateral_params.slash_fraction_invalid": "0.2",
+    "collateral_params.slash_fraction_downtime": "0.1",
+    "collateral_params.downtime_missed_percentage_threshold": "0.05",
+    "collateral_params.grace_period_end_epoch": "180",
+    "collateral_params.base_weight_ratio": "0.2",
+    "collateral_params.collateral_per_weight_unit": "4.2",
+    "bitcoin_reward_params.use_bitcoin_rewards": "true",
+    "bitcoin_reward_params.initial_epoch_reward": "323000000000000",
+    "bitcoin_reward_params.decay_rate": "-0.000475",
+    "bitcoin_reward_params.genesis_epoch": "1",
+    "bitcoin_reward_params.utilization_bonus_factor": "0.5",
+    "bitcoin_reward_params.full_coverage_bonus_factor": "1.2",
+    "bitcoin_reward_params.partial_coverage_bonus_factor": "0.1",
+    "dynamic_pricing_params.stability_zone_lower_bound": "0.4",
+    "dynamic_pricing_params.stability_zone_upper_bound": "0.6",
+    "dynamic_pricing_params.price_elasticity": "0.05",
+    "dynamic_pricing_params.utilization_window_duration": "60",
+    "dynamic_pricing_params.min_per_token_price": "1",
+    "dynamic_pricing_params.base_per_token_price": "100",
+    "dynamic_pricing_params.grace_period_end_epoch": "90",
+    "dynamic_pricing_params.grace_period_per_token_price": "100",
+    "bandwidth_limits_params.estimated_limits_per_block_kb": "53760",
+    "bandwidth_limits_params.kb_per_input_token": "0.0023",
+    "bandwidth_limits_params.kb_per_output_token": "0.64",
+    "bandwidth_limits_params.invalidations_limit": "500",
+    "bandwidth_limits_params.invalidations_sample_period": "120",
+    "bandwidth_limits_params.invalidations_limit_curve": "250",
+    "bandwidth_limits_params.minimum_concurrent_invalidations": "1",
+    "bandwidth_limits_params.max_inferences_per_block": "1000",
+    "confirmation_poc_params.expected_confirmations_per_epoch": "4",
+    "confirmation_poc_params.alpha_threshold": "0.5",
+    "confirmation_poc_params.slash_fraction": "0",
+    "confirmation_poc_params.upgrade_protection_window": "500",
+    "genesis_guardian_params.network_maturity_threshold": "15000000",
+    "genesis_guardian_params.network_maturity_min_height": "3000000",
+    "developer_access_params.until_block_height": "2459367",
+    "participant_access_params.new_participant_registration_start_height": "2475000",
+    "participant_access_params.use_participant_allowlist": "true",
+    "participant_access_params.participant_allowlist_until_block_height": "2475000",
+    "devshard_escrow_params.min_amount": "50000000",
+    "devshard_escrow_params.max_amount": "100000000000",
+    "devshard_escrow_params.max_escrows_per_epoch": "500000",
+    "devshard_escrow_params.group_size": "16",
+    "devshard_escrow_params.token_price": "10",
+    "devshard_escrow_params.max_nonce": "1000000",
+    "devshard_escrow_params.devshard_requests_enabled": "true",
+    "devshard_escrow_params.default_inference_seal_grace_nonces": "160",
+    "devshard_escrow_params.default_inference_seal_grace_seconds": "3600",
+    "devshard_escrow_params.create_devshard_fee": "10000",
+    "devshard_escrow_params.fee_per_nonce": "1000",
+    "devshard_escrow_params.refusal_timeout": "60",
+    "devshard_escrow_params.execution_timeout": "1920",
+    "devshard_escrow_params.validation_rate": "1000",
+    "devshard_escrow_params.vote_threshold_factor": "50",
+    "devshard_escrow_params.default_auto_seal_every_n_nonces": "0",
+    "fee_params.min_gas_price_ngonka": "0",
+    "fee_params.base_validation_gas": "500000",
+    "fee_params.gas_per_poc_count": "100",
+    "delegation_params.deploy_window": "500",
+    "delegation_params.refusal_penalty": "0.1",
+    "delegation_params.no_participation_penalty": "0.15",
+    "delegation_params.delegation_share": "0.05",
+    "delegation_params.w_threshold": "0.1",
+    "delegation_params.v_min": "3",
+    "delegation_params.cap_factor": "0.75",
+    "delegation_params.initial_model_id": "MiniMaxAI/MiniMax-M2.7",
+    "delegation_params.max_model_voting_power_percentage": "0.3",
+    "maintenance_params.maintenance_enabled": "false",
+    "maintenance_params.maintenance_min_schedule_lead_blocks": "100",
+    "maintenance_params.maintenance_max_window_blocks": "200",
+    "maintenance_params.maintenance_max_concurrent_validators": "3",
+    "maintenance_params.maintenance_max_concurrent_power_bps": "1000",
+    "maintenance_params.maintenance_credit_cap_blocks": "400",
+    "maintenance_params.maintenance_credit_earn_per_successful_epoch_blocks": "20"
+  },
+  "validators": 21,
+  "statsWindow": null,
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/chain-rpc/status",
+      "description": "Node status — moniker, network, sync info, latest block",
+      "cache": "1 s",
+      "group": "CometBFT RPC",
+      "params": "",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/block",
+      "description": "Block header + data at height",
+      "params": "height",
+      "cache": "24 h if height set",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/block_results",
+      "description": "ABCI results (events, gas) for a block",
+      "params": "height",
+      "cache": "24 h if height set",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/commit",
+      "description": "Block commit (signatures) at height",
+      "params": "height",
+      "cache": "24 h if height set",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/blockchain",
+      "description": "Range of block headers",
+      "params": "minHeight, maxHeight",
+      "cache": "1 s",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/tx",
+      "description": "Transaction by hash (with optional proof)",
+      "params": "hash (0x-prefixed), prove",
+      "cache": "24 h",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/tx_search",
+      "description": "Search transactions by events",
+      "params": "query, page, per_page, order_by",
+      "cache": "custom",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/validators",
+      "description": "Validator set at height",
+      "params": "height, page, per_page",
+      "cache": "custom",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/net_info",
+      "description": "P2P network info — connected peers",
+      "cache": "10 s",
+      "group": "CometBFT RPC",
+      "params": "",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/consensus_state",
+      "description": "Current consensus round/step",
+      "cache": "2 s",
+      "group": "CometBFT RPC",
+      "params": "",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/dump_consensus_state",
+      "description": "Detailed consensus state dump",
+      "cache": "2 s",
+      "group": "CometBFT RPC",
+      "params": "",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/genesis",
+      "description": "Genesis document",
+      "cache": "1 h",
+      "group": "CometBFT RPC",
+      "params": "",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/abci_info",
+      "description": "ABCI application info",
+      "cache": "5 s",
+      "group": "CometBFT RPC",
+      "params": "",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/abci_query",
+      "description": "Direct ABCI query to the app",
+      "params": "path, data, height",
+      "cache": "3 s",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/chain-rpc/broadcast_tx_sync",
+      "description": "Broadcast tx — waits for CheckTx",
+      "params": "JSON-RPC body",
+      "group": "CometBFT RPC",
+      "cache": "Not specified",
+      "namespace": "chain-rpc",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-rpc/broadcast_tx_async",
+      "description": "Broadcast tx — fire and forget",
+      "params": "JSON-RPC body",
+      "group": "CometBFT RPC",
+      "cache": "Not specified",
+      "namespace": "chain-rpc",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-rpc/broadcast_tx_commit",
+      "description": "Broadcast tx — waits for block inclusion",
+      "params": "JSON-RPC body",
+      "group": "CometBFT RPC",
+      "cache": "Not specified",
+      "namespace": "chain-rpc",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/unconfirmed_txs",
+      "description": "List unconfirmed txs in mempool",
+      "params": "limit",
+      "group": "CometBFT RPC",
+      "cache": "Not specified",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/num_unconfirmed_txs",
+      "description": "Count of unconfirmed txs",
+      "group": "CometBFT RPC",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/block_by_hash",
+      "description": "Block by hash",
+      "params": "hash",
+      "cache": "24 h",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/header",
+      "description": "Block header at height",
+      "params": "height",
+      "cache": "24 h if height set",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/header_by_hash",
+      "description": "Block header by hash",
+      "params": "hash",
+      "cache": "24 h",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/consensus_params",
+      "description": "Consensus parameters at height",
+      "params": "height",
+      "cache": "5 s",
+      "group": "CometBFT RPC",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-rpc/health",
+      "description": "Node health check",
+      "cache": "1 s",
+      "group": "CometBFT RPC",
+      "params": "",
+      "namespace": "chain-rpc",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/chain-rpc/check_tx",
+      "description": "Check transaction validity without broadcasting",
+      "params": "JSON-RPC body",
+      "group": "CometBFT RPC",
+      "cache": "Not specified",
+      "namespace": "chain-rpc",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-rpc/subscribe",
+      "description": "Subscribe to events (WebSocket)",
+      "params": "query",
+      "group": "CometBFT RPC",
+      "cache": "Not specified",
+      "namespace": "chain-rpc",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-rpc/unsubscribe",
+      "description": "Unsubscribe from events",
+      "params": "query",
+      "group": "CometBFT RPC",
+      "cache": "Not specified",
+      "namespace": "chain-rpc",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/bank/v1beta1/balances/{addr}",
+      "description": "Account balances for an address",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/bank/v1beta1/supply",
+      "description": "Total supply of all denoms",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/bank/v1beta1/denoms_metadata",
+      "description": "Metadata for all denoms",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/validators",
+      "description": "All validators",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/delegations/{addr}",
+      "description": "Delegations for a delegator",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/distribution/v1beta1/delegators/{addr}/rewards",
+      "description": "Delegation rewards for an address",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/gov/v1/proposals",
+      "description": "All governance proposals",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/gov/v1/proposals/{id}/votes",
+      "description": "Votes on a proposal",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/auth/v1beta1/accounts/{addr}",
+      "description": "Account info (sequence, pub key)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/authz/v1beta1/grants",
+      "description": "Authorization grants",
+      "params": "granter, grantee",
+      "group": "Cosmos REST (LCD)",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/feegrant/v1beta1/allowances/{grantee}",
+      "description": "Fee grant allowances",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/slashing/v1beta1/signing_infos",
+      "description": "Validator signing info, slashing params",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/mint/v1beta1/inflation",
+      "description": "Current inflation rate",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/upgrade/v1beta1/current_plan",
+      "description": "Pending upgrade plan",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/cosmos/tx/v1beta1/txs",
+      "description": "Broadcast / query transactions",
+      "params": "tx_bytes, mode",
+      "group": "Cosmos REST (LCD)",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/tx/v1beta1/txs/{hash}",
+      "description": "Transaction by hash",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/core/channel/v1/channels",
+      "description": "IBC channels",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/core/connection/v1/connections",
+      "description": "IBC connections",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmwasm/wasm/v1/contract/{addr}",
+      "description": "CosmWasm contract info",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmwasm/wasm/v1/contract/{addr}/state",
+      "description": "CosmWasm contract state",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmwasm/wasm/v1/contract/{addr}/smart/{query}",
+      "description": "CosmWasm smart query",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmwasm/wasm/v1/contract/{addr}/raw/{key}",
+      "description": "CosmWasm raw state by key",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmwasm/wasm/v1/code",
+      "description": "All stored Wasm codes",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmwasm/wasm/v1/code/{code_id}",
+      "description": "Wasm code info by ID",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/evidence/v1beta1/evidence",
+      "description": "All evidence of misbehavior",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/evidence/v1beta1/evidence/{hash}",
+      "description": "Evidence by hash",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/group/v1/groups",
+      "description": "All groups",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/group/v1/group_members/{group_id}",
+      "description": "Group members",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/group/v1/group_policies/{group_id}",
+      "description": "Group policies",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/group/v1/proposals/{proposal_id}",
+      "description": "Group proposal by ID",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/nft/v1beta1/classes",
+      "description": "All NFT classes",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/nft/v1beta1/nfts",
+      "description": "All NFTs (filterable by class)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/nft/v1beta1/balance/{owner}/{class_id}",
+      "description": "NFT balance by owner and class",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/circuit/v1/accounts",
+      "description": "Circuit breaker accounts",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/circuit/v1/disabled_list",
+      "description": "Disabled message types",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/consensus/v1/params",
+      "description": "Consensus parameters",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/params/v1beta1/params",
+      "description": "Module parameters by subspace",
+      "params": "subspace, key",
+      "group": "Cosmos REST (LCD)",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/validators/{addr}/delegations",
+      "description": "Delegations to a validator",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/validators/{addr}/unbonding_delegations",
+      "description": "Unbonding delegations from validator",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/pool",
+      "description": "Staking pool (bonded/unbonded totals)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/params",
+      "description": "Staking module parameters",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/distribution/v1beta1/params",
+      "description": "Distribution module parameters",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/distribution/v1beta1/community_pool",
+      "description": "Community pool balance",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/distribution/v1beta1/validators/{addr}/commission",
+      "description": "Validator commission",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/gov/v1/params/{params_type}",
+      "description": "Gov module parameters",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/gov/v1/proposals/{id}",
+      "description": "Proposal by ID",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/gov/v1/proposals/{id}/deposits",
+      "description": "Deposits on a proposal",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/gov/v1/proposals/{id}/tally",
+      "description": "Tally result for a proposal",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/slashing/v1beta1/params",
+      "description": "Slashing module parameters",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/mint/v1beta1/params",
+      "description": "Mint module parameters",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/mint/v1beta1/annual_provisions",
+      "description": "Current annual provisions",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/bank/v1beta1/params",
+      "description": "Bank module parameters",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/bank/v1beta1/balances/{addr}/{denom}",
+      "description": "Single denom balance for address",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/bank/v1beta1/spendable_balances/{addr}",
+      "description": "Spendable balances for address",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/bank/v1beta1/supply/{denom}",
+      "description": "Supply of a single denom",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/auth/v1beta1/params",
+      "description": "Auth module parameters",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/upgrade/v1beta1/applied_plan/{name}",
+      "description": "Applied upgrade plan by name",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/upgrade/v1beta1/module_versions",
+      "description": "Module consensus versions",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/core/client/v1/client_states",
+      "description": "All IBC client states",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/core/client/v1/client_states/{client_id}",
+      "description": "IBC client state by ID",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/core/channel/v1/channels/{channel_id}/ports/{port_id}",
+      "description": "IBC channel by ID and port",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/apps/transfer/v1/denom_traces",
+      "description": "IBC denom traces",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/apps/transfer/v1/params",
+      "description": "IBC transfer parameters",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/apps/transfer/v1/denom_hashes/{trace}",
+      "description": "IBC denom hash for a trace",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/core/connection/v1/connections/{connection_id}",
+      "description": "IBC connection by ID",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/core/channel/v1/channels/{channel_id}/ports/{port_id}/packet_commitments",
+      "description": "IBC packet commitments",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/core/channel/v1/channels/{channel_id}/ports/{port_id}/packet_acks",
+      "description": "IBC packet acknowledgements",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/ibc/core/client/v1/consensus_states/{client_id}",
+      "description": "IBC client consensus states",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/validators/{addr}",
+      "description": "Single validator by operator address",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/delegators/{addr}/validators",
+      "description": "Validators for a delegator",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/delegators/{addr}/unbonding_delegations",
+      "description": "Unbonding delegations for delegator",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/delegators/{addr}/redelegations",
+      "description": "Redelegations for delegator",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/staking/v1beta1/historical_info/{height}",
+      "description": "Historical staking info at height",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/distribution/v1beta1/validators/{addr}/outstanding_rewards",
+      "description": "Validator outstanding rewards",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/distribution/v1beta1/validators/{addr}/slashes",
+      "description": "Validator slashing events",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/distribution/v1beta1/delegators/{addr}/withdraw_address",
+      "description": "Delegator withdraw address",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/authz/v1beta1/grants/granter/{granter}",
+      "description": "Grants by granter",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/authz/v1beta1/grants/grantee/{grantee}",
+      "description": "Grants by grantee",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/feegrant/v1beta1/issued/{granter}",
+      "description": "Fee grants issued by granter",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/slashing/v1beta1/signing_infos/{cons_address}",
+      "description": "Signing info for a validator",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/tx/v1beta1/txs",
+      "description": "Search transactions by events",
+      "params": "events, pagination, order_by",
+      "group": "Cosmos REST (LCD)",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/base/tendermint/v1beta1/blocks/latest",
+      "description": "Latest block (Cosmos base)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/base/tendermint/v1beta1/blocks/{height}",
+      "description": "Block at height (Cosmos base)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/base/tendermint/v1beta1/node_info",
+      "description": "Node info (Cosmos base)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/base/tendermint/v1beta1/syncing",
+      "description": "Sync status (Cosmos base)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/base/tendermint/v1beta1/validatorsets/latest",
+      "description": "Latest validator set (Cosmos base)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/base/tendermint/v1beta1/validatorsets/{height}",
+      "description": "Validator set at height (Cosmos base)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/cosmos/tx/v1beta1/simulate",
+      "description": "Simulate transaction execution",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/auth/v1beta1/accounts",
+      "description": "All accounts (paginated)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/auth/v1beta1/address_by_id/{id}",
+      "description": "Account address by account ID",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/bank/v1beta1/send_enabled",
+      "description": "Send-enabled denoms",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/gov/v1beta1/proposals",
+      "description": "All proposals (v1beta1 legacy)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/gov/v1beta1/proposals/{id}",
+      "description": "Proposal by ID (v1beta1 legacy)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/group/v1/group_info/{group_id}",
+      "description": "Group info by ID",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/group/v1/groups_by_admin/{admin}",
+      "description": "Groups by admin address",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/group/v1/groups_by_member/{address}",
+      "description": "Groups by member address",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/group/v1/group_policy_info/{address}",
+      "description": "Group policy info by address",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/group/v1/proposals_by_group_policy/{address}",
+      "description": "Proposals by group policy",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/nft/v1beta1/owner/{class_id}/{id}",
+      "description": "NFT owner",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/nft/v1beta1/supply/{class_id}",
+      "description": "NFT supply by class",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/nft/v1beta1/nfts/{class_id}/{id}",
+      "description": "Single NFT by class and ID",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/cosmos/tx/v1beta1/encode",
+      "description": "Encode a transaction to bytes",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/cosmos/tx/v1beta1/decode",
+      "description": "Decode transaction bytes",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/cosmos/tx/v1beta1/encode/amino",
+      "description": "Encode transaction (Amino)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/cosmos/tx/v1beta1/decode/amino",
+      "description": "Decode transaction (Amino)",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/base/tendermint/v1beta1/abci_query",
+      "description": "ABCI query via Cosmos base endpoint",
+      "params": "path, data, height",
+      "group": "Cosmos REST (LCD)",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/auth/v1beta1/module_accounts",
+      "description": "All module accounts",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/auth/v1beta1/module_accounts/{name}",
+      "description": "Module account by name",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmos/bank/v1beta1/denoms_metadata/{denom}",
+      "description": "Metadata for a single denom",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmwasm/wasm/v1/codes/pinned",
+      "description": "Pinned Wasm codes",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/cosmwasm/wasm/v1/code/{code_id}/contracts",
+      "description": "Contracts instantiated from code",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/swagger/",
+      "description": "Swagger UI — interactive API documentation",
+      "group": "Cosmos REST (LCD)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/params",
+      "description": "Inference module parameters",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/inference/{index}",
+      "description": "Single inference by index",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/inference",
+      "description": "All inferences (paginated)",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/participant/{index}",
+      "description": "Participant by index",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/participant",
+      "description": "All participants",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/inference_participant/{address}",
+      "description": "Participant by address",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/participants_with_balances",
+      "description": "Participants with token balances",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/participants_stats",
+      "description": "Full participant stats",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/participants/count",
+      "description": "Participant count",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/get_participant_current_stats/{id}",
+      "description": "Current stats for participant",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/get_all_participant_current_stats",
+      "description": "All participants current stats",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/get_current_epoch",
+      "description": "Current epoch number and data",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/epoch_info",
+      "description": "Epoch info (start block, duration)",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/epoch_group_data/{epoch_index}",
+      "description": "Epoch group data",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/current_epoch_group_data",
+      "description": "Current epoch group data",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/epoch_performance_summary/{epoch_index}",
+      "description": "Performance summary for epoch",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/epoch_performance_summary/{epoch_index}/{participantId}",
+      "description": "Performance for specific participant in epoch",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/epoch_group_validations/{participant}/{epoch_index}",
+      "description": "Epoch group validations",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/excluded_participants/{epoch_index}",
+      "description": "Excluded participants for epoch",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/tokenomics_data",
+      "description": "Current tokenomics",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/get_unit_of_compute_price_proposal",
+      "description": "Current UoC price proposal",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/models_all",
+      "description": "All registered AI models",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/model_per_token_price/{model_id}",
+      "description": "Per-token price for a model",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/all_model_per_token_prices",
+      "description": "All model per-token prices",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/model_capacity/{model_id}",
+      "description": "Capacity for a model",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/all_model_capacities",
+      "description": "All model capacities",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/models_stats_by_time",
+      "description": "Model stats by time period",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/top_miner/{address}",
+      "description": "Top miner by address",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/top_miner",
+      "description": "All top miners",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/poc_batches_for_stage/{block_height}",
+      "description": "PoC batches at stage",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/poc_validations_for_stage/{block_height}",
+      "description": "PoC validations at stage",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/poc_v2_validations_for_stage/{block_height}",
+      "description": "PoC v2 validations at stage",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/poc_v2_store_commit/{height}/{address}",
+      "description": "PoC v2 off-chain state commit",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/all_poc_v2_store_commits/{height}",
+      "description": "All PoC v2 commits for stage",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/poc_validation_snapshot/{height}",
+      "description": "PoC validation snapshot",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/count_po_c_batches_at_height/{height}",
+      "description": "Count PoC batches at height",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/count_po_c_validations_at_height/{height}",
+      "description": "Count PoC validations at height",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/active_confirmation_poc_event",
+      "description": "Active confirmation PoC event",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/confirmation_poc_events/{epoch_index}",
+      "description": "Confirmation PoC events for epoch",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/mlnode_weight_distribution/{height}/{address}",
+      "description": "ML node weight distribution",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/all_mlnode_weight_distributions/{height}",
+      "description": "All ML node weight distributions for stage",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/mlnode_version",
+      "description": "Required ML node version",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/hardware_nodes/{participant}",
+      "description": "Hardware nodes for participant",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/hardware_nodes_all",
+      "description": "All hardware nodes",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/training_task",
+      "description": "Current training task",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/training_task_all",
+      "description": "All training tasks",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/queued_training_tasks",
+      "description": "Queued training tasks",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/in_progress_training_tasks",
+      "description": "In-progress training tasks",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/training_kv_record/{taskId}/{key}",
+      "description": "Training KV record",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/list_training_kv_record_keys/{taskId}",
+      "description": "List training KV record keys",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/training_barrier",
+      "description": "Training barrier state",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/training_alive_nodes",
+      "description": "Alive nodes in training",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/training_allow_list",
+      "description": "Training allow list",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/inference_timeout/{expirationHeight}/{inferenceId}",
+      "description": "Inference timeout record",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/inference_validation_details/{epochId}/{inferenceId}",
+      "description": "Inference validation details",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/get_inference_validation_parameters/{ids}/{requester}",
+      "description": "Inference validation parameters",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/get_minimum_validation_average",
+      "description": "Minimum validation average threshold",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/settle_amount/{participant}",
+      "description": "Settle amount for participant",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/developer/{developer}/stats_by_time",
+      "description": "Developer stats by time period",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/developer/{developer}/stats_by_epochs_backwards",
+      "description": "Developer stats by epochs",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/all_stats_by_time",
+      "description": "Global stats by time period",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/bridge_transaction/{origin_chain}/{block_number}/{receipt_index}",
+      "description": "Bridge transaction",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/bridge_transactions",
+      "description": "All bridge transactions",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/bridge_addresses/{chain_id}",
+      "description": "Bridge addresses by chain",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/liquidity_pool",
+      "description": "Liquidity pool state",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/wrapped_token_balances/{address}",
+      "description": "Wrapped token balances",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/approved_tokens_for_trade",
+      "description": "Approved tokens for trading",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/validate_wrapped_token_for_trade/{denom}",
+      "description": "Validate wrapped token for trading",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/validate_ibc_token_for_trade/{denom}",
+      "description": "Validate IBC token for trading",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/participant_allow_list",
+      "description": "Participant allow list",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/partial_upgrade/{height}",
+      "description": "Partial upgrade at height",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/partial_upgrade",
+      "description": "All partial upgrades",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/random_seeds/{epoch_index}",
+      "description": "Random seeds for epoch",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/subnet_escrow/{id}",
+      "description": "Subnet escrow by ID",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/subnet_host_epoch_stats/{epoch_index}/{participant}",
+      "description": "Subnet host epoch stats",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/inference/grantees_by_message_type/{granter_address}/{message_type_url}",
+      "description": "Grantees by message type",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/bls/params",
+      "description": "BLS module parameters",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/bls/epoch_data/{epoch_id}",
+      "description": "BLS epoch data",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/bls/signing_status/{request_id}",
+      "description": "BLS signing status",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/bls/signing_history",
+      "description": "BLS signing history",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/collateral/params",
+      "description": "Collateral module parameters",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/collateral/collateral/{participant}",
+      "description": "Collateral for a participant",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/collateral/collateral",
+      "description": "All collaterals",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/collateral/unbonding/{participant}",
+      "description": "Unbonding collateral",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/collateral/unbonding",
+      "description": "All unbonding collaterals",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/restrictions/params",
+      "description": "Restrictions module parameters",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/restrictions/status",
+      "description": "Transfer restriction status",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/restrictions/exemptions",
+      "description": "Transfer exemptions",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/restrictions/exemption_usage",
+      "description": "Exemption usage",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/genesistransfer/params",
+      "description": "Genesis transfer parameters",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/genesistransfer/transfer_status/{genesis_address}",
+      "description": "Transfer status for genesis account",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/genesistransfer/transfer_history",
+      "description": "Transfer history",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/genesistransfer/allowed_accounts",
+      "description": "Allowed accounts",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/genesistransfer/transfer_eligibility/{genesis_address}",
+      "description": "Transfer eligibility",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/streamvesting/params",
+      "description": "Stream vesting parameters",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/streamvesting/vesting_schedule/{participant_address}",
+      "description": "Vesting schedule for participant",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/streamvesting/total_vesting/{participant_address}",
+      "description": "Total vesting amount",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/chain-api/productscience/inference/bookkeeper/params",
+      "description": "Bookkeeper module parameters",
+      "group": "Gonka chain modules (REST)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/start_inference",
+      "description": "Start an inference request",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/finish_inference",
+      "description": "Finish an inference and submit result",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/invalidate_inference",
+      "description": "Invalidate a failed inference",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/revalidate_inference",
+      "description": "Re-validate an invalidated inference",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/validation",
+      "description": "Submit validation result for an inference",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/submit_new_participant",
+      "description": "Register a new funded participant",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/submit_new_unfunded_participant",
+      "description": "Register a new unfunded participant",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/claim_rewards",
+      "description": "Claim epoch rewards",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/submit_poc_batch",
+      "description": "Submit Proof of Computation batch",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/submit_poc_validation",
+      "description": "Submit PoC validation result",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/submit_poc_validations_v2",
+      "description": "Submit PoC v2 validations (batch)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/poc_v2_store_commit",
+      "description": "Submit PoC v2 off-chain state commit",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/mlnode_weight_distribution",
+      "description": "Submit ML node weight distribution",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/submit_seed",
+      "description": "Submit random seed for epoch",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/submit_unit_of_compute_price_proposal",
+      "description": "Submit UoC price governance proposal",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/register_model",
+      "description": "Register a new AI model (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/delete_governance_model",
+      "description": "Delete a governance-registered model",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/create_training_task",
+      "description": "Create a new training task",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/claim_training_task_for_assignment",
+      "description": "Claim training task for assignment",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/assign_training_task",
+      "description": "Assign training task to participant",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/join_training",
+      "description": "Join an active training session",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/training_heartbeat",
+      "description": "Submit training heartbeat",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/set_barrier",
+      "description": "Set training synchronization barrier",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/join_training_status",
+      "description": "Report training join status",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/submit_training_kv_record",
+      "description": "Submit training key-value record",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/submit_hardware_diff",
+      "description": "Submit hardware configuration diff",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/bridge_exchange",
+      "description": "Execute bridge token exchange",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/register_bridge_addresses",
+      "description": "Register bridge contract addresses (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/register_liquidity_pool",
+      "description": "Register bridge liquidity pool (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/request_bridge_withdrawal",
+      "description": "Request bridge withdrawal",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/request_bridge_mint",
+      "description": "Request bridge mint",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/register_wrapped_token_contract",
+      "description": "Register wrapped token contract (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/migrate_all_wrapped_tokens",
+      "description": "Migrate all wrapped tokens (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/register_token_metadata",
+      "description": "Register token metadata (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/approve_bridge_token_for_trading",
+      "description": "Approve bridge token for trading (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/approve_ibc_token_for_trading",
+      "description": "Approve IBC token for trading (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/register_ibc_token_metadata",
+      "description": "Register IBC token metadata (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/add_training_allow_list",
+      "description": "Add to training allow list (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/remove_training_allow_list",
+      "description": "Remove from training allow list (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/set_training_allow_list",
+      "description": "Set entire training allow list (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/add_participants_to_allow_list",
+      "description": "Add participants to allow list (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/remove_participants_from_allow_list",
+      "description": "Remove participants from allow list (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/create_partial_upgrade",
+      "description": "Create partial chain upgrade (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/create_subnet_escrow",
+      "description": "Create subnet escrow",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/settle_subnet_escrow",
+      "description": "Settle subnet escrow",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/inference/update_params",
+      "description": "Update inference module params (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/bls/submit_dealer_part",
+      "description": "Submit BLS dealer part (DKG)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/bls/submit_verification_vector",
+      "description": "Submit BLS verification vector (DKG)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/bls/submit_group_key_validation_signature",
+      "description": "Submit group key validation sig (DKG)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/bls/submit_partial_signature",
+      "description": "Submit BLS partial signature",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/bls/request_threshold_signature",
+      "description": "Request BLS threshold signature",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/bls/update_params",
+      "description": "Update BLS module params (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/collateral/deposit_collateral",
+      "description": "Deposit collateral",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/collateral/withdraw_collateral",
+      "description": "Withdraw collateral",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/collateral/update_params",
+      "description": "Update collateral module params (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/restrictions/execute_emergency_transfer",
+      "description": "Execute emergency transfer (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/restrictions/update_params",
+      "description": "Update restrictions module params (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/genesistransfer/transfer_ownership",
+      "description": "Transfer genesis account ownership",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/genesistransfer/update_params",
+      "description": "Update genesis transfer params (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/streamvesting/transfer_with_vesting",
+      "description": "Transfer tokens with vesting schedule",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/streamvesting/batch_transfer_with_vesting",
+      "description": "Batch transfer with vesting",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/streamvesting/update_params",
+      "description": "Update stream vesting params (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/chain-api/productscience/inference/bookkeeper/update_params",
+      "description": "Update bookkeeper params (gov)",
+      "group": "Gonka transactions (Msg RPCs)",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "chain-api",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/v1/status",
+      "description": "Node health and sync status",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/identity",
+      "description": "Node identity (address, pubkey)",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/versions",
+      "description": "Software version info",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/models",
+      "description": "Available AI models and capacities",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/pricing",
+      "description": "Current inference pricing",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/participants",
+      "description": "List all participants",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/participants/{address}",
+      "description": "Participant details by address",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/governance/models",
+      "description": "Governance-registered models",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/governance/pricing",
+      "description": "Governance pricing proposals",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/epochs/{epoch}",
+      "description": "Epoch data by ID",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/epochs/{epoch}/participants",
+      "description": "Participants in an epoch",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/stats/summary/epochs",
+      "description": "Global inference summary by epochs",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/stats/summary/time",
+      "description": "Global inference summary by time",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/stats/models",
+      "description": "Per-model usage statistics",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/stats/developers/{dev}/inferences",
+      "description": "Developer inference stats",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/bls/epoch/{id}",
+      "description": "BLS epoch data",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/bls/signatures/{request_id}",
+      "description": "BLS signature by request ID",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/bridge/status",
+      "description": "Bridge status",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/bridge/addresses",
+      "description": "Bridge addresses",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/restrictions/status",
+      "description": "Transfer restriction status",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/restrictions/exemptions",
+      "description": "Transfer exemptions",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/poc/artifacts/state",
+      "description": "Proof-of-Computation artifact state",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/inference/payloads",
+      "description": "Inference payload data",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "description": "Submit inference request (OpenAI-compatible)",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/v1/chat/completions",
+      "description": "Get inference result by ID",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/participants",
+      "description": "Register a new participant",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/v1/training/tasks",
+      "description": "Create a training task",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/v1/training/tasks",
+      "description": "List training tasks",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/training/tasks/{id}",
+      "description": "Get training task by ID",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/training/lock-nodes",
+      "description": "Lock nodes for training session",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/v1/verify-proof",
+      "description": "Verify a submitted proof",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/v1/verify-block",
+      "description": "Verify a block",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/v1/governance/models-legacy",
+      "description": "Legacy governance-registered models",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/stats/developers/{dev}/summary/epochs",
+      "description": "Developer epoch summary",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/poc-batches/{epoch}",
+      "description": "PoC batches for an epoch",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/v1/poc/proofs",
+      "description": "Submit PoC proofs (rate limited 300/min)",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "GET",
+      "path": "/v1/restrictions/exemptions/{id}/usage/{account}",
+      "description": "Exemption usage for specific account",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/debug/pubkey-to-addr/{pubkey}",
+      "description": "Convert public key to address",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/v1/debug/verify/{height}",
+      "description": "Debug: verify at block height",
+      "group": "Gonka API node",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ch/blocks",
+      "description": "Latest blocks with tx count, gas totals, timestamps — newest first",
+      "params": "limit (default 20, max 100), offset (max 100K)",
+      "group": "Fast indexed endpoints",
+      "cache": "Not specified",
+      "namespace": "api/ch",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ch/blocks/latest",
+      "description": "Latest indexed block — height, time, tx count, gas totals",
+      "group": "Fast indexed endpoints",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "api/ch",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ch/tx/{hash}",
+      "description": "Transaction by hash — full indexed record",
+      "params": "hash: 64 hex chars, 0x prefix ok",
+      "group": "Fast indexed endpoints",
+      "cache": "Not specified",
+      "namespace": "api/ch",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ch/block/{height}",
+      "description": "All transactions in a block, chain order",
+      "params": "height: non-negative integer",
+      "group": "Fast indexed endpoints",
+      "cache": "Not specified",
+      "namespace": "api/ch",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ch/address/{address}",
+      "description": "Paginated tx history for any wallet — sent & received, newest first",
+      "params": "limit (default 5, max 100), offset (max 1M)",
+      "group": "Fast indexed endpoints",
+      "cache": "Not specified",
+      "namespace": "api/ch",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ch/slashing",
+      "description": "Slashing events — filter by participant and height range",
+      "params": "participant, from_height, to_height, limit (50), offset",
+      "group": "Fast indexed endpoints",
+      "cache": "Not specified",
+      "namespace": "api/ch",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ch/hardware/nodes/{address}",
+      "description": "Current hardware registrations — GPU types, status, timestamps",
+      "group": "Fast indexed endpoints",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "api/ch",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ch/hardware/snapshots",
+      "description": "Per-epoch hardware history",
+      "params": "snapshot_epoch (required), participant, limit, offset",
+      "group": "Fast indexed endpoints",
+      "cache": "Not specified",
+      "namespace": "api/ch",
+      "readOnly": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/ch/epoch-performance/{address}",
+      "description": "Per-epoch inference & rewards counters for a participant",
+      "params": "epoch_min, limit, offset. Ordered epoch_index DESC",
+      "group": "Fast indexed endpoints",
+      "cache": "Not specified",
+      "namespace": "api/ch",
+      "readOnly": true
+    },
+    {
+      "method": "POST",
+      "path": "/mlnode/v1/poc-batches/generated",
+      "description": "V1: PoC batch generation callback",
+      "group": "MLNode callback API",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "other",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/mlnode/v1/poc-batches/validated",
+      "description": "V1: PoC batch validation callback",
+      "group": "MLNode callback API",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "other",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/v1/poc-batches/generated",
+      "description": "V1 alias: PoC batch generated",
+      "group": "MLNode callback API",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/v1/poc-batches/validated",
+      "description": "V1 alias: PoC batch validated",
+      "group": "MLNode callback API",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/v2/poc-batches/generated",
+      "description": "V2: PoC artifacts generation (off-chain)",
+      "group": "MLNode callback API",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    },
+    {
+      "method": "POST",
+      "path": "/v2/poc-batches/validated",
+      "description": "V2: PoC validations (off-chain)",
+      "group": "MLNode callback API",
+      "params": "",
+      "cache": "Not specified",
+      "namespace": "v1",
+      "readOnly": false
+    }
+  ],
+  "catalogAuth": "{\"type\":\"api_key\",\"headers\":[\"X-Api-Key\",\"Authorization: Bearer YOUR_KEY\"],\"get_key\":\"https://rpc.gonka.gg/access\"}"
+}

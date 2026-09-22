@@ -1,7 +1,7 @@
 import {z} from 'zod';
 import {reconcileModels} from './audit';
 import {readJSON,configuredOrigin} from './http';
-import {epochData,participantData,blockData,proposalData,modelData,networkModelIds,governanceModelData,versionsData,protocolParamsData,statsData,catalogData,catalogDeclaredTotal,hardwareData,record,scalar} from './normalize';
+import {epochData,participantData,blockData,proposalData,modelData,networkModelIds,governanceModelData,versionsData,protocolParamsData,statsData,catalogData,catalogDeclaredTotal,hardwareData,participantStatsData,dexData,record,scalar} from './normalize';
 import {registry,emptySnapshot,unavailable,ageSnapshot,normalizeSnapshotShape} from './sources';
 import {ngnk} from './metrics';
 import type {Snapshot} from './types';
@@ -23,8 +23,9 @@ read('tokenomics',rpc+prefix+'tokenomics_data',d=>{const p=z.object({tokenomics_
 read('community',rpc+'/chain-api/cosmos/distribution/v1beta1/community_pool',d=>{const p=z.object({pool:z.array(z.object({denom:z.string(),amount:scalar}))}).parse(d),native=p.pool.find(x=>x.denom==='ngonka');s.communityPool=native?ngnk(native.amount):null;}),
 read('governance',rpc+'/chain-api/cosmos/gov/v1/proposals?pagination.limit=20&pagination.reverse=true',d=>{s.proposals=proposalData(d);}),
 read('stats',rpc+`/v1/stats/models?time_from=${from}&time_to=${now}`,d=>{s.stats=statsData(d);s.statsWindow={from:new Date(from).toISOString(),to:new Date(now).toISOString()};}),
+read('dex','https://api.dexscreener.com/latest/dex/tokens/0x972a7A92D92796a98801A8818bcF91f1648f2F68',d=>{s.dex=dexData(d);}),
 read('catalog',rpc+'/api/endpoints',d=>{s.endpoints=catalogData(d);s.endpointDeclaredTotal=catalogDeclaredTotal(d);const p=record.parse(d);s.catalogAuth=p.auth?JSON.stringify(p.auth):null;})]);
-if(s.epoch){if(previous?.epoch?.id!==s.epoch.id){s.participants=[];s.hardware=[];sourceMap.delete('participants');sourceMap.delete('hardware');}await read('participants',rpc+`/v1/epochs/${s.epoch.id}/participants`,d=>{const p=record.parse(d);s.participants=participantData(d);s.validators=Array.isArray(p.validators)?p.validators.length:null;});}
+if(s.epoch){if(previous?.epoch?.id!==s.epoch.id){s.participants=[];s.hardware=[];sourceMap.delete('participants');sourceMap.delete('hardware');}await read('participants',rpc+`/v1/epochs/${s.epoch.id}/participants`,d=>{const p=record.parse(d);s.participants=participantData(d);s.validators=Array.isArray(p.validators)?p.validators.length:null;});await read('participantStats',rpc+'/chain-api/productscience/inference/inference/participants_stats',d=>{s.participantStats=participantStatsData(d);});}
 const oldHardware=sourceMap.get('hardware');if(s.participants.length&&(!oldHardware||previous?.epoch?.id!==s.epoch?.id||Date.now()-Date.parse(oldHardware.fetchedAt)>3600000)){await read('hardware',rpc+prefix+'hardware_nodes_all',d=>{s.hardware=hardwareData(d,s.participants);});}
 // Reconcile per-source fields even when one of the three providers fails.
 const catalog=raw.models??{data:s.models.map(m=>({id:m.id,owned_by:m.provider}))};
