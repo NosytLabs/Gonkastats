@@ -35,7 +35,10 @@ export function ChatConsole({s}:{s:Snapshot}){
     setInput('');setError(null);setBusy(true);
     const next:Msg[]=[...messages,{role:'user',content:text}];setMessages(next);
     try{
-      const res=await fetch(provider.base+'/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+effectiveKey},body:JSON.stringify({model,messages:next.map(({role,content})=>({role,content})),max_tokens:1200})});
+      const url=providerId==='antseed'?'/api/chat':(provider.base+'/chat/completions');
+      const headers:Record<string,string>={'Content-Type':'application/json'};
+      if(providerId!=='antseed')headers['Authorization']='Bearer '+effectiveKey;
+      const res=await fetch(url,{method:'POST',headers,body:JSON.stringify({model,messages:next.map(({role,content})=>({role,content})),max_tokens:1200})});
       const data=await res.json();
       if(!res.ok)throw new Error(data?.error?.message??('HTTP '+res.status));
       const out=data?.choices?.[0]?.message?.content?.trim();
