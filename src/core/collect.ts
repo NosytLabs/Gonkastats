@@ -1,7 +1,7 @@
 import {z} from 'zod';
 import {reconcileModels} from './audit';
 import {readJSON,configuredOrigin} from './http';
-import {epochData,participantData,blockData,proposalData,modelData,networkModelIds,governanceModelData,versionsData,protocolParamsData,statsData,catalogData,catalogDeclaredTotal,hardwareData,participantStatsData,dexData,record,scalar} from './normalize';
+import {epochData,participantData,blockData,proposalData,modelData,networkModelIds,governanceModelData,versionsData,protocolParamsData,statsData,catalogData,catalogDeclaredTotal,hardwareData,participantStatsData,dexData,record,scalar,amount} from './normalize';
 import {registry,emptySnapshot,unavailable,ageSnapshot,normalizeSnapshotShape} from './sources';
 import {ngnk} from './metrics';
 import type {Snapshot} from './types';
@@ -16,7 +16,7 @@ read('networkModels',rpc+'/v1/models',d=>{s.networkModels=networkModelIds(d);}),
 read('governanceModels',rpc+'/v1/governance/models',d=>{s.governanceModels=governanceModelData(d);}),
 read('versions',rpc+'/v1/versions',d=>{s.versions=versionsData(d);}),
 read('capabilities','https://api.proxy.gonka.gg/api/models/capabilities',d=>{z.object({models:z.array(record)}).parse(d);}),
-read('pricing','https://api.proxy.gonka.gg/api/pricing',d=>{const amount=scalar.refine(v=>/^\d{1,80}(\.\d{1,40})?$/.test(v),'Invalid pricing amount');const p=z.object({gonka_usd:amount,fx_updated_at:z.string(),models:z.array(z.object({model_id:z.string(),usd_per_million_tokens:amount.nullish()}).passthrough())}).parse(d);s.fx=p.gonka_usd;s.fxAt=p.fx_updated_at;}),
+read('pricing','https://api.proxy.gonka.gg/api/pricing',d=>{const p=z.object({gonka_usd:amount,fx_updated_at:z.string(),models:z.array(z.object({model_id:z.string(),usd_per_million_tokens:amount.nullish()}).passthrough())}).parse(d);s.fx=p.gonka_usd;s.fxAt=p.fx_updated_at;}),
 read('params',rpc+prefix+'params',d=>{const p=protocolParamsData(d);s.protocol=p.protocol;s.pocModels=p.pocModels;s.devshardVersions=p.devshardVersions;}),
 read('supply',rpc+'/chain-api/cosmos/bank/v1beta1/supply/by_denom?denom=ngonka',d=>{const p=z.object({amount:z.object({denom:z.literal('ngonka'),amount:scalar})}).parse(d);s.totalSupply=ngnk(p.amount.amount);}),
 read('tokenomics',rpc+prefix+'tokenomics_data',d=>{const p=z.object({tokenomics_data:z.record(z.string(),scalar)}).parse(d);s.tokenomics=Object.fromEntries(Object.entries(p.tokenomics_data).map(([k,v])=>[k,ngnk(v)]));}),

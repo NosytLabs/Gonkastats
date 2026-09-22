@@ -37,7 +37,7 @@ export async function GET(request:Request,{params}:{params:Promise<{resource:str
  case 'live':data=s.blocks.filter(b=>!query.since||Date.parse(b.time)>=Date.parse(query.since)).slice(0,Number(query.limit??20)).map(b=>({type:'indexed-block',id:String(b.height),at:b.time,transactions:b.transactions,gas:b.gas,href:'/blocks/'+b.height}));meta.coverage='Retained indexed blocks only. Not every transaction or inference event.';break;
  case 'sources':data=s.sources;break;
  case 'source-health':data=sourceHealthData(s);break;
- case 'health':case 'status':data=healthData(s);if(healthData(s).usableSources===0)status=503;break;
+ case 'health':case 'status':{const h=healthData(s);data=h;if(h.usableSources===0)status=503;}break;
  case 'endpoints':data=page(s.endpoints.filter(e=>query.method==='ALL'||e.method===(query.method??'GET')),e=>e.path+' '+e.description+' '+e.group);break;
  case 'history':case 'charts':{const points=await history(Number(query.hours??24));data=resource==='history'?{points,storage:process.env.DATABASE_URL?'configured':'not-configured'}:{...chartData(points,(query.metric??'weight') as 'weight'|'price'|'participants',Number(query.maxPoints??200)),storage:process.env.DATABASE_URL?'configured':'not-configured'};meta.coverage='Only actual retained database observations. No fabricated backfill.';break;}
  case 'lookup':{const result=await detail(query.kind,query.id);data=result;if(result.error)status=result.error==='Invalid lookup.'?400:result.error.includes('budget')?429:result.error.includes('404')?404:result.error.includes('snapshot')?503:502;break;}
