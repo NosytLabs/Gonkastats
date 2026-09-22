@@ -118,6 +118,12 @@ describe('buildProtocolSnapshot', () => {
     const s=emptySnapshot();
     expect(buildProtocolSnapshot(s).pocModelCoverage).toBe('unavailable');
   });
+
+  it('accepts retained v1 snapshots that predate version metadata',()=>{
+    const s=emptySnapshot() as typeof emptySnapshot extends (...args:any)=>infer R ? R : never;
+    delete (s as Partial<typeof s>).versions;
+    expect(buildProtocolSnapshot(s).versions).toEqual({});
+  });
 });
 ```
 
@@ -241,7 +247,7 @@ export function buildProtocolSnapshot(s:Snapshot):ProtocolSnapshot {
     pocModelCoverage:pocObserved?'observed':'unavailable',
     devshardVersions:pocObserved?s.epoch!.devshardVersions:[],
     endpointCount:s.endpoints.length||null,
-    versions:{...s.versions},
+    versions:{...(s.versions??{})},
   };
 }
 ```
@@ -929,6 +935,7 @@ git commit -m "feat(agents): expose safe runtime RPC discovery metadata"
 ### Task 7: Normalized protocol/provider/source APIs and OpenAPI
 
 **Files:**
+- Create: `src/core/providers.ts`
 - Modify: `src/core/api-definitions.ts`
 - Modify: `src/core/api-data.ts`
 - Modify: `src/app/api/v1/[resource]/route.ts`
@@ -989,7 +996,22 @@ case 'providers':
   return providerMetadata(s);
 ```
 
-If `providerMetadata` is needed by both UI and API, place it in `src/core/providers.ts`, not inside React code.
+Create `src/core/providers.ts` so UI and API share one provider-layer definition:
+
+```ts
+import type {Snapshot} from './types';
+export interface ProviderMetadata {id:'openbroker'|'proxy'|'feather';name:string;scope:string;status:'observed'|'documented'|'not-configured';sourceIds:string[];}
+export function providerMetadata(s:Snapshot):ProviderMetadata[] {
+  const observed=(ids:string[])=>ids.some(id=>s.sources.some(source=>source.id===id&&source.status!=='unavailable'));
+  return [
+    {id:'openbroker',name:'OpenBroker',scope:'managed provider',status:observed(['models'])?'observed':'documented',sourceIds:['models']},
+    {id:'proxy',name:'Proxy by gonka.gg',scope:'managed provider',status:observed(['capabilities','pricing'])?'observed':'documented',sourceIds:['capabilities','pricing']},
+    {id:'feather',name:'Feather',scope:'self-hosted indexer',status:process.env.FEATHER_URL?'documented':'not-configured',sourceIds:[]},
+  ];
+}
+```
+
+Do not add uptime, benchmark or account-state fields without an observed source.
 
 - [ ] **Step 5: Update machine-readable docs**
 
