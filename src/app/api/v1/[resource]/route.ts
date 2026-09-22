@@ -5,7 +5,7 @@ import {contextPlan,compositionData} from '@/core/workload';
 import {getSnapshot,detail,epochDiff} from '@/core/service';
 import {history} from '@/db/store';
 import {apiDefinitions,validateQuery} from '@/core/api-definitions';
-import {metricData,healthData,chartData} from '@/core/api-data';
+import {metricData,healthData,chartData,protocolData,sourceHealthData,providersData} from '@/core/api-data';
 import {openapi} from '@/core/openapi';
 import {simulateCost} from '@/core/cost';
 export const dynamic='force-dynamic';
@@ -25,6 +25,8 @@ export async function GET(request:Request,{params}:{params:Promise<{resource:str
  case 'activity':data={...activityData(s.blocks,Number(query.limit??30)),...(!hasObservation(s,'blocks')?{transactions:null,gas:null,missingHeights:null,spanSeconds:null,histogram:[]}:{}),source:s.sources.find(x=>x.id==='blocks'),scope:'selected indexed records'};break;
  case 'overview':data=s;break;
  case 'metrics':data=metricData(s);break;
+ case 'protocol':data=protocolData(s);break;
+ case 'providers':data=providersData(s);break;
  case 'models':{const rows=filterModels(s.models,{q:'',capability:query.capability??'all',sort:query.sort??'name',view:'table',compare:[]});data=page(rows,m=>m.id);break;}
  case 'composition':data=compositionData(s);break;
  case 'context-plan':data={plans:contextPlan(s.models,String(Number(query.prompt??8000)),String(Number(query.completion??2000))),sourceIds:['models','capabilities'],basis:'Proxy-reported limits joined to the OpenBroker catalog; not a provider acceptance guarantee'};break;
@@ -34,6 +36,7 @@ export async function GET(request:Request,{params}:{params:Promise<{resource:str
  case 'inference':data={models:s.stats,window:s.statsWindow,coverage:'API-node-reported; global DevShard completeness not verified',source:s.sources.find(x=>x.id==='stats')};break;
  case 'live':data=s.blocks.filter(b=>!query.since||Date.parse(b.time)>=Date.parse(query.since)).slice(0,Number(query.limit??20)).map(b=>({type:'indexed-block',id:String(b.height),at:b.time,transactions:b.transactions,gas:b.gas,href:'/blocks/'+b.height}));meta.coverage='Retained indexed blocks only. Not every transaction or inference event.';break;
  case 'sources':data=s.sources;break;
+ case 'source-health':data=sourceHealthData(s);break;
  case 'health':case 'status':data=healthData(s);if(healthData(s).usableSources===0)status=503;break;
  case 'endpoints':data=page(s.endpoints.filter(e=>query.method==='ALL'||e.method===(query.method??'GET')),e=>e.path+' '+e.description+' '+e.group);break;
  case 'history':case 'charts':{const points=await history(Number(query.hours??24));data=resource==='history'?{points,storage:process.env.DATABASE_URL?'configured':'not-configured'}:{...chartData(points,(query.metric??'weight') as 'weight'|'price'|'participants',Number(query.maxPoints??200)),storage:process.env.DATABASE_URL?'configured':'not-configured'};meta.coverage='Only actual retained database observations. No fabricated backfill.';break;}
