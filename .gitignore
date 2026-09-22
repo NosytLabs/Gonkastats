@@ -11,3 +11,4 @@ data/*.json
 artifacts/
 next-env.d.ts
 .data/
+*.bak
