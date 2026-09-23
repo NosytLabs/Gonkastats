@@ -1,4 +1,5 @@
 name: Verify current main once
+# rerun after API registry QA/doc sync
 on:
   push:
     branches: [main]
