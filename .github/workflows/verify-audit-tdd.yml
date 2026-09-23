@@ -1,16 +1,16 @@
-name: GonkaStats current audit TDD
+name: GonkaStats current audit verification
 on:
   push:
     branches: [fix/current-audit-20260923]
 permissions:
   contents: read
 concurrency:
-  group: gonkastats-audit-tdd-${{ github.ref }}
+  group: gonkastats-audit-verify-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  test:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 18
     env:
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
@@ -19,5 +19,27 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm test -- tests/release-surface.test.ts
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Unit and contract tests
+        run: npm test
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Build production app
+        run: npm run build
+      - name: Capture bounded public observations
+        run: npm run snapshot
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser verification
+        run: npm run test:e2e
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: gonkastats-current-audit
+          path: artifacts/
+          retention-days: 3
+          if-no-files-found: warn
