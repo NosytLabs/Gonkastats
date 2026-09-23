@@ -37,7 +37,7 @@ Also explore Network, Hardware, Participants, Epochs, Providers, Markets, Tokeno
 
 ## API and developer reference
 
-**21 implemented GET definitions** are published in the interactive reference, including aliases and the OpenAPI route; this is not a claim of 21 independent datasets. Definitions, validation and documentation share an implementation registry.
+**24 implemented GET definitions** are published in the interactive reference, including aliases and the OpenAPI route; this is not a claim of 21 independent datasets. Definitions, validation and documentation share an implementation registry.
 
 ```sh
 curl 'http://localhost:3000/api/v1/activity?limit=30'
@@ -91,4 +91,4 @@ npm run test:e2e
 
 Deploy as a Node.js Next.js application or with the Dockerfile. GitHub Pages alone cannot run its backend. Multi-instance hosting needs an edge-wide limiter; process budgets are not a distributed rate limiter.
 
-Main retains **manual-only verification**, read-only CI permissions, locked dependencies, bounded execution and seven-day artifact retention. Temporary branch verification was removed after the passing run. There are no scheduled telemetry or billable inference jobs.
+Main retains **manual-only verification**, read-only CI permissions, locked dependencies, bounded execution and three-day artifact retention. Temporary branch verification was removed after the passing run. There are no scheduled telemetry or billable inference jobs.
