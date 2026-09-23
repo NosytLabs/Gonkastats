@@ -47,14 +47,13 @@ curl 'http://localhost:3000/api/v1/composition'
 
 Examples use the current site origin, quoted curl commands, bounded parameters, working Try-it reads, provenance and ETags. Model filters and accounting calculations reuse the same functions as the UI. No arbitrary proxy, transaction broadcast, private-account access or paid completion route exists.
 
-## Verified unified release
+## Current verification
 
-Tested application commit: `d726e738a0c27c7f2dc8ce68849a23a0a11e88d4`.
-[Passing verification run](https://github.com/NosytLabs/Gonkastats/actions/runs/35662277984), 2026-09-21.
+Current application source was verified on **September 23, 2026** in [Actions run 35848657955](https://github.com/NosytLabs/Gonkastats/actions/runs/35848657955), from commit `b6290438a4f8b308b8c94c87f585a276a482eb79`. Subsequent cleanup in this repository is documentation/workflow-only unless a newer verification record says otherwise.
 
-Locked installation, the complete unit/contract suite, strict TypeScript, ESLint, production build, public-source capture and **all four browser scripts passed**. Evidence includes 35 baseline page checks, 23 baseline API scenarios, new activity/context/composition API checks, and 31 interaction/check groups across the scripts. **31 selected page/theme/viewport accessibility scans returned zero axe violations.** No browser runtime exceptions were reported. Selected desktop/tablet/mobile overflow checks passed.
+The locked install, complete unit/contract suite, strict TypeScript, ESLint, production build, bounded public-source snapshot, Chromium installation, and the full browser QA suite all passed. The browser QA now checks the current **24-route API registry** and requires the key activity, protocol, provider, source-health, context-planning, and composition endpoints rather than relying on an old fixed route count.
 
-These are bounded automated tests, not an exhaustive accessibility, security or load certification. See [audit evidence](docs/AUDIT-VERIFICATION.md) and the [chart/content release record](docs/CHARTS-RELEASE.md). Superseded planning and intermediate verification notes have been removed so the repository keeps one current audit trail.
+These are bounded automated tests, not an exhaustive accessibility, security, provider-availability, or load certification. Public-source failures remain explicit instead of being replaced with synthetic data. Main retains manual-only verification and three-day evidence retention.
 
 ## Accuracy and limitations
 
