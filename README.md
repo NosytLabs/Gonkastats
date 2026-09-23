@@ -37,7 +37,7 @@ Also explore Network, Hardware, Participants, Epochs, Providers, Markets, Tokeno
 
 ## API and developer reference
 
-**24 implemented GET definitions** are published in the interactive reference, including aliases and the OpenAPI route; this is not a claim of 21 independent datasets. Definitions, validation and documentation share an implementation registry.
+**24 implemented GET definitions** are published in the interactive reference, including aliases and the OpenAPI route; this is not a claim that every definition is an independent dataset. Definitions, validation and documentation share an implementation registry.
 
 ```sh
 curl 'http://localhost:3000/api/v1/activity?limit=30'
@@ -49,21 +49,21 @@ Examples use the current site origin, quoted curl commands, bounded parameters, 
 
 ## Current verification
 
-Current application source was verified on **September 23, 2026** in [Actions run 35848657955](https://github.com/NosytLabs/Gonkastats/actions/runs/35848657955), from commit `b6290438a4f8b308b8c94c87f585a276a482eb79`. Subsequent cleanup in this repository is documentation/workflow-only unless a newer verification record says otherwise.
+Current application source was verified on **September 23, 2026** in [Actions run 35851426112](https://github.com/NosytLabs/Gonkastats/actions/runs/35851426112). The tested application source is commit `87031d0586d6ee72d00c92e706870c72002c24bc`; the workflow run executed commit `1b35840c76648856218389d927befceb99b601a6`, whose only additional change was the temporary verification workflow. See [V2 verification evidence](docs/V2-VERIFICATION.md).
 
-The locked install, complete unit/contract suite, strict TypeScript, ESLint, production build, bounded public-source snapshot, Chromium installation, and the full browser QA suite all passed. The browser QA now checks the current **24-route API registry** and requires the key activity, protocol, provider, source-health, context-planning, and composition endpoints rather than relying on an old fixed route count.
+The locked install, **153 unit/contract tests**, strict TypeScript, ESLint, production build, bounded public-source snapshot, Chromium installation, and all **five browser QA scripts** passed. Baseline browser QA covered 35 page routes, 23 API scenarios and 12 interaction flows; 33 selected axe scans across the five suites reported zero violations, and the v2 suite separately verified Protocol Radar, provider pages, model lifecycle, source dependencies and write-definition safety.
 
 These are bounded automated tests, not an exhaustive accessibility, security, provider-availability, or load certification. Public-source failures remain explicit instead of being replaced with synthetic data. Main retains manual-only verification and three-day evidence retention.
 
 ## Accuracy and limitations
 
-During final source capture, 13 of 14 reads returned usable observations. The dAPI inference-statistics endpoint returned HTTP 500. Inference demand remains unavailable; blockchain transactions are not substituted for AI requests. No missing history, sentiment, market cap, uptime or GPU-equivalence series is invented.
+During the September 23 verification snapshot, **18 of 19 registered public sources** returned usable observations. The dAPI inference-statistics endpoint returned HTTP 500. Inference demand remains unavailable; blockchain transactions are not substituted for AI requests. No missing history, sentiment, market cap, uptime or GPU-equivalence series is invented.
 
 Model availability, capabilities and prices are separate observations. The collector reconciles each field group independently so a failed catalog cannot freeze fresh prices, and failed fields retain their original stale attribution. Collection gaps longer than 15 minutes break historical chart lines without creating numeric readings. Duplicate block heights and invalid timestamps are rejected before aggregation.
 
 Raw JSON numbers are parsed losslessly. Ledger values stay decimal strings; GNK/ngonka are not AI text-token units. Declared weights are not current consensus power. Hardware registrations are not physical audits. The provider conversion reference is not an executed trade. Issued supply is not assumed to be circulating supply.
 
-**This is not full VeniceStats/AntSeedStats parity or a publicly hosted deployment.** Long-term charts need PostgreSQL and an operated collector. Private OpenBroker analytics, hosted AI/MCP, measured broker benchmarks, licensed Pulse ingestion and self-hosted Feather remain unconfigured. Pulse is an attributed reading room. No paid infrastructure, wallet, database or domain is provisioned by this release.
+**This is not full VeniceStats/AntSeedStats parity or a publicly hosted deployment.** Long-term charts need PostgreSQL and an operated collector. Private OpenBroker analytics, hosted AI/MCP, measured broker benchmarks, licensed Pulse ingestion and self-hosted Feather remain unconfigured. GonkaStats intentionally exposes no BYOK chat proxy or paid-completion surface. Pulse is an attributed reading room. No paid infrastructure, wallet, database or domain is provisioned by this release.
 
 ## Retained observations and optional history
 
