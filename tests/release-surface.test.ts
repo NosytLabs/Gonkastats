@@ -9,6 +9,9 @@ it('keeps the public application read-only with no chat proxy or BYOK chat surfa
   expect(page).not.toContain("from '@/features/chat'");
   expect(page).not.toContain("case 'chat'");
   expect(shell).not.toContain("['/chat','AI Chat'");
+  const css=readFileSync('src/app/observatory.css','utf8');
+  expect(css).not.toContain('.chat-log');
+  expect(css).not.toContain('.key-input');
 });
 
 it('runs the v2 browser audit as part of the standard e2e suite',()=>{
