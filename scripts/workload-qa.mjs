@@ -1,13 +1,13 @@
-import {spawn} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {createWriteStream} from 'node:fs';
 import assert from 'node:assert/strict';
 import {chromium,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 await mkdir('artifacts/screenshots',{recursive:true});
+const {startServer}=await import('./qa-server.mjs');
 const log=createWriteStream('artifacts/workload-server.log');
-const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port','3103'],{env:{...process.env,DATA_MODE:'snapshot',NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});server.stdout.pipe(log);server.stderr.pipe(log);
-const base='http://127.0.0.1:3103';let browser;const report={checks:[],accessibility:[],errors:[],startedAt:new Date().toISOString()};
+const server=await startServer(3103,c=>{try{log.write(c.toString())}catch{}});
+const base=server.base;let browser;const report={checks:[],accessibility:[],errors:[],startedAt:new Date().toISOString()};
 try{
  let ready=false;for(let i=0;i<60;i++){try{if((await fetch(base+'/api/v1/openapi')).ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,1000));}assert.ok(ready);
  const schema=await (await fetch(base+'/api/v1/openapi')).json();assert.ok(Object.keys(schema.paths).length>=21);
@@ -25,4 +25,4 @@ try{
  report.checks.push('Desktop/tablet/mobile render and overflow');await page.setViewportSize({width:1440,height:1050});
  for(const theme of ['dark','light']){await page.goto(base+'/workload');if(await page.locator('html').getAttribute('data-theme')!==theme)await page.getByRole('button',{name:'Toggle color theme'}).click();for(const route of ['/workload','/network','/learn','/']){await page.goto(base+route,{waitUntil:'networkidle'});const a=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();report.accessibility.push({route,theme,violations:a.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>n.target)}))});}}
  assert.equal(report.accessibility.flatMap(r=>r.violations).length,0,'No axe violations in new views');assert.equal(report.errors.length,0);report.result='passed';
-}catch(e){report.result='failed';report.error=String(e.stack??e);console.error(e);process.exitCode=1;}finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/workload-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();server.kill('SIGTERM');log.end();}
+}catch(e){report.result='failed';report.error=String(e.stack??e);console.error(e);process.exitCode=1;}finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/workload-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();server.stop();log.end();}

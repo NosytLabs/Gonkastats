@@ -1,16 +1,15 @@
-import {spawn} from 'node:child_process';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {createWriteStream} from 'node:fs';
 import assert from 'node:assert/strict';
 import {chromium,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 await mkdir('artifacts/screenshots',{recursive:true});
-const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port','3101'],{env:{...process.env,DATA_MODE:'snapshot',NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});
-const log=createWriteStream('artifacts/revamp-server.log');server.stdout.pipe(log);server.stderr.pipe(log);
-const base='http://127.0.0.1:3101';let browser;
+const {startServer}=await import('./qa-server.mjs');
+const log=createWriteStream('artifacts/revamp-server.log');
+const server=await startServer(3101,c=>{try{log.write(c.toString())}catch{}});
+const base=server.base;let browser;
 const report={startedAt:new Date().toISOString(),mode:'real retained public observation',checks:[],accessibility:[],runtimeErrors:[],skipped:[]};
 try{
- let ready=false;for(let i=0;i<60;i++){try{const r=await fetch(base+'/api/v1/openapi');if(r.ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,1000));}assert.ok(ready,'Production server ready');
  const snapshot=JSON.parse(await readFile('data/snapshot.json','utf8'));browser=await chromium.launch();const context=await browser.newContext({viewport:{width:1440,height:1050},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>report.runtimeErrors.push(e.message));
  await page.goto(base+'/',{waitUntil:'networkidle'});await expect(page.locator('.dashboard-kpis .metric')).toHaveCount(6);await expect(page.getByRole('heading',{name:'Gonka, at a glance.'})).toBeVisible();
  const source=page.locator('.kpi-tile .source-note').first();await source.locator('summary').click();await expect(source.getByRole('link',{name:'Inspect upstream source'})).toBeVisible();assert.equal(await page.locator('.kpi-tile').first().evaluate(el=>getComputedStyle(el).overflow),'visible');await source.locator('summary').click();report.checks.push('Six source-qualified KPIs with unclipped provenance');
@@ -27,4 +26,4 @@ try{
  for(const theme of ['dark','light']){await page.goto(base+'/');if(await page.locator('html').getAttribute('data-theme')!==theme)await page.getByRole('button',{name:'Toggle color theme'}).click();for(const route of ['/','/models','/learn','/cost-lab']){await page.goto(base+route,{waitUntil:'networkidle'});const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();report.accessibility.push({route,theme,violations:result.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>n.target)}))});}if(theme==='light'){await page.goto(base+'/');await page.screenshot({path:'artifacts/screenshots/overview-revamp-light.png',fullPage:false});}}
  assert.equal(report.runtimeErrors.length,0,'No browser exceptions');assert.equal(report.accessibility.flatMap(r=>r.violations).length,0,'No automated accessibility findings in selected new views');report.result='passed';
 }catch(error){report.result='failed';report.error=error.stack??String(error);console.error(error);process.exitCode=1;}
-finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/revamp-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();server.kill('SIGTERM');log.end();}
+finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/revamp-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();server.stop();log.end();}

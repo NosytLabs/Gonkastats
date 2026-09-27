@@ -1,14 +1,13 @@
-import {spawn} from 'node:child_process';
 import {mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {chromium,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-const base='http://127.0.0.1:3102';
-const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port','3102'],{env:{...process.env,DATA_MODE:'snapshot',NEXT_TELEMETRY_DISABLED:'1'},stdio:'ignore'});
+const {startServer}=await import('./qa-server.mjs');
+const server=await startServer(3102);
+const base=server.base;
 const report={startedAt:new Date().toISOString(),checks:[],accessibility:[],runtimeErrors:[],skipped:[]};let browser;
 try{
- await mkdir('artifacts/screenshots',{recursive:true});let ready=false;
- for(let i=0;i<60;i++){try{if((await fetch(base+'/api/v1/openapi')).ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,1000));}assert.ok(ready);
+ await mkdir('artifacts/screenshots',{recursive:true});
  const snapshot=(await(await fetch(base+'/api/v1/overview')).json()).data;
  const r=await fetch(base+'/api/v1/activity?limit=15');assert.equal(r.status,200);const a=(await r.json()).data;
  const blockSource=snapshot.sources.find(s=>s.id==='blocks');
@@ -42,4 +41,4 @@ try{
  }
  assert.equal(report.runtimeErrors.length,0);assert.equal(report.accessibility.flatMap(r=>r.violations).length,0);report.result='passed';
 }catch(e){report.result='failed';report.error=e.stack??String(e);console.error(e);process.exitCode=1;}
-finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/audit-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();server.kill('SIGTERM');}
+finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/audit-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();server.stop();}

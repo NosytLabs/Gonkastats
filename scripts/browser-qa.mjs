@@ -1,17 +1,16 @@
-import {spawn} from 'node:child_process';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {createWriteStream} from 'node:fs';
 import assert from 'node:assert/strict';
 import {chromium} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 await mkdir('artifacts/screenshots',{recursive:true});
+const {startServer}=await import('./qa-server.mjs');
 const log=createWriteStream('artifacts/server.log');
-const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port','3100'],{env:{...process.env,DATA_MODE:'snapshot',NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});server.stdout.pipe(log);server.stderr.pipe(log);
-const base='http://127.0.0.1:3100';let browser;const report={startedAt:new Date().toISOString(),mode:'retained public observation; no synthetic production values',routes:[],api:[],interactions:[],accessibility:[],consoleErrors:[],sourceStatus:[]};
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const server=await startServer(3100,c=>{try{log.write(c.toString())}catch{}});
+try{log.write('server started\n')}catch{}
+const base=server.base;let browser;const report={startedAt:new Date().toISOString(),mode:'retained public observation; no synthetic production values',routes:[],api:[],interactions:[],accessibility:[],consoleErrors:[],sourceStatus:[]};
 async function checkApi(path,status=200){const r=await fetch(base+path);assert.equal(r.status,status,path);const j=await r.json();report.api.push({path,status:r.status});return j;}
 try{
- let ready=false;for(let i=0;i<60;i++){try{const r=await fetch(base+'/api/v1/openapi');if(r.ok){ready=true;break;}}catch{}await sleep(1000);}assert.ok(ready,'Server started within 60 seconds');
  const snapshot=JSON.parse(await readFile('data/snapshot.json','utf8'));report.sourceStatus=snapshot.sources.map(s=>({id:s.id,status:s.status,error:s.error,url:s.url,fetchedAt:s.fetchedAt}));
  const api=await checkApi('/api/v1/overview');assert.equal(api.data.mode,'snapshot');assert.ok(Array.isArray(api.meta.sources));
  for(const path of ['metrics','models?limit=2','participants?limit=5','blocks?limit=5','epochs','inference','sources','endpoints?limit=5','history','charts?metric=weight&hours=24&maxPoints=20','live?limit=5','simulate-cost?prompt=1000000&completion=250000&requests=2&attempts=1.5'])await checkApi('/api/v1/'+path);
@@ -52,4 +51,4 @@ try{
  for(const width of [768,390]){await page.setViewportSize({width,height:900});for(const path of ['/','/developers','/agents','/cost-lab','/participants','/hardware','/ecosystem','/watchlist','/privacy']){await page.goto(base+path,{waitUntil:'networkidle'});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,path+' mobile overflow at '+width);if(path==='/'){await page.waitForTimeout(500);await page.screenshot({path:`artifacts/screenshots/overview-${width}.png`,fullPage:true});}}}
  await page.getByRole('button',{name:'Open navigation',exact:true}).click();await page.getByRole('dialog').getByRole('link',{name:'Participants',exact:true}).click();await page.waitForURL('**/participants');report.interactions.push('Mobile navigation drawer');
  assert.equal(report.consoleErrors.length,0,'No browser runtime or hydration errors');const serious=report.accessibility.flatMap(r=>r.violations.filter(v=>['serious','critical'].includes(v.impact)));assert.equal(serious.length,0,'No serious/critical automated accessibility violations in tested views');report.finishedAt=new Date().toISOString();report.result='passed';
-}catch(error){report.result='failed';report.error=error.stack??String(error);console.error(error);process.exitCode=1;}finally{await writeFile('artifacts/qa-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();server.kill('SIGTERM');log.end();}
+}catch(error){report.result='failed';report.error=error.stack??String(error);console.error(error);process.exitCode=1;}finally{await writeFile('artifacts/qa-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();server.stop();log.end();}
