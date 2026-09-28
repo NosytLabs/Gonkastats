@@ -12,6 +12,12 @@ describe('navigation and UI release surface',()=>{
     expect(shell).not.toContain('setQ(e.target.value.trim())');
   });
 
+  it('keeps utility pages named for breadcrumbs and command search without adding sidebar clutter',()=>{
+    for(const [href,label] of [['/methodology','Methodology'],['/changelog','Changelog'],['/about','About'],['/privacy','Privacy']]){
+      expect(shell).toContain(`'${href}':'${label}'`);
+    }
+  });
+
   it('uses the same active state for styling and aria-current on nested routes',()=>{
     expect(shell).toContain("aria-current={active?'page':undefined}");
   });
