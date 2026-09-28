@@ -1,0 +1,23 @@
+name: GonkaStats UI audit TDD
+on:
+  push:
+    branches: [fix/ui-ux-audit-20260928]
+permissions:
+  contents: read
+concurrency:
+  group: gonkastats-ui-audit-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm test -- tests/navigation-ux.test.ts
