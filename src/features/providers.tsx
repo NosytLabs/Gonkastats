@@ -1,4 +1,3 @@
-'use client';
 import Link from 'next/link';
 import {ArrowUpRight,Box,Coins,Database,KeyRound,Layers,ShieldCheck} from 'lucide-react';
 import {Badge,DataTable,Empty,External,Metric,Panel,Proof} from '@/components/ui';
