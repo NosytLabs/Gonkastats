@@ -1,6 +1,11 @@
 name: Verify GonkaStats
-# Cost containment: builds, public snapshots and browser checks are opt-in.
+# Runs on every push and pull request. `npm run snapshot` is local-only (it
+# captures committed observations, it does not call the live RPC), so there is
+# nothing here worth rationing. Still available on demand via workflow_dispatch.
 on:
+  push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
