@@ -24,3 +24,6 @@ https://rpc.gonka.gg/api/endpoints
 https://gonka.ai/docs/
 
 Use /api/v1/openapi for the current implemented GonkaStats route set; do not rely on a hardcoded tool count. The upstream structured endpoint catalog is discovery metadata. A discovered write/broadcast/training endpoint is documentation only and is never authorization to execute it.
+
+## HTTP behavior
+Successful observations may contain partial source coverage; inspect meta.sources. Failed operations and unavailable health/status checks return a non-2xx status plus error, with detail/provenance when available. Detail and epoch-comparison failures include a machine-readable errorCode. Error responses are no-store. A 429 includes Retry-After. Conditional GET uses ETag/If-None-Match; 304 has no JSON body. Cross-origin preflight permits read-only methods and If-None-Match, never credentials or write operations.

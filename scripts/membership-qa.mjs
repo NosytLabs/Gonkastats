@@ -46,7 +46,7 @@ try{
    await page.setViewportSize({width:1440,height:1000});await page.goto(base+'/network',{waitUntil:'networkidle'});
    const cards=page.locator('.network-compute-stack > .panel');await expect(cards).toHaveCount(2);
    const first=await cards.nth(0).boundingBox(),second=await cards.nth(1).boundingBox();assert.ok(first&&second);
-   const gap=second.y-(first.y+first.height);assert.ok(gap>=0&&gap<=24,'Related cards should stack without a stretched blank area');
+   const gap=second.y-(first.y+first.height);assert.ok(Math.abs(gap-18)<=4,'Related cards retain the designed 18px separation');
    assert.equal(await page.locator('.network-compute-grid').evaluate(el=>getComputedStyle(el).alignItems),'start');
   });
   for(const theme of ['dark','light'])for(const width of [1440,390])await check('Observed network layout '+theme+' '+width,async()=>{
