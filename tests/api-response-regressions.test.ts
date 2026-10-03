@@ -1,3 +1,4 @@
+import {openapi} from '../src/core/openapi';
 import type {ReadErrorCode} from '../src/core/read-errors';
 import {beforeEach,expect,it,vi} from 'vitest';
 import {emptySnapshot} from '../src/core/sources';
@@ -38,4 +39,13 @@ it('conditional-GET preflight is read-only and performs no source work',async()=
 it('status uses a typed code even if the human-facing message changes',async()=>{
  vi.mocked(epochDiff).mockResolvedValue({from:1,to:2,rows:[],urls:[],fetchedAt:new Date().toISOString(),error:'This wording can change safely',errorCode:'not-found'});
  expect((await read('epoch-diff','?from=1&to=2')).status).toBe(404);
+});
+it('documented header constants match actual route responses',async()=>{
+ const spec=JSON.parse(JSON.stringify(openapi()));
+ const options=await route.OPTIONS(new Request('https://example.test/api/v1/metrics',{method:'OPTIONS'}),{params:Promise.resolve({resource:'metrics'})});
+ const assertHeaders=(response:Response,documented:Record<string,{schema:{const?:string}}>)=>{for(const [name,header] of Object.entries(documented))if(header.schema.const!==undefined)expect(response.headers.get(name),name).toBe(header.schema.const);};
+ assertHeaders(options,spec.paths['/metrics'].options.responses['204'].headers);
+ const success=await read('metrics');assertHeaders(success,spec.paths['/metrics'].get.responses['200'].headers);
+ vi.mocked(detail).mockResolvedValue({kind:'blocks',id:'1',url:'',data:null,fetchedAt:new Date().toISOString(),error:'Please wait',errorCode:'rate-limited'});
+ assertHeaders(await read('lookup','?kind=blocks&id=1'),spec.paths['/lookup'].get.responses['429'].headers);
 });
