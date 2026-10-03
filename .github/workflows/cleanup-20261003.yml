@@ -30,11 +30,13 @@ jobs:
           python3 .github/maintenance/apply-seo-cleanup.py
           python3 - <<'PY'
           from pathlib import Path
-          # Metadata-route unit tests should resolve without a framework alias loader.
           for name in ['robots.ts','sitemap.ts']:
               p=Path('src/app')/name
               p.write_text(p.read_text().replace("from '@/core/seo'", "from '../core/seo'"))
+          p=Path('scripts/qa-fixture.mjs')
+          p.write_text(p.read_text().replace(",'utf8')));", ",'utf8'));"))
           PY
+          for file in scripts/*.mjs; do node --check "$file"; done
       - name: Resolve patched framework and verify locked install
         run: |
           set -euo pipefail
@@ -81,9 +83,9 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import json,os,re,datetime
+          import json,os,re
           reports={p.name:json.loads(p.read_text()) for p in Path('artifacts').glob('*report.json')}
-          if not reports or any(v.get('result')!='passed' for v in reports.values()):
+          if len(reports)!=6 or any(v.get('result')!='passed' for v in reports.values()):
               raise SystemExit('Incomplete or failed browser verification')
           sources=json.loads(Path('artifacts/source-status.json').read_text())
           audit=json.loads(Path('artifacts/dependency-audit.json').read_text())
@@ -93,15 +95,22 @@ jobs:
           unit=clean(Path('artifacts/unit-tests.log').read_text())
           counts='\n'.join(line.strip() for line in unit.splitlines() if 'Test Files' in line or ('Tests' in line and 'passed' in line))
           unavailable=[s['name']+': '+str(s['error']) for s in sources['sources'] if s['status']=='unavailable']
-          Path('docs/SEO-CLEANUP-VERIFICATION.md').write_text('# SEO, UI and security cleanup verification\n\nRun: '+run+'\n\nStarting branch commit: `'+os.environ['GITHUB_SHA']+'`. The run applied the reviewed maintenance script, regenerated the pinned lockfile, ran verification, and committed the verified source.\n\n## Verification\n\n```text\n'+counts+'\n```\n\nTypecheck, lint, production build and all six browser suites completed successfully. See downloadable Actions evidence for exact page, API, accessibility and interaction counts. This is not a manual WCAG certification, field Core Web Vitals measurement or penetration test.\n\n## Public observation\n\nCaptured '+sources['generatedAt']+'.\n\nUnavailable sources: '+('; '.join(unavailable) or 'none in this observation')+'. Failures remain unavailable; no metrics were invented.\n\n## Dependencies\n\nNext.js and eslint-config-next were updated together to 16.3.8 with a regenerated lockfile. Full audit summary: `'+json.dumps(audit.get('metadata',{}).get('vulnerabilities',{}))+'`. Production-only audit summary: `'+json.dumps(prod.get('metadata',{}).get('vulnerabilities',{}))+'`. A vulnerable dependency report is not proof a vulnerable path is exposed by this application.\n\n## Publication boundary\n\nSet SITE_URL to the real public HTTPS origin to emit indexable landing pages and a populated sitemap. Leave it blank locally; SITE_NOINDEX=true and snapshot/preview mode prevent indexing. The former localhost SITE_URL example is no longer valid. No domain or public deployment was provisioned. Public API access remains read-only.\n\n## Cleanup\n\nRoutine browser CI now uses an explicitly dated public QA fixture, not live RPC polling. Manual live_sources remains available. No cron jobs were added. The temporary privileged maintenance workflow and implementation script were removed before committing source.\n')
-          readme=Path('README.md')
-          readme.write_text(readme.read_text()+'\n## SEO publication and current cleanup\n\nSee [the current cleanup verification](docs/SEO-CLEANUP-VERIFICATION.md). Set `SITE_URL` to the deployed public HTTPS origin, without a path. Leave it blank for local work; remove the previous `http://localhost:3000` example from existing local environment files. Snapshot and preview modes remain `noindex`, and no public hostname is guessed. Set `SITE_NOINDEX=true` for other staging installs.\n\nRoutine CI uses `npm run qa:fixture` for a clearly dated, real public observation; it does not call live RPC endpoints. `npm run snapshot` still performs live reads and is available through manual `live_sources` verification. The fixture is never a production fallback.\n')
+          summary={'run':run,'startingCommit':os.environ['GITHUB_SHA'],'unitCounts':counts,'browserReports':list(reports),'sourceTimestamp':sources['generatedAt'],'unavailable':unavailable,'audit':audit.get('metadata',{}),'productionAudit':prod.get('metadata',{})}
+          Path('artifacts/summary.json').write_text(json.dumps(summary,indent=2))
+          Path('docs/SEO-CLEANUP-VERIFICATION.md').write_text('# SEO, UI and security cleanup verification\n\nRun: '+run+'\n\nStarting branch commit: `'+os.environ['GITHUB_SHA']+'`. The run applied the reviewed maintenance script, regenerated the pinned lockfile, ran verification, and committed the verified source.\n\n## Verification\n\n```text\n'+counts+'\n```\n\nTypecheck, lint, production build and all six browser suites completed successfully. Downloadable Actions evidence contains exact page, API, accessibility and interaction results. This is not a manual WCAG certification, field Core Web Vitals measurement or penetration test.\n\n## Public observation\n\nCaptured '+sources['generatedAt']+'.\n\nUnavailable sources: '+('; '.join(unavailable) or 'none in this observation')+'. Failures remain unavailable; no metrics were invented.\n\n## Dependencies\n\nNext.js and eslint-config-next were updated together to 16.3.8 with a regenerated lockfile. Full audit summary: `'+json.dumps(audit.get('metadata',{}).get('vulnerabilities',{}))+'`. Production-only audit summary: `'+json.dumps(prod.get('metadata',{}).get('vulnerabilities',{}))+'`. A vulnerable dependency report is not proof a vulnerable path is exposed by this application.\n\n## Publication boundary\n\nSet SITE_URL to the real public HTTPS origin to emit indexable landing pages and a populated sitemap. Leave it blank locally; SITE_NOINDEX=true and snapshot/preview mode prevent indexing. The former localhost SITE_URL example is no longer valid. No domain or public deployment was provisioned. Public API access remains read-only.\n\n## Cleanup\n\nRoutine browser CI now uses an explicitly dated public QA fixture, not live RPC polling. Manual live_sources remains available. No cron jobs were added. The temporary privileged maintenance workflow and implementation script were removed before committing source.\n')
+          readme=Path('README.md');text=readme.read_text()
+          start=text.find('## Current verification');end=text.find('\n## Accuracy and limitations',start)
+          if start>=0 and end>start:
+              text=text[:start]+'## Current verification\n\nSee [the latest cleanup verification](docs/SEO-CLEANUP-VERIFICATION.md) and [the passing run]('+run+'). Earlier records are historical evidence, not a claim about current source availability.\n\n'+text[end:]
+          text=re.sub(r'During the September 23 verification snapshot,.*?Inference demand remains unavailable;', 'Public-source availability is recorded with timestamps in the latest verification record. Unavailable inference demand is not substituted with chain activity;',text,flags=re.S)
+          text=text.replace('Main retains **manual-only verification**','Main retains **bounded verification**')
+          text+='\n## SEO publication and reproducible QA\n\nSet `SITE_URL` to the deployed public HTTPS origin, without a path. Leave it blank for local work; remove the previous `http://localhost:3000` example from existing local environment files. Snapshot and preview modes remain `noindex`, and no public hostname is guessed. Set `SITE_NOINDEX=true` for other staging installs.\n\nRoutine CI uses `npm run qa:fixture` for a clearly dated, real public observation; it does not call live RPC endpoints. `npm run snapshot` still performs live reads and is available through manual `live_sources` verification. The fixture is never a production fallback.\n'
+          readme.write_text(text)
           for name in ['.github/maintenance/apply-seo-cleanup.py','.github/workflows/cleanup-20261003.yml']:
               Path(name).unlink()
-          Path('artifacts/summary.json').write_text(json.dumps({'run':run,'startingCommit':os.environ['GITHUB_SHA'],'unitCounts':counts,'browserReports':list(reports),'sourceTimestamp':sources['generatedAt'],'unavailable':unavailable,'audit':audit.get('metadata',{}),'productionAudit':prod.get('metadata',{})},indent=2))
           PY
           remote=$(git ls-remote origin refs/heads/fix/seo-security-cleanup-20261003 | cut -f1)
-          test "$remote" = "$GITHUB_SHA" || { echo 'Remote moved; leaving evidence for manual reconciliation'; exit 1; }
+          test "$remote" = "$GITHUB_SHA" || { echo 'Remote moved; leaving evidence for reconciliation'; exit 1; }
           git config user.name 'Nosyt Labs'
           git config user.email 'hi@nosytlabs.com'
           git add src scripts tests package.json package-lock.json .env.example next.config.mjs .github README.md docs/SEO-CLEANUP-VERIFICATION.md
