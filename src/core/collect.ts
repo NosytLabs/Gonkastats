@@ -30,7 +30,8 @@ if(s.epoch){if(previous?.epoch?.id!==s.epoch.id){s.participants=[];s.hardware=[]
 // A newly fetched hardware registry must never be joined against stale membership.
 if(raw.participants===undefined){
   const old=sourceMap.get('hardware');
-  const error='Hardware matching is waiting for a successful epoch membership read.';
+  const error=s.epoch?'Hardware matching is waiting for a successful epoch membership read.':'Hardware matching was not attempted because no epoch observation is available.';
+  if(!s.epoch)sourceMap.set('participants',unavailable('participants','Membership was not requested because no epoch observation is available.'));
   sourceMap.set('hardware',old&&old.status!=='unavailable'?{...old,status:'stale',error}:unavailable('hardware',error));
 }else{
   const changed=!sameHardwareMembership(previous?.participants??[],s.participants);

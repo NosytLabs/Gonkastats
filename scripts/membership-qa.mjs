@@ -9,7 +9,8 @@ const snapshot=JSON.parse(original);
 const address=snapshot.participants[0]?.address??snapshot.participantStats[0]?.address??'gonka1scskt6wpnjnumsah6kjphmdu87vjgvcxmn4rxv';
 const report={startedAt:new Date().toISOString(),mode:'Retained public snapshot plus explicitly injected missing/empty membership scenarios',checks:[],failures:[],skipped:[],accessibility:[],runtimeErrors:[]};
 let browser;
-async function check(name,run){try{await run();report.checks.push(name);}catch(e){report.failures.push({name,error:e.stack??String(e)});}}
+const SKIP=Symbol('skip');
+async function check(name,run){try{if(await run()!==SKIP)report.checks.push(name);}catch(e){report.failures.push({name,error:e.stack??String(e)});}}
 async function scenario(name,value,run){
  await writeFile('data/snapshot.json',JSON.stringify(value));let server,context;
  try{
@@ -32,7 +33,7 @@ try{
   });
   await check('Participant search disables empty exports and reset restores observed rows',async()=>{
    await page.goto(base+'/participants',{waitUntil:'networkidle'});
-   if(!snapshot.sources.some(s=>s.id==='participants'&&s.status!=='unavailable')){await expect(page.getByRole('heading',{name:'Membership data unavailable',exact:true})).toBeVisible();report.skipped.push('Search/CSV restore: public membership source unavailable');return;}
+   if(!snapshot.sources.some(s=>s.id==='participants'&&s.status!=='unavailable')){await expect(page.getByRole('heading',{name:'Membership data unavailable',exact:true})).toBeVisible();report.skipped.push('Participant search/export/reset: public membership source unavailable');return SKIP;}
    await page.getByRole('textbox',{name:'Search participants'}).fill('no-such-address-cleanup');await expect(page.getByRole('button',{name:'Export CSV',exact:true})).toBeDisabled();
    await page.getByRole('button',{name:'Reset table',exact:true}).click();await expect(page.getByRole('textbox',{name:'Search participants'})).toHaveValue('');
    if(snapshot.participants.length)await expect(page.getByRole('button',{name:'Export CSV',exact:true})).toBeEnabled();
@@ -40,6 +41,13 @@ try{
   await check('Network reuses source-qualified chart panels with exact data controls',async()=>{
    await page.goto(base+'/network',{waitUntil:'networkidle'});await expect(page.getByRole('heading',{name:'Which models do members report?',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'What hardware is registered?',exact:true})).toBeVisible();
    await page.getByRole('button',{name:'View model participation data',exact:true}).click();await expect(page.locator('caption').filter({hasText:'Model participation exact values'})).toHaveCount(1);
+  });
+  await check('Network model and membership context use compact stacked cards',async()=>{
+   await page.setViewportSize({width:1440,height:1000});await page.goto(base+'/network',{waitUntil:'networkidle'});
+   const cards=page.locator('.network-compute-stack > .panel');await expect(cards).toHaveCount(2);
+   const first=await cards.nth(0).boundingBox(),second=await cards.nth(1).boundingBox();assert.ok(first&&second);
+   const gap=second.y-(first.y+first.height);assert.ok(gap>=0&&gap<=24,'Related cards should stack without a stretched blank area');
+   assert.equal(await page.locator('.network-compute-grid').evaluate(el=>getComputedStyle(el).alignItems),'start');
   });
   for(const theme of ['dark','light'])for(const width of [1440,390])await check('Observed network layout '+theme+' '+width,async()=>{
    await page.setViewportSize({width,height:1000});await page.goto(base+'/network',{waitUntil:'networkidle'});if(await page.locator('html').getAttribute('data-theme')!==theme)await page.getByRole('button',{name:'Toggle color theme'}).click();
@@ -58,7 +66,7 @@ try{
  });
  const empty=structuredClone(gap);empty.sources=empty.sources.map(s=>s.id==='participants'?{...s,status:'recent',error:null}:s);
  await scenario('injected-observed-empty',empty,async(page,context,base)=>{
-  await check('Observed zero members stays distinct from unavailable membership',async()=>{await page.goto(base+'/participants',{waitUntil:'networkidle'});await expect(page.getByText('No members were returned for this epoch.',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Export CSV',exact:true})).toBeDisabled();await page.goto(base+'/participants/'+address,{waitUntil:'networkidle'});await expect(page.getByRole('heading',{name:'Not in the retained epoch membership',exact:true})).toBeVisible();});
+  await check('Observed zero members stays distinct from unavailable membership',async()=>{await page.goto(base+'/participants',{waitUntil:'networkidle'});await expect(page.getByText('No members were returned for this epoch.',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Export CSV',exact:true})).toBeDisabled();await page.getByRole('textbox',{name:'Search participants'}).fill('anything');await expect(page.getByText('No members were returned for this epoch.',{exact:true})).toBeVisible();await page.goto(base+'/participants/'+address,{waitUntil:'networkidle'});await expect(page.getByRole('heading',{name:'Not in the retained epoch membership',exact:true})).toBeVisible();});
  });
  assert.equal(report.failures.length,0,'Named checks failed');assert.equal(report.runtimeErrors.length,0,'Browser runtime failures');report.result=report.skipped.length?'passed_with_skips':'passed';
 }catch(e){report.result='failed';report.error=e.stack??String(e);process.exitCode=1;}

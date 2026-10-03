@@ -37,3 +37,7 @@ it('keeps the hourly hardware cache when member node IDs have not changed',async
  read.mockImplementation(async url=>{if(url.endsWith('/epochs/latest'))return epoch();if(url.endsWith('/7/participants'))return membership();throw new Error('Unavailable');});
  const old=prior(),s=await collect(old);expect(s.hardware).toEqual(old.hardware);expect(read.mock.calls.some(([u])=>u.endsWith('/hardware_nodes_all'))).toBe(false);
 });
+it('attributes cold-start dependency gaps to the unavailable epoch without inventing a membership attempt',async()=>{
+ read.mockRejectedValue(new Error('Epoch unavailable'));
+ const s=await collect();expect(s.epoch).toBeNull();expect(s.sources.find(x=>x.id==='participants')?.error).toMatch(/not requested.*epoch/i);expect(s.sources.find(x=>x.id==='hardware')?.error).toMatch(/no epoch observation/i);expect(read.mock.calls.some(([u])=>/\/epochs\/\d+\/participants/.test(u))).toBe(false);
+});

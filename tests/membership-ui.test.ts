@@ -20,5 +20,9 @@ it('an observed empty membership list is distinguished from a failed source',()=
 });
 it('empty shared tables do not offer an empty CSV download',()=>{
  const html=renderToStaticMarkup(createElement(DataTable,{rows:[],rowKey:()=>'',columns:[{key:'id',label:'ID',value:()=>''}]}));
- expect(html).toMatch(/<button[^>]*disabled[^>]*>[\s\S]*?Export CSV/);expect(html).toContain('No records were returned for this observation.');
+ expect(html).toMatch(/<button[^>]*disabled[^>]*>[\s\S]*?Export CSV/);expect(html).toContain('No records are available in this table.');
+});
+it('default empty-table wording does not invent a successful upstream observation',()=>{
+ const html=renderToStaticMarkup(createElement(DataTable,{rows:[],rowKey:()=>'',source:unavailable('params'),columns:[{key:'id',label:'ID',value:()=>''}]}));
+ expect(html).toContain('No records are available in this table.');expect(html).not.toContain('returned for this observation');
 });
