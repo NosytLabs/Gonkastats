@@ -26,3 +26,8 @@ it('does not replay a five-minute cached rate-limit failure after the read budge
  state.gonkaReadBudget={start:Date.now(),count:0};vi.stubGlobal('fetch',vi.fn(async()=>Response.json({block:{height:'2'}})));
  expect(await detail('blocks','2')).toMatchObject({error:null,data:{block:{height:'2'}}});
 });
+
+it('supports the documented epoch upper bound through the actual detail URL',async()=>{
+ const fetcher=vi.fn<typeof fetch>(async()=>Response.json({epoch:'1000000'}));vi.stubGlobal('fetch',fetcher);
+ expect(await detail('epochs','1000000')).toMatchObject({error:null,data:{epoch:'1000000'}});expect(fetcher.mock.calls[0]?.[0]).toContain('/epochs/1000000/participants');
+});

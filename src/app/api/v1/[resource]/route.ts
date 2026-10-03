@@ -1,3 +1,4 @@
+import {lookupPath} from '@/core/lookup';
 import {readFailureStatus} from '@/core/read-errors';
 import {hasObservation,filterModels} from '@/core/insights';
 import {activityData} from '@/core/audit';
@@ -8,7 +9,7 @@ import {history} from '@/db/store';
 import {apiDefinitions,validateQuery} from '@/core/api-definitions';
 import {metricData,healthData,chartData,protocolData,sourceHealthData,providersData} from '@/core/api-data';
 import {openapi} from '@/core/openapi';
-import {simulateCost} from '@/core/cost';
+import {simulateCost,observedCostRates} from '@/core/cost';
 export const dynamic='force-dynamic';
 export const runtime='nodejs';
 const state=globalThis as typeof globalThis & {gonkaApiBudget?:{at:number;count:number}};
@@ -24,6 +25,7 @@ export async function GET(request:Request,{params}:{params:Promise<{resource:str
  let query:Record<string,string>;
  try{query=validateQuery(def,new URL(request.url).searchParams);}catch(e){return apiError(e instanceof Error?e.message:'Invalid query',400);}
  if(resource==='epoch-diff'&&(Number(query.to)<=Number(query.from)||Number(query.to)-Number(query.from)>30))return apiError('Choose increasing epochs at most 30 apart',400);
+ if(resource==='lookup'&&!lookupPath(query.kind,query.id))return apiError('Invalid lookup.',400);
  if(resource==='openapi')return Response.json(openapi(),{headers:headers()});
  const now=Date.now();if(!state.gonkaApiBudget||now-state.gonkaApiBudget.at>=60000)state.gonkaApiBudget={at:now,count:0};if(++state.gonkaApiBudget.count>240)return apiError('Public read budget reached. Try again in one minute.',429);
  try{const s=await getSnapshot();let data:unknown,status=200,pagination:unknown,failure:string|undefined;const meta:{schemaVersion:string;generatedAt:string;mode:string;sources:typeof s.sources;pagination?:unknown;coverage?:string}={schemaVersion:'1',generatedAt:s.generatedAt,mode:s.mode,sources:s.sources};
@@ -49,7 +51,7 @@ export async function GET(request:Request,{params}:{params:Promise<{resource:str
  case 'history':case 'charts':{const points=await history(Number(query.hours??24));const metric=(query.metric??'weight') as 'weight'|'price'|'participants';data=resource==='history'?{points,storage:process.env.DATABASE_URL?'configured':'not-configured'}:{...chartData(points,metric,Number(query.maxPoints??200)),storage:process.env.DATABASE_URL?'configured':'not-configured'};meta.coverage='Only actual retained database observations. No fabricated backfill.';break;}
  case 'lookup':{const result=await detail(query.kind,query.id);data=result;if(result.error){status=readFailureStatus(result.errorCode);failure=result.error;}break;}
  case 'epoch-diff':{const result=await epochDiff(Number(query.from),Number(query.to));data=result;if(result.error){status=readFailureStatus(result.errorCode);failure=result.error;}break;}
- case 'simulate-cost':{const model=query.model?s.models.find(m=>m.id===query.model):s.models[0];if(query.model&&!model)return apiError('Model not present in the observed catalog',404);try{data={...simulateCost({prompt:query.prompt,completion:query.completion,requests:query.requests,attempts:query.attempts},{tokenPrice:s.protocol['devshard_escrow_params.token_price']??null,providerPrice:model?.price??null,fx:s.fx}),model:model?.id??null,classification:'scenario',excludes:['escrow creation','per-nonce fees','gas','separate ledger adjustments']};}catch(e){return apiError(e instanceof Error?e.message:'Invalid scenario',400);}break;}
+ case 'simulate-cost':{const model=query.model?s.models.find(m=>m.id===query.model):s.models[0];if(query.model&&!model)return apiError('Model not present in the observed catalog',404);try{data={...simulateCost({prompt:query.prompt,completion:query.completion,requests:query.requests,attempts:query.attempts},observedCostRates(s,model)),model:model?.id??null,classification:'scenario',excludes:['escrow creation','per-nonce fees','gas','separate ledger adjustments']};}catch(e){return apiError(e instanceof Error?e.message:'Invalid scenario',400);}break;}
  default:return apiError('Unimplemented endpoint',404);
  }
  if(pagination)meta.pagination=pagination;const payload={data,meta,...(failure?{error:failure}:{})},text=JSON.stringify(payload),etag='"'+createHash('sha256').update(text).digest('hex')+'"';if(status===200&&request.headers.get('If-None-Match')===etag)return new Response(null,{status:304,headers:{...headers(),ETag:etag}});return new Response(text,{status,headers:{...headers(status),'Content-Type':'application/json; charset=utf-8',ETag:etag}});

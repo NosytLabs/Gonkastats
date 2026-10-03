@@ -6,3 +6,7 @@ node_modules
 data/*.json
 artifacts
 .superpowers
+
+# Local diagnostics and interrupted snapshot writes
+*.log
+data/*.tmp

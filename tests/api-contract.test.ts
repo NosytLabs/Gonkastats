@@ -14,3 +14,6 @@ it('retains missing metrics as null',()=>expect(metricData(emptySnapshot()).ever
 it('marks wholly missing source data unavailable',()=>expect(healthData(emptySnapshot()).status).toBe('unavailable'));
 it('preserves gaps in downsampled chart buckets',()=>{const points=Array.from({length:6},(_,i)=>({at:new Date(i*1000).toISOString(),weight:i===1?null:String(i),price:null,participants:1}));const result=chartData(points,'weight',2);expect(result.points).toHaveLength(2);expect(result.points[0].value).toBeNull();expect(result.points[1].value).toBe('5');expect(result.rawPointCount).toBe(6);});
 it('does not invent history when no observations exist',()=>expect(chartData([],'weight',200).points).toEqual([]));
+
+it.each(['2026-02-30T00:00:00Z','2026-09-31T00:00:00Z','2025-02-29T12:00:00Z','2026-10-03T24:00:00Z'])('rejects a nonexistent UTC calendar time: %s',since=>{const live=apiDefinitions.find(d=>d.id==='live')!;expect(()=>validateQuery(live,new URLSearchParams({since}))).toThrow();});
+it.each(['2024-02-29T00:00:00Z','2026-10-03T12:01:02.123456Z'])('accepts a real UTC timestamp: %s',since=>{const live=apiDefinitions.find(d=>d.id==='live')!;expect(validateQuery(live,new URLSearchParams({since})).since).toBe(since);});
