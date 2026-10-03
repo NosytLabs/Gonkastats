@@ -35,8 +35,6 @@ try {
     titles.add(title); descriptions.add(description);
     assert.equal(attribute(html, 'meta', 'property', 'og:url', 'content'), canonical, path + ' social URL matches canonical');
     assert.ok(attribute(html, 'meta', 'property', 'og:description', 'content'), path + ' has a social description');
-    // The response can contain both a streaming loading boundary and the final
-    // page. The browser suites verify the final DOM's single primary heading.
     const headingsInResponse = (html.match(/<h1\b/g) ?? []).length;
     const robots = attribute(html, 'meta', 'name', 'robots', 'content');
     if (['/watchlist', '/account/usage'].includes(path)) assert.ok(robots?.includes('noindex'), path + ' keeps browser-local/account views out of search');
@@ -46,10 +44,16 @@ try {
   const missingHtml = await missing.text();
   const excluded = (missingHtml.match(/<meta\b[^>]*>/g) ?? []).some(tag => tag.includes('name="robots"') && tag.includes('noindex'));
   assert.ok(excluded, 'unknown pages are excluded from indexing');
-  // With the app's loading boundary, Next.js can commit a streamed response
-  // before notFound() resolves. Record that HTTP status instead of calling it
-  // a hard 404; the browser and crawler still receive the not-found/noindex UI.
+  // Streaming can commit HTTP 200 before notFound. Record, do not imply hard 404.
   report.notFound = {status: missing.status, noindex: excluded};
+  report.malformedRoutes=[];
+  for(const path of ['/models/%0A61','/models/%5C61','/models/not-hex','/blocks/%0A123','/participants/%5Cbad']){
+    const response=await fetch(server.base+path,{headers:crawlerHeaders});const html=await response.text();
+    assert.ok([200,400,404].includes(response.status),path+' does not become a metadata server error');
+    const noindex=(html.match(/<meta\b[^>]*>/g)??[]).some(tag=>tag.includes('name="robots"')&&tag.includes('noindex'));
+    if(response.status===200)assert.ok(noindex,path+' streamed error stays noindex');
+    report.malformedRoutes.push({path,status:response.status,noindex});
+  }
   const sitemap = await fetch(server.base + '/sitemap.xml');
   assert.equal(sitemap.status, 200, 'crawler sitemap exists');
   const xml = await sitemap.text();
@@ -89,5 +93,5 @@ try {
   await mkdir('artifacts', {recursive: true});
   await writeFile('artifacts/seo-report.json', JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify(report, null, 2));
-  server.stop();
+  await server.stop();
 }

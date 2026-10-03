@@ -43,8 +43,14 @@ try{
  for(const theme of ['dark','light'])for(const width of [1440,390]){
   await page.setViewportSize({width,height:1000});await page.goto(server.base+'/',{waitUntil:'networkidle'});if(await page.locator('html').getAttribute('data-theme')!==theme)await page.getByRole('button',{name:'Toggle color theme'}).click();
   await page.screenshot({path:'artifacts/screenshots/cleanup-overview-'+theme+'-'+width+'.png',fullPage:false});
-  if(!report.failures.some(f=>f.name.includes('source details'))){await page.locator('.kpi-tile .source-note button').first().click();const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();report.accessibility.push({theme,width,violations:result.violations.map(v=>({id:v.id,targets:v.nodes.map(n=>n.target)}))});await page.screenshot({path:'artifacts/screenshots/cleanup-source-'+theme+'-'+width+'.png'});await page.keyboard.press('Escape');}
+  if(report.failures.some(f=>f.name.includes('source details'))){report.skipped.push('Source dialog axe scan skipped after failed dialog check: '+theme+' '+width);}else await check('Source dialog accessibility '+theme+' '+width,async()=>{
+    await page.locator('.kpi-tile .source-note button').first().click();
+    const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
+    report.accessibility.push({theme,width,violations:result.violations.map(v=>({id:v.id,targets:v.nodes.map(n=>n.target)}))});
+    await page.screenshot({path:'artifacts/screenshots/cleanup-source-'+theme+'-'+width+'.png'});await page.keyboard.press('Escape');
+    assert.equal(result.violations.length,0,'No automated findings in this measured view');
+  });
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
  }
- assert.equal(report.failures.length,0,JSON.stringify(report.failures));assert.equal(report.runtimeErrors.length,0);assert.equal(report.accessibility.flatMap(r=>r.violations).length,0);report.result='passed';
+ assert.equal(report.failures.length,0,JSON.stringify(report.failures));assert.equal(report.runtimeErrors.length,0);assert.equal(report.accessibility.length,4,'All four source-dialog accessibility scans must execute');report.result='passed';
 }catch(e){report.result='failed';report.error=String(e);process.exitCode=1;}finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/cleanup-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();await server.stop();}
