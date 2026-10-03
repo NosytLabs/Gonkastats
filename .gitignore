@@ -12,3 +12,7 @@ artifacts/
 next-env.d.ts
 .data/
 *.bak
+
+# Local diagnostics and interrupted snapshot writes
+*.log
+data/*.tmp

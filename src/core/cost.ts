@@ -1,3 +1,5 @@
+import {hasObservation} from './insights';
+import type {Snapshot,Model} from './types';
 import Decimal from 'decimal.js';
 const Exact=Decimal.clone({precision:70});
 export interface CostInput {prompt:string;completion:string;requests:string;attempts:string;}
@@ -12,3 +14,13 @@ export function simulateCost(input:CostInput,rates:CostRates):CostResult{
  const single=tokenPrice===null?null:tokens.mul(tokenPrice).div(1e9),retry=single?.mul(attempts)??null;
  return {tokens:tokens.toFixed(),advertisedUsd:providerPrice===null?null:tokens.div(1e6).mul(providerPrice).toFixed(),singleAttemptGnk:single?.toFixed()??null,retryScenarioGnk:retry?.toFixed()??null,retryScenarioUsd:retry===null||fx===null?null:retry.mul(fx).toFixed(),assumptions:{...input}};
 }
+
+export function observedCostRates(s:Snapshot,model:Model|undefined):CostRates{
+ const pricing=hasObservation(s,'pricing');
+ return {tokenPrice:hasObservation(s,'params')?s.protocol['devshard_escrow_params.token_price']??null:null,
+  providerPrice:pricing&&hasObservation(s,'models')?model?.price??null:null,
+  fx:pricing?s.fx:null};
+}
+
+/** Preserve fractional GNK precision; never round a charge to free. */
+export function formatGnkCost(value:string|null|undefined):string{return value==null?"—":new Decimal(value).toFixed();}

@@ -43,9 +43,18 @@ it('status uses a typed code even if the human-facing message changes',async()=>
 it('documented header constants match actual route responses',async()=>{
  const spec=JSON.parse(JSON.stringify(openapi()));
  const options=await route.OPTIONS(new Request('https://example.test/api/v1/metrics',{method:'OPTIONS'}),{params:Promise.resolve({resource:'metrics'})});
- const assertHeaders=(response:Response,documented:Record<string,{schema:{const?:string}}>)=>{for(const [name,header] of Object.entries(documented))if(header.schema.const!==undefined)expect(response.headers.get(name),name).toBe(header.schema.const);};
+ const assertHeaders=(response:Response,documented:Record<string,{schema:{const?:string}}>)=>{const entries=Object.entries(documented);expect(entries.length).toBeGreaterThan(0);for(const [name,header] of entries){expect(response.headers.get(name),name+' must be present').not.toBeNull();if(header.schema.const!==undefined)expect(response.headers.get(name),name).toBe(header.schema.const);}};
  assertHeaders(options,spec.paths['/metrics'].options.responses['204'].headers);
  const success=await read('metrics');assertHeaders(success,spec.paths['/metrics'].get.responses['200'].headers);
  vi.mocked(detail).mockResolvedValue({kind:'blocks',id:'1',url:'',data:null,fetchedAt:new Date().toISOString(),error:'Please wait',errorCode:'rate-limited'});
  assertHeaders(await read('lookup','?kind=blocks&id=1'),spec.paths['/lookup'].get.responses['429'].headers);
+});
+
+it('rejects an invalid lookup before snapshot collection and detail reads',async()=>{
+ vi.mocked(detail).mockResolvedValue({kind:'blocks',id:'bad',url:'',data:null,fetchedAt:new Date().toISOString(),error:'Invalid lookup.',errorCode:'invalid-request'});
+ const response=await read('lookup','?kind=blocks&id=bad');expect(response.status).toBe(400);errorHeaders(response);expect(getSnapshot).not.toHaveBeenCalled();expect(detail).not.toHaveBeenCalled();
+});
+it('cost API ignores monetary fields when the source has no usable observation',async()=>{
+ const s=emptySnapshot();s.protocol['devshard_escrow_params.token_price']='987654';s.fx='2';vi.mocked(getSnapshot).mockResolvedValue(s);
+ const response=await read('simulate-cost');const body=await response.json();expect(body.data.singleAttemptGnk).toBeNull();expect(body.data.retryScenarioUsd).toBeNull();
 });

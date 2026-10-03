@@ -47,13 +47,13 @@ curl 'http://localhost:3000/api/v1/composition'
 
 Examples use the current site origin, quoted curl commands, bounded parameters, working Try-it reads, provenance and ETags. Model filters and accounting calculations reuse the same functions as the UI. No arbitrary proxy, transaction broadcast, private-account access or paid completion route exists. Lookup/epoch-comparison failures use non-2xx statuses with an error message; all errors are `no-store`. HTTP 429 supplies `Retry-After`. Cross-origin clients can inspect `ETag` and use conditional GET through the read-only preflight.
 
-## Recorded verification
+## Maintained documentation
 
-The locked install, unit/contract tests, strict TypeScript, ESLint, production build, bounded public-source snapshot, Chromium installation, and the then-configured browser QA scripts passed in [Actions run 37081672505](https://github.com/NosytLabs/Gonkastats/actions/runs/37081672505). Each run verifies its own revision. Earlier measurements and their exact source revision remain in [V2 verification evidence](docs/V2-VERIFICATION.md).
+[Architecture and data contracts](docs/ARCHITECTURE.md) describe source boundaries, canonical pages and shared logic. [Operations and verification](docs/OPERATIONS.md) cover deployment prerequisites, collection and test commands. [Reference research](docs/REFERENCE-RESEARCH.md) is a dated design record, not live source status.
 
-The browser suites check page routes, primary headings, API contracts, interactions, responsive layout and selected accessibility rules. `npm run test:seo` separately checks the local production server's canonical URLs, distinct page metadata and crawler routes without requiring Chromium.
+Completed design plans and superseded audits were removed from the working tree; originals remain in [Git history at the pre-cleanup revision](https://github.com/NosytLabs/Gonkastats/tree/28d121eee8c425fa572c8a6527104f489db7e08b/docs). Old endpoint counts, source availability and CI policy are not current instructions.
 
-These are bounded automated tests, not an exhaustive accessibility, security, provider-availability, or load certification. Public-source failures remain explicit instead of being replaced with synthetic data. Main runs verification on pushes and pull requests, retains manual dispatch, and keeps evidence for three days.
+Verification is revision-specific: use the Actions run and its JSON reports for that revision. Missing/empty test fixtures are explicitly labelled, never production observations. CI runs on main pushes and pull requests, supports manual dispatch and retains evidence for three days. There is no scheduled data-polling workflow.
 
 ## Accuracy and limitations
 
