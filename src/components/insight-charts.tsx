@@ -2,6 +2,7 @@
 import {useId,useState} from 'react';
 import Link from 'next/link';
 import {Download} from 'lucide-react';
+import {formatGnkCost} from '@/core/cost';
 import {csv,format,number,shorten} from '@/core/metrics';
 import {concentration,hasObservation,modelFootprint,overviewFacts} from '@/core/insights';
 import type {Snapshot,Source} from '@/core/types';
@@ -9,7 +10,7 @@ import {Empty,Panel,Proof,More,download} from './ui';
 export interface BarRow {label:string;value:string|number|null;href?:string;}
 export function ComparisonBars({rows,unit,label,source,money=false,basis='current observation, not history'}:{rows:BarRow[];unit:string;label:string;source?:Source;money?:boolean;basis?:string}){
  const id=useId(),[table,setTable]=useState(false),max=Math.max(0,...rows.map(row=>number(row.value)??0));
- const display=(value:BarRow['value'])=>money?format(value,'usd'):format(value,'number');
+ const display=(value:BarRow['value'])=>money?format(value,'usd'):unit==='GNK'?formatGnkCost(value===null?null:String(value)):format(value,'number');
  return <figure className="comparison-chart" aria-label={label}><div className="comparison-bars">{rows.map((row,index)=><div className="comparison-row" key={row.label}><div className="comparison-label"><span><i className="chart-rank">{String(index+1).padStart(2,'0')}</i>{row.href?<Link href={row.href}>{row.label}</Link>:row.label}</span><strong title={String(row.value??'Unavailable')}>{display(row.value)} <small>{money?'':unit}</small></strong></div><svg viewBox="0 0 500 8" preserveAspectRatio="none" height="8" width="100%" aria-hidden="true"><rect width="500" height="8" rx="4" fill="var(--border)"/>{number(row.value)!==null&&max>0&&<rect width={Math.max(0,(number(row.value)??0)/max*500)} height="8" rx="4" fill={`var(--chart-${index%3})`}/>}</svg>{row.value!==null&&number(row.value)===null&&<small className="muted">Exact value available below; outside the chart’s safe numeric range.</small>}</div>)}</div>{!rows.length&&<Empty>No usable observations for this comparison.</Empty>}<figcaption className="chart-caption"><span>{unit} · {basis}</span><div className="chart-actions"><button className="text-button" aria-expanded={table} aria-controls={id} onClick={()=>setTable(!table)}>{table?'Hide':'View'} {label.toLowerCase()} data</button><button className="icon-button" aria-label={'Export '+label+' CSV'} onClick={()=>download(label.toLowerCase().replaceAll(' ','-')+'.csv',csv(rows.map(row=>({label:row.label,value:row.value,unit,source:source?.url??'',fetchedAt:source?.fetchedAt??'',sourceTime:source?.sourceTime??'',coverage:source?.coverage??''}))),'text/csv')}><Download size={14}/></button></div></figcaption>{table&&<div id={id} className="table-scroll"><table><caption className="sr-only">{label} exact values</caption><thead><tr><th>Category</th><th>Exact value</th><th>Unit</th></tr></thead><tbody>{rows.map(row=><tr key={row.label}><td>{row.label}</td><td className="mono">{row.value??'Unavailable'}</td><td>{unit}</td></tr>)}</tbody></table></div>}</figure>;
 }
 export function HardwareChart({s}:{s:Snapshot}){return <Panel title="What hardware is registered?" description="GPU mix matched to the epoch’s declared ML nodes" action={<More href="/hardware">Hardware</More>} footer={<Proof snapshot={s} ids={['hardware','participants']}/>}>
