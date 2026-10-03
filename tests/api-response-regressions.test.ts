@@ -1,3 +1,4 @@
+import type {ReadErrorCode} from '../src/core/read-errors';
 import {beforeEach,expect,it,vi} from 'vitest';
 import {emptySnapshot} from '../src/core/sources';
 vi.mock('../src/core/service',()=>({getSnapshot:vi.fn(),detail:vi.fn(),epochDiff:vi.fn()}));
@@ -7,12 +8,11 @@ import * as route from '../src/app/api/v1/[resource]/route';
 const read=(resource:string,query='',headers:Record<string,string>={})=>route.GET(new Request('https://example.test/api/v1/'+resource+query,{headers}),{params:Promise.resolve({resource})});
 beforeEach(()=>{vi.clearAllMocks();vi.mocked(getSnapshot).mockResolvedValue(emptySnapshot());(globalThis as typeof globalThis&{gonkaApiBudget?:unknown}).gonkaApiBudget=undefined;});
 function errorHeaders(response:Response){expect(response.headers.get('cache-control')).toBe('no-store');expect(response.headers.get('access-control-allow-origin')).toBe('*');}
-it.each([
- ['Upstream HTTP 500',502],['Live lookup is disabled in snapshot mode.',503],
- ['Read budget reached; try again next minute.',429],['Upstream HTTP 404',404],
- ['One epoch returned an unsupported membership schema.',502]
-])('epoch failures do not return cacheable success: %s',async(error,status)=>{
- vi.mocked(epochDiff).mockResolvedValue({from:1,to:2,rows:[],urls:[],fetchedAt:new Date().toISOString(),error});
+it.each<[ReadErrorCode,number]>([
+ ['upstream-failed',502],['unavailable',503],['rate-limited',429],['not-found',404]
+])('epoch failures do not return cacheable success: %s',async(errorCode,status)=>{
+ const error='A human-readable message, independent of the code';
+ vi.mocked(epochDiff).mockResolvedValue({from:1,to:2,rows:[],urls:[],fetchedAt:new Date().toISOString(),error,errorCode});
  const response=await read('epoch-diff','?from=1&to=2');expect(response.status).toBe(status);errorHeaders(response);const body=await response.json();expect(body.data.error).toBe(error);expect(body.error).toBe(error);
  if(status===429)expect(response.headers.get('retry-after')).toBe('60');
 });
@@ -23,7 +23,7 @@ it.each([['simulate-cost','?model=not-in-catalog',404],['simulate-cost','?attemp
  const response=await read(resource,query);expect(response.status).toBe(status);errorHeaders(response);
 });
 it('lookup budget failures include retry guidance',async()=>{
- vi.mocked(detail).mockResolvedValue({kind:'blocks',id:'1',url:'',data:null,fetchedAt:new Date().toISOString(),error:'Read budget reached; try again next minute.'});
+ vi.mocked(detail).mockResolvedValue({kind:'blocks',id:'1',url:'',data:null,fetchedAt:new Date().toISOString(),error:'Please wait',errorCode:'rate-limited'});
  const response=await read('lookup','?kind=blocks&id=1');expect(response.status).toBe(429);errorHeaders(response);expect(response.headers.get('retry-after')).toBe('60');
 });
 it('successful responses retain ETag support and expose it to browser clients',async()=>{
@@ -34,4 +34,8 @@ it('conditional-GET preflight is read-only and performs no source work',async()=
  expect('OPTIONS' in route).toBe(true);
  const response=await route.OPTIONS(new Request('https://example.test/api/v1/metrics',{method:'OPTIONS'}),{params:Promise.resolve({resource:'metrics'})});
  expect(response.status).toBe(204);expect(response.headers.get('access-control-allow-methods')).toBe('GET, HEAD, OPTIONS');expect(response.headers.get('access-control-allow-headers')).toBe('If-None-Match');expect(getSnapshot).not.toHaveBeenCalled();
+});
+it('status uses a typed code even if the human-facing message changes',async()=>{
+ vi.mocked(epochDiff).mockResolvedValue({from:1,to:2,rows:[],urls:[],fetchedAt:new Date().toISOString(),error:'This wording can change safely',errorCode:'not-found'});
+ expect((await read('epoch-diff','?from=1&to=2')).status).toBe(404);
 });

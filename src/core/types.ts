@@ -1,3 +1,4 @@
+import type {ReadErrorCode} from './read-errors';
 export type Scope='chain'|'indexer'|'provider'|'estimate';
 export type Freshness='recent'|'stale'|'snapshot'|'unavailable';
 export interface Source {id:string;name:string;url:string;scope:Scope;status:Freshness;fetchedAt:string;sourceTime:string|null;ttl:number;error:string|null;coverage:string;}
@@ -15,6 +16,6 @@ export interface ModelStat {model:string;tokens:string;requests:string;}
 export interface Market {symbol:string;name:string;dex:string;pairAddress:string|null;priceUsd:string|null;marketCap:string|null;fdv:string|null;liquidity:string|null;volume24h:string|null;priceChange24h:string|null;baseToken:string|null;quoteToken:string|null;}
 export interface Endpoint {method:string;path:string;description:string;group:string;params:string;cache:string;namespace:'chain-rpc'|'chain-api'|'v1'|'api/ch'|'other';readOnly:boolean;}
 export interface Snapshot {version:1;generatedAt:string;mode:'live'|'snapshot';sources:Source[];epoch:Epoch|null;participants:Participant[];participantStats:ParticipantStat[];dex:Market|null;models:Model[];networkModels:string[];governanceModels:GovernanceModel[];pocModels:PocModelParam[];devshardVersions:DevshardVersion[];versions:Record<string,string>;endpointDeclaredTotal:number|null;blocks:Block[];proposals:Proposal[];hardware:Hardware[];stats:ModelStat[];fx:string|null;fxAt:string|null;totalSupply:string|null;tokenomics:Record<string,string>;communityPool:string|null;protocol:Record<string,string>;validators:number|null;statsWindow:{from:string;to:string}|null;endpoints:Endpoint[];catalogAuth:string|null;}
-export interface Detail {kind:string;id:string;url:string;fetchedAt:string;data:unknown|null;error:string|null;}
+export interface Detail {errorCode?:ReadErrorCode;kind:string;id:string;url:string;fetchedAt:string;data:unknown|null;error:string|null;}
 export interface HistoryPoint {gap?:true;at:string;weight:string|null;price:string|null;participants:number|null;}
-export interface EpochDiff {from:number;to:number;fetchedAt:string;rows:{address:string;before:string|null;after:string|null;delta:string;state:'joined'|'left'|'retained'}[];urls:string[];error:string|null;}
+export interface EpochDiff {errorCode?:ReadErrorCode;from:number;to:number;fetchedAt:string;rows:{address:string;before:string|null;after:string|null;delta:string;state:'joined'|'left'|'retained'}[];urls:string[];error:string|null;}

@@ -1,3 +1,4 @@
+import {readFailureStatus} from '@/core/read-errors';
 import {hasObservation,filterModels} from '@/core/insights';
 import {activityData} from '@/core/audit';
 import {createHash} from 'node:crypto';
@@ -13,8 +14,6 @@ export const runtime='nodejs';
 const state=globalThis as typeof globalThis & {gonkaApiBudget?:{at:number;count:number}};
 function headers(status=200){return {'Cache-Control':status>=400?'no-store':'public, max-age=0, s-maxage=30, stale-while-revalidate=60','Access-Control-Allow-Origin':'*','Access-Control-Expose-Headers':'ETag, Retry-After','X-Content-Type-Options':'nosniff',...(status===429?{'Retry-After':'60'}:{})};}
 function apiError(error:string,status:number){return Response.json({error},{status,headers:headers(status)});}
-// These are the service layer's existing error messages, not arbitrary upstream bodies.
-function readFailureStatus(error:string){if(error==='Invalid lookup.')return 400;if(/budget|^Upstream HTTP 429$/i.test(error))return 429;if(error==='Upstream HTTP 404')return 404;if(error==='Live lookup is disabled in snapshot mode.')return 503;return 502;}
 export async function OPTIONS(_request:Request,{params}:{params:Promise<{resource:string}>}){
  const {resource}=await params;if(!apiDefinitions.some(d=>d.id===resource))return apiError('Unknown read-only endpoint',404);
  return new Response(null,{status:204,headers:{...headers(),'Cache-Control':'no-store','Access-Control-Allow-Methods':'GET, HEAD, OPTIONS','Access-Control-Allow-Headers':'If-None-Match','Access-Control-Max-Age':'600'}});
@@ -48,8 +47,8 @@ export async function GET(request:Request,{params}:{params:Promise<{resource:str
  case 'health':case 'status':{const h=healthData(s);data=h;if(h.usableSources===0){status=503;failure='No usable public source observations';}}break;
  case 'endpoints':data=page(s.endpoints.filter(e=>query.method==='ALL'||e.method===(query.method??'GET')),e=>e.path+' '+e.description+' '+e.group);break;
  case 'history':case 'charts':{const points=await history(Number(query.hours??24));const metric=(query.metric??'weight') as 'weight'|'price'|'participants';data=resource==='history'?{points,storage:process.env.DATABASE_URL?'configured':'not-configured'}:{...chartData(points,metric,Number(query.maxPoints??200)),storage:process.env.DATABASE_URL?'configured':'not-configured'};meta.coverage='Only actual retained database observations. No fabricated backfill.';break;}
- case 'lookup':{const result=await detail(query.kind,query.id);data=result;if(result.error){status=readFailureStatus(result.error);failure=result.error;}break;}
- case 'epoch-diff':{const result=await epochDiff(Number(query.from),Number(query.to));data=result;if(result.error){status=readFailureStatus(result.error);failure=result.error;}break;}
+ case 'lookup':{const result=await detail(query.kind,query.id);data=result;if(result.error){status=readFailureStatus(result.errorCode);failure=result.error;}break;}
+ case 'epoch-diff':{const result=await epochDiff(Number(query.from),Number(query.to));data=result;if(result.error){status=readFailureStatus(result.errorCode);failure=result.error;}break;}
  case 'simulate-cost':{const model=query.model?s.models.find(m=>m.id===query.model):s.models[0];if(query.model&&!model)return apiError('Model not present in the observed catalog',404);try{data={...simulateCost({prompt:query.prompt,completion:query.completion,requests:query.requests,attempts:query.attempts},{tokenPrice:s.protocol['devshard_escrow_params.token_price']??null,providerPrice:model?.price??null,fx:s.fx}),model:model?.id??null,classification:'scenario',excludes:['escrow creation','per-nonce fees','gas','separate ledger adjustments']};}catch(e){return apiError(e instanceof Error?e.message:'Invalid scenario',400);}break;}
  default:return apiError('Unimplemented endpoint',404);
  }

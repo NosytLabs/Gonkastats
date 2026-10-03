@@ -28,7 +28,8 @@ try{
  report.checks.push('Cross-origin browser reads ETag and completes conditional GET/preflight with an empty 304 response');
  for(const f of observed.failures){assert.equal(f.status,f.expected,f.path);assert.equal(f.cache,'no-store');assert.equal(typeof f.error,'string');}
  report.checks.push('Actual cross-origin epoch and cost errors preserve non-success status, no-store and readable error bodies');
- assert.ok(observed.dependencies.find(s=>s.id==='hardware').usedBy.includes('/hardware'));assert.ok(observed.dependencies.find(s=>s.id==='pricing').usedBy.includes('/cost-lab'));
+ assert.ok(Array.isArray(observed.dependencies),'source-health data must be an array');
+ for(const [id,path] of [['hardware','/hardware'],['pricing','/cost-lab']]){const source=observed.dependencies.find(s=>s.id===id);assert.ok(source,'source-health omitted '+id);assert.ok(Array.isArray(source.usedBy),'source-health usedBy must be an array for '+id);assert.ok(source.usedBy.includes(path),id+' must include '+path);}
  report.checks.push('Source-health API includes the actual hardware and cost-lab consumers');
  await page.goto(server.base+'/developers',{waitUntil:'networkidle'});await expect(page.getByRole('heading',{name:'Handle failures without inventing observations'})).toBeVisible();
  const example=page.getByTestId('api-example-epoch-diff');await example.locator('summary').click();await example.getByLabel('epoch-diff from',{exact:true}).fill('1');await example.getByLabel('epoch-diff to',{exact:true}).fill('2');await example.getByRole('button',{name:'Try it',exact:true}).click();await expect(example.getByText('HTTP 503',{exact:true})).toBeVisible();await expect(example.locator('.raw-record')).toContainText('snapshot mode');
