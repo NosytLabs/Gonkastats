@@ -9,3 +9,6 @@
 .source-dialog h2{font-size:20px;line-height:1.4;margin:0 24px 14px 0}.source-dialog>p{font-size:13px;line-height:1.7}.source-dialog .external{font-size:13px;min-height:40px}.source-facts{margin:20px 0}.source-facts>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}.source-facts dt{color:var(--muted)}.source-facts dd{margin:0}.source-facts time{font-variant-numeric:tabular-nums}
 .loading-title{font-size:28px;font-weight:600;color:var(--text);letter-spacing:-.8px;line-height:1.3}
 @media(max-width:620px){.source-dialog{padding:23px 20px}.source-facts>div{grid-template-columns:1fr;gap:3px}}
+
+/* Keep short model/member charts together instead of stretching one into empty space. */
+.network-compute-grid{align-items:start}.network-compute-stack{display:grid;gap:18px;min-width:0}.network-compute-stack>.panel{margin-bottom:0}

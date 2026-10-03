@@ -6,6 +6,7 @@ import {Panel,Metric,Proof,DataTable,Empty,External,Badge} from '@/components/ui
 import {PageHeading,Watch} from './shared';
 import {bech32Address,format,shorten} from '@/core/metrics';
 import type {Snapshot} from '@/core/types';
+import {memberObservation} from '@/core/membership';
 
 type Section='hardware'|'ecosystem'|'watchlist'|'about'|'privacy';
 const resources=[
@@ -22,12 +23,12 @@ const resources=[
 function Watchlist({s}:{s:Snapshot}){
  const [saved,setSaved]=useState<string[]>([]),[ready,setReady]=useState(false);
  useEffect(()=>{const refresh=()=>{try{const raw:unknown=JSON.parse(localStorage.getItem('gonkastats-watchlist')??'[]');setSaved(Array.isArray(raw)?[...new Set(raw.filter((x):x is string=>typeof x==='string'&&bech32Address(x)))].slice(0,100):[]);}catch{setSaved([]);}setReady(true);};refresh();window.addEventListener('storage',refresh);window.addEventListener('gonkastats-watchlist',refresh);return()=>{window.removeEventListener('storage',refresh);window.removeEventListener('gonkastats-watchlist',refresh);};},[]);
- const rows=saved.map(address=>({address,participant:s.participants.find(p=>p.address===address)}));
+ const rows=saved.map(address=>({address,...memberObservation(s,address)}));
  return <Panel title="Your locally saved addresses" description="Stored only in this browser; this is not a portfolio or a hosted alert subscription." footer={<Proof snapshot={s} ids={['participants']}/>}>
  {!ready?<p role="status">Reading local watchlist…</p>:!rows.length?<Empty title="Keep an eye on the compute you care about">Star an address on the <Link className="accent" href="/participants">participants page</Link> to see it here. No login, wallet connection, or signing is needed.</Empty>:<DataTable rows={rows} rowKey={r=>r.address} exportName="watchlist" source={s.sources.find(x=>x.id==='participants')} columns={[
  {key:'address',label:'Address',value:r=>r.address,render:r=><Link className="mono" href={'/participants/'+r.address}>{shorten(r.address,8)}</Link>},
  {key:'weight',label:'Declared weight',value:r=>r.participant?.weight??null,render:r=>format(r.participant?.weight,'number')},
- {key:'status',label:'Observed membership',value:r=>!r.participant?'Not in this observation':r.participant.excluded?'Marked excluded':'Declared member'},
+ {key:'status',label:'Observed membership',value:r=>r.label},
  {key:'watch',label:'Saved',value:r=>r.address,render:r=><Watch address={r.address}/>}
  ]}/>}
  </Panel>;
