@@ -35,6 +35,10 @@ jobs:
               p.write_text(p.read_text().replace("from '@/core/seo'", "from '../core/seo'"))
           p=Path('scripts/qa-fixture.mjs')
           p.write_text(p.read_text().replace(",'utf8')));", ",'utf8'));"))
+          p=Path('src/app/observatory.css')
+          old='.kpi-tile{min-width:0;background:var(--panel);border:1px solid var(--border);border-radius:11px;overflow:hidden}'
+          if old not in p.read_text(): raise SystemExit('KPI rule changed; inspect before editing')
+          p.write_text(p.read_text().replace(old,old.replace('overflow:hidden','overflow:visible')))
           PY
           for file in scripts/*.mjs; do node --check "$file"; done
       - name: Resolve patched framework and verify locked install
