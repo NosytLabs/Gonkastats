@@ -38,7 +38,11 @@ GET provides bounded reads. OPTIONS is read-only CORS transport, not another dat
 
 Failures use non-2xx status, human-readable error, no-store and public CORS headers. Detail/epoch-comparison failures include `data.errorCode`; early query/budget rejections do not promise a data object. Never parse human wording for machine behavior.
 
-Only successful details enter the five-minute cache. Invalid IDs fail before snapshot collection. Nonexistent UTC dates are rejected instead of being normalized into another day.
+Only successful details enter the five-minute cache. Concurrent identical lookups share one in-flight request and one read-budget debit; cache keys include the configured source origin. Snapshot serving cannot reuse a live detail. Rejected HTTP bodies are cancelled and stream readers released before the connection slot is returned. Invalid IDs fail before snapshot collection. Nonexistent UTC dates are rejected instead of being normalized into another day.
+
+## Catalog views
+
+Overview and model discovery share unavailable/observed-empty catalog explanations. A failed filter is not an absent source. Resetting catalog filters preserves the separately controlled comparison selection, and empty exports are disabled. Model catalog/comparison tables provide named keyboard-scroll regions.
 
 ## Working-tree hygiene
 
