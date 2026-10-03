@@ -41,4 +41,4 @@ try{
  }
  assert.equal(report.runtimeErrors.length,0);assert.equal(report.accessibility.flatMap(r=>r.violations).length,0);report.result='passed';
 }catch(e){report.result='failed';report.error=e.stack??String(e);console.error(e);process.exitCode=1;}
-finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/audit-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();server.stop();}
+finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/audit-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();await server.stop();}

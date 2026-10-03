@@ -1,49 +1,58 @@
-import {spawn, execSync} from 'node:child_process';
+import {fork,execFileSync} from 'node:child_process';
+import {createServer} from 'node:net';
 
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
-function winPidsOnPort(port){
-  let out='';
-  try{out=execSync(`netstat -ano -p tcp | findstr ":${port} .*LISTENING"`,{encoding:'utf8'});}catch{}
-  const pids=[...new Set(out.split(/\r?\n/).map(l=>l.trim().split(/\s+/).pop()).filter(p=>/^\d+$/.test(p)))];
-  return pids;
+async function requireFreePort(port){
+  if(!Number.isInteger(port)||port<1||port>65535)throw new Error('QA port must be an integer from 1 to 65535');
+  await new Promise((resolve,reject)=>{
+    const probe=createServer();
+    probe.once('error',error=>reject(new Error(error.code==='EADDRINUSE'?'QA port '+port+' is already in use; existing service left untouched':error.message)));
+    probe.listen({port,host:'127.0.0.1',exclusive:true},()=>probe.close(error=>error?reject(error):resolve()));
+  });
 }
 
-function killByPort(port,child){
-  if(process.platform==='win32'){
-    // The Next CLI exits right after spawning its server worker, so the child
-    // handle is useless. Kill whatever PID actually owns the port instead.
-    for(const pid of winPidsOnPort(port)){
-      try{execSync(`taskkill /pid ${pid} /T /F`,{stdio:'ignore'});}catch{}
-    }
-    try{execSync(`taskkill /pid ${child?.pid??0} /T /F`,{stdio:'ignore'});}catch{}
-  }else{
-    child?.kill('SIGTERM');
-  }
-}
-
-/**
- * Spawn `next start` on a fixed port in snapshot mode and wait until the
- * OpenAPI endpoint answers. Fails fast if the port is already taken instead of
- * silently reusing whatever leftover process happens to answer. On Windows the
- * Next CLI orphans its server child on SIGTERM, so stop() must kill the tree.
- */
+/** Own one server process and await its IPC readiness; never adopt a port owner. */
 export async function startServer(port,onData=()=>{}){
-  let out='';
-  const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port',String(port)],
-    {env:{...process.env,DATA_MODE:'snapshot',NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});
-  const pipe=c=>{out+=c.toString();onData(c);};
-  server.stdout.on('data',pipe);server.stderr.on('data',pipe);
-  const base='http://127.0.0.1:'+port;let ready=false,failure=null;
-  for(let i=0;i<60;i++){
-    if(/EADDRINUSE|Failed to start server/.test(out)){failure='port '+port+' is already in use (leftover server?)';break;}
-    try{const r=await fetch(base+'/api/v1/openapi');if(r.ok){ready=true;break;}}catch{}
-    await sleep(1000);
-  }
-  if(!ready){
-    if(failure===null&&server.exitCode!==null)failure='server exited with code '+server.exitCode;
-    killByPort(port,server);
-    throw new Error('Production server on port '+port+' did not start: '+(failure??'timed out after 60s')+'\n'+out.slice(-2000));
-  }
-  return {base,child:server,stop(){killByPort(port,server);}};
+  await requireFreePort(port);
+  let output='',spawnError=null,ready=false;
+  const child=fork(new URL('./qa-worker.mjs',import.meta.url),[String(port)],{
+    execPath:process.execPath,execArgv:[],
+    env:{...process.env,NODE_ENV:'production',DATA_MODE:'snapshot',NEXT_TELEMETRY_DISABLED:'1'},
+    stdio:['ignore','pipe','pipe','ipc'],
+  });
+  const pipe=chunk=>{output=(output+chunk.toString()).slice(-20000);onData(chunk);};
+  child.stdout.on('data',pipe);child.stderr.on('data',pipe);
+  child.once('error',error=>{spawnError=error;});
+  child.on('message',message=>{if(message?.type==='gonkastats:ready'&&message.pid===child.pid&&message.port===port)ready=true;});
+  const exited=new Promise(resolve=>child.once('exit',resolve));
+  const waitForExit=async(ms)=>{let timer;try{return await Promise.race([exited.then(()=>true),new Promise(resolve=>{timer=setTimeout(()=>resolve(false),ms);})]);}finally{clearTimeout(timer);}};
+  let stopping;
+  const stop=()=>stopping??=(async()=>{
+    // This PID is the listening worker itself. Do not kill a dead/reused PID.
+    if(child.exitCode!==null||child.signalCode!==null||!child.pid)return;
+    if(process.platform==='win32'){
+      try{execFileSync('taskkill',['/PID',String(child.pid),'/T','/F'],{stdio:'ignore',timeout:3000});}catch{}
+    }else child.kill('SIGTERM');
+    if(await waitForExit(3000))return;
+    if(child.exitCode!==null||child.signalCode!==null)return;
+    const signalled=child.kill('SIGKILL');
+    if(signalled&&await waitForExit(3000))return;
+    // Bound cleanup even if the OS refuses the signal. Disconnecting asks the
+    // owned worker to exit; never discover or terminate a different port owner.
+    if(child.connected)child.disconnect();
+    child.stdout.destroy();child.stderr.destroy();child.unref();
+    throw new Error('Owned QA worker '+child.pid+' failed to exit within the bounded shutdown deadline');
+  })();
+  const base='http://127.0.0.1:'+port,deadline=Date.now()+60000;
+  try{
+    while(Date.now()<deadline){
+      if(spawnError)throw spawnError;
+      if(/EADDRINUSE|Failed to start server/.test(output))throw new Error('QA port '+port+' is already in use; existing service left untouched');
+      if(child.exitCode!==null||child.signalCode!==null)throw new Error('Owned QA server exited before readiness');
+      if(ready){try{const response=await fetch(base+'/api/v1/openapi',{signal:AbortSignal.timeout(1500)});if(response.ok)return {base,child,stop};}catch{}}
+      await sleep(200);
+    }
+    throw new Error(ready?'Owned server never answered /api/v1/openapi within 60 seconds':'Owned server never signaled IPC readiness within 60 seconds');
+  }catch(error){await stop();throw new Error('Production server on port '+port+' did not start: '+error.message+'\n'+output.slice(-2000));}
 }

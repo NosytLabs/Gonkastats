@@ -1,0 +1,11 @@
+/* Source provenance lives in a portal, not clipped KPI/table containers. */
+.source-trigger{display:flex;align-items:center;flex-wrap:wrap;gap:5px;width:100%;min-height:36px;text-align:left;background:none;border:0;padding:2px 0;color:var(--muted);font:inherit;font-size:11px;cursor:pointer;line-height:1.5}
+.source-trigger:hover{color:var(--accent)}
+/* Compact card labels remain fully named for assistive technology and in the dialog. */
+.kpi-tile{display:flex;flex-direction:column}.kpi-tile .metric{flex:1}.kpi-tile>.source-note{flex:0 0 auto;min-height:54px}
+.kpi-tile .source-trigger{display:grid;grid-template-columns:14px minmax(0,1fr) 6px;column-gap:5px;row-gap:2px;align-items:center}
+.kpi-tile .source-trigger>span:first-of-type{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.kpi-tile .source-trigger>span:last-of-type{grid-column:2 / 4}
+.source-dialog{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 48px);overflow-y:auto;overscroll-behavior:contain;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px;z-index:100;box-shadow:var(--shadow);overflow-wrap:anywhere}
+.source-dialog h2{font-size:20px;line-height:1.4;margin:0 24px 14px 0}.source-dialog>p{font-size:13px;line-height:1.7}.source-dialog .external{font-size:13px;min-height:40px}.source-facts{margin:20px 0}.source-facts>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}.source-facts dt{color:var(--muted)}.source-facts dd{margin:0}.source-facts time{font-variant-numeric:tabular-nums}
+.loading-title{font-size:28px;font-weight:600;color:var(--text);letter-spacing:-.8px;line-height:1.3}
+@media(max-width:620px){.source-dialog{padding:23px 20px}.source-facts>div{grid-template-columns:1fr;gap:3px}}
