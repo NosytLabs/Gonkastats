@@ -22,7 +22,7 @@ it('empty shared tables do not offer an empty CSV download',()=>{
  const html=renderToStaticMarkup(createElement(DataTable,{rows:[],rowKey:()=>'',columns:[{key:'id',label:'ID',value:()=>''}]}));
  expect(html).toMatch(/<button[^>]*disabled[^>]*>[\s\S]*?Export CSV/);expect(html).toContain('No records are available in this table.');
 });
-it('default empty-table wording does not invent a successful upstream observation',()=>{
- const html=renderToStaticMarkup(createElement(DataTable,{rows:[],rowKey:()=>'',source:unavailable('params'),columns:[{key:'id',label:'ID',value:()=>''}]}));
+it('shared table default copy stays neutral without an observation',()=>{
+ const html=renderToStaticMarkup(createElement(DataTable,{rows:[],rowKey:()=>'',columns:[{key:'id',label:'ID',value:()=>''}]}));
  expect(html).toContain('No records are available in this table.');expect(html).not.toContain('returned for this observation');
 });

@@ -45,11 +45,11 @@ curl 'http://localhost:3000/api/v1/context-plan?prompt=8000&completion=2000'
 curl 'http://localhost:3000/api/v1/composition'
 ```
 
-Examples use the current site origin, quoted curl commands, bounded parameters, working Try-it reads, provenance and ETags. Model filters and accounting calculations reuse the same functions as the UI. No arbitrary proxy, transaction broadcast, private-account access or paid completion route exists.
+Examples use the current site origin, quoted curl commands, bounded parameters, working Try-it reads, provenance and ETags. Model filters and accounting calculations reuse the same functions as the UI. No arbitrary proxy, transaction broadcast, private-account access or paid completion route exists. Lookup/epoch-comparison failures use non-2xx statuses with an error message; all errors are `no-store`. HTTP 429 supplies `Retry-After`. Cross-origin clients can inspect `ETag` and use conditional GET through the read-only preflight.
 
 ## Recorded verification
 
-The locked install, unit/contract tests, strict TypeScript, ESLint, production build, bounded public-source snapshot, Chromium installation, and all five browser QA scripts passed in [Actions run 37081672505](https://github.com/NosytLabs/Gonkastats/actions/runs/37081672505). Each run verifies its own revision. Earlier measurements and their exact source revision remain in [V2 verification evidence](docs/V2-VERIFICATION.md).
+The locked install, unit/contract tests, strict TypeScript, ESLint, production build, bounded public-source snapshot, Chromium installation, and the then-configured browser QA scripts passed in [Actions run 37081672505](https://github.com/NosytLabs/Gonkastats/actions/runs/37081672505). Each run verifies its own revision. Earlier measurements and their exact source revision remain in [V2 verification evidence](docs/V2-VERIFICATION.md).
 
 The browser suites check page routes, primary headings, API contracts, interactions, responsive layout and selected accessibility rules. `npm run test:seo` separately checks the local production server's canonical URLs, distinct page metadata and crawler routes without requiring Chromium.
 
@@ -57,7 +57,7 @@ These are bounded automated tests, not an exhaustive accessibility, security, pr
 
 ## Accuracy and limitations
 
-During the September 23 verification snapshot, **18 of 19 registered public sources** returned usable observations. The dAPI inference-statistics endpoint returned HTTP 500. Inference demand remains unavailable; blockchain transactions are not substituted for AI requests. No missing history, sentiment, market cap, uptime or GPU-equivalence series is invented.
+Source availability is observation-specific; use `/sources` or `/api/v1/source-health` for the retained status and dependent pages. The inference-statistics endpoint has returned HTTP 500 in recorded captures. When unavailable, inference demand remains unavailable; blockchain transactions are not substituted for AI requests. No missing history, sentiment, market cap, uptime or GPU-equivalence series is invented.
 
 Model availability, capabilities and prices are separate observations. The collector reconciles each field group independently so a failed catalog cannot freeze fresh prices, and failed fields retain their original stale attribution. Collection gaps longer than 15 minutes break historical chart lines without creating numeric readings. Duplicate block heights and invalid timestamps are rejected before aggregation.
 
