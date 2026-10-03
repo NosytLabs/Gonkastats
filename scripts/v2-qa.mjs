@@ -9,7 +9,7 @@ const report={startedAt:new Date().toISOString(),checks:[],accessibility:[],runt
 try{
  await mkdir('artifacts/screenshots',{recursive:true});
  for(const resource of ['protocol','providers','source-health']){const r=await fetch(base+'/api/v1/'+resource);assert.equal(r.status,200,resource+' API');report.checks.push(resource+' API');}
- browser=await chromium.launch();const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>report.runtimeErrors.push(e.message));
+ browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE});const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>report.runtimeErrors.push(e.message));
  for(const [path,name] of [['/protocol','Protocol radar'],['/providers','Provider layers'],['/providers/openbroker','OpenBroker'],['/providers/proxy','Proxy by gonka.gg']]){
    const response=await page.goto(base+path,{waitUntil:'networkidle'});assert.equal(response?.status(),200,path+' status');await expect(page.getByRole('heading',{name:new RegExp(name,'i')})).toBeVisible();report.checks.push(path);
  }

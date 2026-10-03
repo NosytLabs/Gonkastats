@@ -20,7 +20,7 @@ try{
  assert.equal((await fetch(base+'/api/v1/activity?limit=61')).status,400);
  assert.equal((await fetch(base+'/api/v1/activity?limit=15&limit=30')).status,400);
  report.checks.push('Activity bounds and duplicate query validation');
- browser=await chromium.launch();const context=await browser.newContext({viewport:{width:1440,height:1050},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>report.runtimeErrors.push(e.message));
+ browser=await chromium.launch({executablePath:process.env.CHROMIUM_EXECUTABLE});const context=await browser.newContext({viewport:{width:1440,height:1050},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>report.runtimeErrors.push(e.message));
  await page.goto(base+'/activity',{waitUntil:'networkidle'});await expect(page.locator('main h1')).toHaveCount(1);
  await page.getByRole('button',{name:'Latest 15',exact:true}).click();await expect(page).toHaveURL(/records=15/);
  await page.reload({waitUntil:'networkidle'});await expect(page.getByRole('button',{name:'Latest 15',exact:true})).toHaveAttribute('aria-pressed','true');

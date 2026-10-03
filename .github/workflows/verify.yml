@@ -1,7 +1,7 @@
 name: Verify GonkaStats
-# Runs on every push and pull request. `npm run snapshot` is local-only (it
-# captures committed observations, it does not call the live RPC), so there is
-# nothing here worth rationing. Still available on demand via workflow_dispatch.
+# Runs on pushes and pull requests. Snapshot creation performs bounded,
+# read-only public-source requests; serving the retained snapshot is offline.
+# Also available on demand via workflow_dispatch.
 on:
   push:
     branches: [main]
@@ -34,7 +34,9 @@ jobs:
         run: npm run lint
       - name: Build production app
         run: npm run build
-      - name: Capture bounded public observations
+      - name: Verify page metadata and crawler routes
+        run: npm run test:seo
+      - name: Capture bounded live public observations
         run: npm run snapshot
       - name: Install Chromium
         run: npx playwright install --with-deps chromium

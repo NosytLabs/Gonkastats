@@ -47,13 +47,13 @@ curl 'http://localhost:3000/api/v1/composition'
 
 Examples use the current site origin, quoted curl commands, bounded parameters, working Try-it reads, provenance and ETags. Model filters and accounting calculations reuse the same functions as the UI. No arbitrary proxy, transaction broadcast, private-account access or paid completion route exists.
 
-## Current verification
+## Recorded verification
 
-Current application source was verified on **September 23, 2026** in [Actions run 35851426112](https://github.com/NosytLabs/Gonkastats/actions/runs/35851426112). The tested application source is commit `87031d0586d6ee72d00c92e706870c72002c24bc`; the workflow run executed commit `1b35840c76648856218389d927befceb99b601a6`, whose only additional change was the temporary verification workflow. See [V2 verification evidence](docs/V2-VERIFICATION.md).
+The locked install, unit/contract tests, strict TypeScript, ESLint, production build, bounded public-source snapshot, Chromium installation, and all five browser QA scripts passed in [Actions run 37081672505](https://github.com/NosytLabs/Gonkastats/actions/runs/37081672505). Each run verifies its own revision. Earlier measurements and their exact source revision remain in [V2 verification evidence](docs/V2-VERIFICATION.md).
 
-The locked install, **153 unit/contract tests**, strict TypeScript, ESLint, production build, bounded public-source snapshot, Chromium installation, and all **five browser QA scripts** passed. Baseline browser QA covered 35 page routes, 23 API scenarios and 12 interaction flows; 33 selected axe scans across the five suites reported zero violations, and the v2 suite separately verified Protocol Radar, provider pages, model lifecycle, source dependencies and write-definition safety.
+The browser suites check page routes, primary headings, API contracts, interactions, responsive layout and selected accessibility rules. `npm run test:seo` separately checks the local production server's canonical URLs, distinct page metadata and crawler routes without requiring Chromium.
 
-These are bounded automated tests, not an exhaustive accessibility, security, provider-availability, or load certification. Public-source failures remain explicit instead of being replaced with synthetic data. Main retains manual-only verification and three-day evidence retention.
+These are bounded automated tests, not an exhaustive accessibility, security, provider-availability, or load certification. Public-source failures remain explicit instead of being replaced with synthetic data. Main runs verification on pushes and pull requests, retains manual dispatch, and keeps evidence for three days.
 
 ## Accuracy and limitations
 
@@ -72,7 +72,7 @@ npm run snapshot
 DATA_MODE=snapshot npm run dev
 ```
 
-The git-ignored snapshot holds dated public observations, disables live refresh and does not perform live detail lookups. Browser verification uses this mode for reproducibility. Live historical detail and Epoch Diff calls were not exercised by the snapshot browser suite.
+`npm run snapshot` makes bounded live reads from the registered public sources and writes their dated observations to a git-ignored file. Serving with `DATA_MODE=snapshot` reuses that file, disables live refresh and does not perform live detail lookups. Browser verification uses this retained mode for reproducibility. Snapshot creation and offline snapshot serving are separate operations. Live historical detail and Epoch Diff calls are not exercised by the snapshot browser suite.
 
 For history, set server-only `DATABASE_URL`, run `npm run db:migrate`, and operate `npm run collect` separately from the web process. Five-minute storage slots are idempotent. No live database integration was provisioned or exercised in this release.
 
@@ -83,6 +83,7 @@ npm test
 npm run typecheck
 npm run lint
 npm run build
+npm run test:seo
 npm run snapshot
 npx playwright install chromium
 npm run test:e2e
@@ -90,4 +91,8 @@ npm run test:e2e
 
 Deploy as a Node.js Next.js application or with the Dockerfile. GitHub Pages alone cannot run its backend. Multi-instance hosting needs an edge-wide limiter; process budgets are not a distributed rate limiter.
 
-Main retains **manual-only verification**, read-only CI permissions, locked dependencies, bounded execution and three-day artifact retention. Temporary branch verification was removed after the passing run. There are no scheduled telemetry or billable inference jobs.
+Set `SITE_URL` to the deployed HTTP(S) origin before serving a public instance. Page canonicals, social URLs, `sitemap.xml` and `robots.txt` use that origin; the local default is `http://localhost:3000`. Browser-local watchlists and unconfigured account views are excluded from indexing and the sitemap.
+
+Set `CHROMIUM_EXECUTABLE` when browser verification should use an existing compatible Chromium installation. The SEO report records the HTTP status of unknown routes: the loading boundary can produce a streamed `200` response with the not-found UI and `noindex`, rather than a hard HTTP `404`.
+
+Main verifies pushes to `main` and pull requests, supports manual dispatch, and retains read-only CI permissions, locked dependencies, bounded execution and three-day artifacts. Snapshot creation reads public services; there are no scheduled telemetry or billable inference jobs.
