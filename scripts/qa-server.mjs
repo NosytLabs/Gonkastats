@@ -26,17 +26,23 @@ export async function startServer(port,onData=()=>{}){
   child.once('error',error=>{spawnError=error;});
   child.on('message',message=>{if(message?.type==='gonkastats:ready'&&message.pid===child.pid&&message.port===port)ready=true;});
   const exited=new Promise(resolve=>child.once('exit',resolve));
+  const waitForExit=async(ms)=>{let timer;try{return await Promise.race([exited.then(()=>true),new Promise(resolve=>{timer=setTimeout(()=>resolve(false),ms);})]);}finally{clearTimeout(timer);}};
   let stopping;
   const stop=()=>stopping??=(async()=>{
     // This PID is the listening worker itself. Do not kill a dead/reused PID.
     if(child.exitCode!==null||child.signalCode!==null||!child.pid)return;
     if(process.platform==='win32'){
-      try{execFileSync('taskkill',['/PID',String(child.pid),'/T','/F'],{stdio:'ignore'});}catch{}
+      try{execFileSync('taskkill',['/PID',String(child.pid),'/T','/F'],{stdio:'ignore',timeout:3000});}catch{}
     }else child.kill('SIGTERM');
-    let timer;
-    const done=await Promise.race([exited.then(()=>true),new Promise(resolve=>{timer=setTimeout(()=>resolve(false),3000);})]);
-    clearTimeout(timer);
-    if(!done&&child.exitCode===null&&child.signalCode===null){child.kill('SIGKILL');await exited;}
+    if(await waitForExit(3000))return;
+    if(child.exitCode!==null||child.signalCode!==null)return;
+    const signalled=child.kill('SIGKILL');
+    if(signalled&&await waitForExit(3000))return;
+    // Bound cleanup even if the OS refuses the signal. Disconnecting asks the
+    // owned worker to exit; never discover or terminate a different port owner.
+    if(child.connected)child.disconnect();
+    child.stdout.destroy();child.stderr.destroy();child.unref();
+    throw new Error('Owned QA worker '+child.pid+' failed to exit within the bounded shutdown deadline');
   })();
   const base='http://127.0.0.1:'+port,deadline=Date.now()+60000;
   try{

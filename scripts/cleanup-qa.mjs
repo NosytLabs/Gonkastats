@@ -13,7 +13,9 @@ try{
  const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});const page=await context.newPage();page.on('pageerror',e=>report.runtimeErrors.push(e.message));
  for(const width of [1440,390])await check('Aligned card footers and unclipped, focus-contained source details at '+width,async()=>{
   await page.setViewportSize({width,height:1000});await page.goto(server.base+'/',{waitUntil:'networkidle'});
-  const cards=await page.locator('.kpi-tile').evaluateAll(tiles=>tiles.map(tile=>({row:Math.round(tile.getBoundingClientRect().top),footer:tile.querySelector('.source-note').getBoundingClientRect().top})));
+  const cards=await page.locator('.kpi-tile').evaluateAll(tiles=>tiles.map(tile=>{const note=tile.querySelector('.source-note');return {label:tile.querySelector('.metric-label')?.textContent,row:Math.round(tile.getBoundingClientRect().top),footer:note?note.getBoundingClientRect().top:null};}));
+  assert.equal(cards.length,6,'The overview must expose all six KPI cards');
+  for(const card of cards)assert.notEqual(card.footer,null,'Missing source footer for '+card.label);
   for(const row of new Set(cards.map(c=>c.row))){const positions=cards.filter(c=>c.row===row).map(c=>c.footer);assert.ok(Math.max(...positions)-Math.min(...positions)<=1,'KPI footers in a row must align');}
   const trigger=page.locator('.kpi-tile .source-note').first().getByRole('button');await trigger.click();
   const dialog=page.getByRole('dialog',{name:/Source details/});await expect(dialog).toBeVisible({timeout:2000});
@@ -36,10 +38,13 @@ try{
  await check('Unconfirmed model details are noindex, not indexable soft-404 pages',async()=>{
   await page.goto(server.base+'/models/61',{waitUntil:'networkidle'});const robots=await page.locator('meta[name="robots"]').evaluateAll(tags=>tags.map(t=>t.getAttribute('content')));assert.ok(robots.some(value=>value?.includes('noindex')));
  });
- const observed=(await(await fetch(server.base+'/api/v1/overview')).json()).data;
- if(observed.models.length)await check('Visible model identity is used in detail metadata',async()=>{
+ let observed=null;
+ await check('Overview returns a valid public model observation envelope',async()=>{
+   const response=await fetch(server.base+'/api/v1/overview');assert.equal(response.status,200,'Local overview API status');const body=await response.json();assert.ok(Array.isArray(body.data?.models),'Overview model array');observed=body.data;
+ });
+ if(observed?.models?.length)await check('Visible model identity is used in detail metadata',async()=>{
   const model=observed.models[0];await page.goto(server.base+'/models/'+model.slug,{waitUntil:'networkidle'});assert.ok((await page.title()).includes(model.name));assert.ok(!(await page.title()).includes(model.slug));
- });else report.skipped.push('Live model identity metadata: provider catalog observation unavailable');
+ });else report.skipped.push('Live model identity metadata: no usable provider catalog observation');
  for(const theme of ['dark','light'])for(const width of [1440,390]){
   await page.setViewportSize({width,height:1000});await page.goto(server.base+'/',{waitUntil:'networkidle'});if(await page.locator('html').getAttribute('data-theme')!==theme)await page.getByRole('button',{name:'Toggle color theme'}).click();
   await page.screenshot({path:'artifacts/screenshots/cleanup-overview-'+theme+'-'+width+'.png',fullPage:false});
@@ -52,5 +57,5 @@ try{
   });
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
  }
- assert.equal(report.failures.length,0,JSON.stringify(report.failures));assert.equal(report.runtimeErrors.length,0);assert.equal(report.accessibility.length,4,'All four source-dialog accessibility scans must execute');report.result='passed';
+ assert.equal(report.failures.length,0,JSON.stringify(report.failures));assert.equal(report.runtimeErrors.length,0);assert.equal(report.accessibility.length,4,'All four source-dialog accessibility scans must execute');report.result=report.skipped.length?'passed_with_skips':'passed';
 }catch(e){report.result='failed';report.error=String(e);process.exitCode=1;}finally{report.finishedAt=new Date().toISOString();await writeFile('artifacts/cleanup-report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser?.close();await server.stop();}
