@@ -10,5 +10,5 @@ it('README and maintained documentation have no broken relative file links',()=>
  }
 });
 it('operational logs and interrupted snapshots are not staged as repository content',()=>{
- const rules=readFileSync('.gitignore','utf8').split('\n');expect(rules).toContain('*.log');expect(rules).toContain('data/*.tmp');
+ const rules=readFileSync('.gitignore','utf8').split(/\r?\n/);expect(rules).toContain('*.log');expect(rules).toContain('data/*.tmp');
 });
