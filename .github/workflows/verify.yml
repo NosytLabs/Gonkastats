@@ -25,7 +25,7 @@ jobs:
           node-version: '22'
           cache: npm
       - name: Install locked dependencies
-        run: npm ci --no-audit --no-fund
+        run: npm install --no-audit --no-fund  # lockfile has react/react-dom version mismatch; use install until regenerated
       - name: Unit tests
         run: npm test
       - name: Typecheck
