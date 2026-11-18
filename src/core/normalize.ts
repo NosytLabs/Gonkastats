@@ -1,6 +1,6 @@
 import {activityData} from './audit';
 import {z} from 'zod';
-import {modelName,slugFor,number,ngnk} from './metrics';
+import {modelName,slugFor,number} from './metrics';
 import {compareAmounts} from './insights';
 import type {Epoch,Participant,ParticipantStat,Market,Block,Proposal,Model,ModelStat,Endpoint,GovernanceModel,PocModelParam,DevshardVersion} from './types';
 export const scalar=z.union([z.string(),z.number()]).transform(String);
@@ -23,7 +23,6 @@ export function protocolParamsData(data:unknown):{protocol:Record<string,string>
  const devRoot=record.safeParse(params.devshard_escrow_params),devshardVersions:DevshardVersion[]=[];if(devRoot.success&&Array.isArray(devRoot.data.approved_versions))for(const raw of devRoot.data.approved_versions){const v=record.safeParse(raw);if(!v.success||typeof v.data.name!=='string')continue;devshardVersions.push({name:v.data.name,binary:typeof v.data.binary==='string'?v.data.binary:null,sha256:typeof v.data.sha256==='string'?v.data.sha256:null});}
  return {protocol,pocModels,devshardVersions};}
 export function statsData(data:unknown):ModelStat[]{const d=z.object({stats_models:z.array(z.object({model:z.string(),ai_tokens:scalar,inferences:scalar}))}).parse(data);return d.stats_models.map(s=>({model:s.model,tokens:s.ai_tokens,requests:s.inferences}));}
-export function coinField(data:unknown,path:string[]):string|null {let v:unknown=data;for(const k of path){if(!v||typeof v!=='object')return null;v=(v as Record<string,unknown>)[k];}try{return v===undefined?null:ngnk(scalar.parse(v));}catch{return null;}}
 function endpointNamespace(path:string):Endpoint['namespace']{if(path.startsWith('/chain-rpc/'))return 'chain-rpc';if(path.startsWith('/chain-api/'))return 'chain-api';if(path.startsWith('/api/ch/'))return 'api/ch';if(path.startsWith('/v1/')||path.startsWith('/v2/'))return 'v1';return 'other';}
 export function catalogDeclaredTotal(data:unknown):number|null{const v=record.parse(data).total_endpoints;return v==null?null:integer.parse(v);}
 export function catalogData(data:unknown):Endpoint[]{const d=z.object({groups:z.array(z.object({label:z.string(),endpoints:z.array(z.object({method:z.string(),path:z.string().startsWith('/'),description:z.string(),params:z.string().optional(),cache:z.string().optional()}))}))}).parse(data);return d.groups.flatMap(g=>g.endpoints.map(e=>({...e,group:g.label,params:e.params??'',cache:e.cache??'Not specified',namespace:endpointNamespace(e.path),readOnly:e.method.toUpperCase()==='GET'})));}
